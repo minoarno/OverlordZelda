@@ -8,7 +8,7 @@ public:
 	DiffuseMaterial();
 	~DiffuseMaterial();
 
-	void SetDiffuseMaterial(const std::wstring& assetFile);
+	void SetDiffuseTexture(const std::wstring& assetFile);
 protected:
 	void InitializeEffectVariables()override;
 	void OnUpdateModelVariables(const SceneContext& sceneContext,const ModelComponent* pModelComponent)const override;

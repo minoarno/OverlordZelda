@@ -2,6 +2,7 @@ float4x4 gWorld : WORLD;
 float4x4 gWorldViewProj : WORLDVIEWPROJECTION; 
 float3 gLightDirection = float3(-0.577f, -0.577f, 0.577f);
 
+//Bones
 float4x4 gBones[70];
 
 Texture2D gDiffuseMap;
@@ -22,7 +23,8 @@ struct VS_INPUT{
 	float3 pos : POSITION;
 	float3 normal : NORMAL;
 	float2 texCoord : TEXCOORD;
-	//BlendWeights & BlendIndices?
+	
+	//BlendWeights & BlendIndices
 	float4 blendIndex : BLENDINDICES;
 	float4 blendWeight : BLENDWEIGHTS;
 };
@@ -53,14 +55,13 @@ BlendState NoBlending
 //--------------------------------------------------------------------------------------
 VS_OUTPUT VS(VS_INPUT input){
 
+	VS_OUTPUT output;
+	// Step 1:	convert position into float4 and multiply with matWorldViewProj
 
-    VS_OUTPUT output = (VS_OUTPUT) 0;
 	float4 originalPosition = float4(input.pos, 1);
 	float4 transformedPosition = 0;
 	float3 transformedNormal = 0;
-
-	//Skinning Magic...
-
+	
 	float index;
 	for (float i = 0; i < 4; ++i)
 	{
@@ -74,11 +75,13 @@ VS_OUTPUT VS(VS_INPUT input){
 	transformedPosition.w = 1;
 
 	output.pos = mul(transformedPosition, gWorldViewProj);
-	output.normal = normalize(mul(transformedNormal, (float3x3)gWorld));
-	//Don't forget to change the output.pos & output.normal variables...
-	//output.pos = mul ( float4(input.pos,1.0f), gWorldViewProj ); //Non skinned position
-	//output.normal = normalize(mul(input.normal, (float3x3)gWorld)); //Non skinned normal
 
+	
+	// Step 2:	rotate the normal: NO TRANSLATION
+	//			this is achieved by clipping the 4x4 to a 3x3 matrix, 
+	//			thus removing the postion row of the matrix
+	output.normal = normalize(mul(transformedNormal, (float3x3)gWorld));
+	
 	output.texCoord = input.texCoord;
 	return output;
 }
@@ -117,3 +120,4 @@ technique11 Default
 		SetPixelShader( CompileShader( ps_4_0, PS() ) );
     }
 }
+

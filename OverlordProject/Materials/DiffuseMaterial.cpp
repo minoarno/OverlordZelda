@@ -13,7 +13,7 @@ DiffuseMaterial::~DiffuseMaterial()
 {
 }
 
-void DiffuseMaterial::SetDiffuseMaterial(const std::wstring& assetFile)
+void DiffuseMaterial::SetDiffuseTexture(const std::wstring& assetFile)
 {
 	m_pDiffuseTexture = ContentManager::Load<TextureData>(assetFile);
 	SetVariable_Texture(L"gDiffuseMap", m_pDiffuseTexture);

@@ -41,7 +41,7 @@ void ModelTestScene::Initialize()
 	m_pChair->AddComponent(model);
 
 	DiffuseMaterial* diffuse = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
-	diffuse->SetDiffuseMaterial(L"Textures/Chair_Dark.dds");
+	diffuse->SetDiffuseTexture(L"Textures/Chair_Dark.dds");
 	model->SetMaterial(diffuse);
 
 	RigidBodyComponent* pRigidBody{ new RigidBodyComponent{} };
