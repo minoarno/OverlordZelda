@@ -65,6 +65,13 @@ void PostProcessingScene::Initialize()
 	//Add the material to the PostProcessing Stack + Uncomment the corresponding ImGui code below
 	//If you already have shadow mapping working you can change the code above to use the shadow variant shaders
 	AddPostProcessingEffect(m_pPostBlur);
+
+	auto pSprite = new GameObject();
+	pSprite->AddComponent(new SpriteComponent(L"Textures/TestSprite.jpg", { 0.5f,0.5f }, { 1.f,1.f,1.f,.5f }));
+	AddChild(pSprite);
+
+	pSprite->GetTransform()->Translate(m_SceneContext.windowWidth / 2.f, m_SceneContext.windowHeight / 2.f, .9f);
+	pSprite->GetTransform()->Scale(1.f, 1.f, 1.f);
 }
 
 void PostProcessingScene::OnGUI()
