@@ -35,6 +35,8 @@ private:
 	//Light ViewProjection (perspective used to render ShadowMap)
 	XMFLOAT4X4 m_LightVP{};
 
+	float m_Size = 100.f;
+
 	//Shadow Generator is responsible of drawing all shadow casting meshes to the ShadowMap
 	//There are two techniques, one for static (non-skinned) meshes, and another for skinned meshes (with bones, blendIndices, blendWeights)
 	enum class ShadowGeneratorType

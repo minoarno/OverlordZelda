@@ -20,28 +20,56 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * .5f, 0.f);
 }
 
-void Character::Update(const SceneContext& /*sceneContext*/)
+void Character::Update(const SceneContext& sceneContext)
 {
+	if (!sceneContext.pGameTime->IsRunning())return;
+
 	if (m_pCameraComponent->IsActive())
 	{
-		//constexpr float epsilon{ 0.01f }; //Constant that can be used to compare if a float is near zero
+		constexpr float epsilon{ 0.01f }; //Constant that can be used to compare if a float is near zero
 
 		//***************
 		//HANDLE INPUT
 
 		//## Input Gathering (move)
-		//XMFLOAT2 move; //Uncomment
+		XMFLOAT2 move{0.f,0.f}; //Uncomment
 		//move.y should contain a 1 (Forward) or -1 (Backward) based on the active input (check corresponding actionId in m_CharacterDesc)
 		//Optional: if move.y is near zero (abs(move.y) < epsilon), you could use the ThumbStickPosition.y for movement
+
+		if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveForward)) //forward
+		{
+			move.y = 1;
+		}
+		else if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveBackward)) //backward
+		{
+			move.y = -1;
+		}
+		if (abs(move.y) < epsilon)
+		{
+			move.y = sceneContext.pInput->GetThumbstickPosition(true).y;
+		}
 
 		//move.x should contain a 1 (Right) or -1 (Left) based on the active input (check corresponding actionId in m_CharacterDesc)
 		//Optional: if move.x is near zero (abs(move.x) < epsilon), you could use the Left ThumbStickPosition.x for movement
 
 		//## Input Gathering (look)
-		//XMFLOAT2 look{ 0.f, 0.f }; //Uncomment
+		XMFLOAT2 look{ 0.f, 0.f }; //Uncomment
 		//Only if the Left Mouse Button is Down >
 			// Store the MouseMovement in the local 'look' variable (cast is required)
 		//Optional: in case look.x AND look.y are near zero, you could use the Right ThumbStickPosition for look
+
+		if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveRight)) //right
+		{
+			move.x = 1;
+		}
+		else if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveLeft)) //left
+		{
+			move.x = -1;
+		}
+		if (abs(move.x) < epsilon)
+		{
+			move.x = sceneContext.pInput->GetThumbstickPosition(true).x;
+		}
 
 		//************************
 		//GATHERING TRANSFORM INFO
@@ -68,11 +96,31 @@ void Character::Update(const SceneContext& /*sceneContext*/)
 		//Else (character is not moving, or stopped moving)
 			//Decrease the current MoveSpeed with the current Acceleration (m_MoveSpeed)
 			//Make sure the current MoveSpeed doesn't get smaller than zero
+		m_MoveAcceleration += m_MoveAcceleration * elapsedTime;
+		if (abs(move.x) > epsilon || abs(move.y) > epsilon)
+		{
+
+			m_MoveSpeed += m_MoveAcceleration * elapsedTime;
+			if (m_MoveSpeed > m_CharacterDesc.maxMoveSpeed)
+			{
+				m_MoveSpeed = m_CharacterDesc.maxMoveSpeed;
+			}
+		}
+		else
+		{
+			m_MoveSpeed -= m_MoveAcceleration * elapsedTime;
+			if (m_MoveSpeed < epsilon)
+			{
+				m_MoveSpeed = 0;
+			}
+		}
 
 		//Now we can calculate the Horizontal Velocity which should be stored in m_TotalVelocity.xz
 		//Calculate the horizontal velocity (m_CurrentDirection * MoveSpeed)
 		//Set the x/z component of m_TotalVelocity (horizontal_velocity x/z)
 		//It's important that you don't overwrite the y component of m_TotalVelocity (contains the vertical velocity)
+		m_TotalVelocity.x = m_CurrentDirection.x * m_MoveSpeed;
+		m_TotalVelocity.z = m_CurrentDirection.z * m_MoveSpeed;
 
 		//## Vertical Movement (Jump/Fall)
 		//If the Controller Component is NOT grounded (= freefall)
