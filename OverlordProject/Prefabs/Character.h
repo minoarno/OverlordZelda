@@ -53,6 +53,7 @@ private:
 	ControllerComponent* m_pControllerComponent{};
 
 	CharacterDesc m_CharacterDesc;
+	float m_MinPitch{-70}, m_MaxPitch{70};			
 	float m_TotalPitch{}, m_TotalYaw{};				//Total camera Pitch(X) and Yaw(Y) rotation
 	float m_MoveAcceleration{},						//Acceleration required to reach maxMoveVelocity after 1 second (maxMoveVelocity / moveAccelerationTime)
 		m_FallAcceleration{},						//Acceleration required to reach maxFallVelocity after 1 second (maxFallVelocity / fallAccelerationTime)
