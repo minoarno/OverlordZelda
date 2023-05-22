@@ -67,10 +67,11 @@ void PostProcessingScene::Initialize()
 	AddPostProcessingEffect(m_pPostBlur);
 
 	auto pSprite = new GameObject();
-	pSprite->AddComponent(new SpriteComponent(L"Textures/TestSprite.jpg", { 0.5f,0.5f }, { 1.f,1.f,1.f,.5f }));
+	pSprite->AddComponent(new SpriteComponent(L"Textures/TestSprite.jpg", { 0.5f,0.5f}, { 1.f,1.f,1.f,.5f }));
+
 	AddChild(pSprite);
 
-	pSprite->GetTransform()->Translate(m_SceneContext.windowWidth / 2.f, m_SceneContext.windowHeight / 2.f, .9f);
+	pSprite->GetTransform()->Translate(m_SceneContext.windowWidth / 2.f, m_SceneContext.windowHeight / 2.f, 0.f);
 	pSprite->GetTransform()->Scale(1.f, 1.f, 1.f);
 }
 
