@@ -4,7 +4,8 @@
 
 ID3D11ShaderResourceView* DepthRenderer::GetRenderTarget() const
 {
-	return m_GameContext.pGame->GetRenderTarget()->GetDepthShaderResourceView();
+	return nullptr;
+	//return m_GameContext.pGame->GetRenderTarget()->GetDepthShaderResourceView();
 }
 
 void DepthRenderer::Initialize()
