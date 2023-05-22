@@ -21,7 +21,7 @@ void Level1::Initialize()
 	const auto pDefaultMaterial = physX->createMaterial(1.f, 1.f, 0.f);
 
 	AddLevel(pDefaultMaterial);
-	//AddPlayer(pDefaultMaterial);
+	AddPlayer(pDefaultMaterial);
 
 	AddSea();
 }
@@ -58,12 +58,13 @@ void Level1::AddPlayer(PxMaterial* pDefaultMaterial)
 
 void Level1::AddLevel(PxMaterial* pDefaultMaterial)
 {
-	GameObject* pGameObject = AddChild(new GameObject());
+	GameObject* pGameObject = new GameObject();
 	ModelComponent* pModelComponent = pGameObject->AddComponent(new ModelComponent(L"Meshes/Zelda/SmallIsland.ovm"));
 
 	const auto pTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Zelda/SmallIsland.ovpt");
 	auto pRigidBody = pGameObject->AddComponent(new RigidBodyComponent{ true });
 	pRigidBody->AddCollider(PxTriangleMeshGeometry{ pTriangleMesh }, *pDefaultMaterial);
+	pRigidBody->GetTransform()->Scale(2);
 
 	AddLevelObject(pModelComponent, 0, L"Woods");
 	AddLevelObject(pModelComponent, 1, L"Roofs");
@@ -73,6 +74,9 @@ void Level1::AddLevel(PxMaterial* pDefaultMaterial)
 	AddLevelObject(pModelComponent, 5, L"BigRocks");
 	AddLevelObject(pModelComponent, 6, L"Grass");
 	AddLevelObject(pModelComponent, 7, L"RandomRocks");
+
+	pGameObject->GetTransform()->Scale(2);
+	AddChild(pGameObject);
 }
 
 void Level1::AddLevelObject(ModelComponent* pModelComponent, UINT8 id, const std::wstring& filename)

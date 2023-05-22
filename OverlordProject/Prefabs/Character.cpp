@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Character.h"
-
+#include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
 Character::Character(const CharacterDesc& characterDesc) :
 	m_CharacterDesc{ characterDesc },
 	m_MoveAcceleration(characterDesc.maxMoveSpeed / characterDesc.moveAccelerationTime),
@@ -17,7 +17,29 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	m_pCameraComponent = pCamera->GetComponent<CameraComponent>();
 	m_pCameraComponent->SetActive(true); //Uncomment to make this camera the active camera
 
-	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * .5f, 0.f);
+	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * 1.5f, -5.f);
+
+	m_pVisuals = AddChild(new GameObject{});
+	auto pModel = m_pVisuals->AddComponent(new ModelComponent(L"Meshes/Zelda/Link.ovm"));
+	auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/body.png");
+	pModel->SetMaterial(pSkinnedMaterial, 0);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/mouth1.png");
+	pModel->SetMaterial(pSkinnedMaterial, 1);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/pupil.png");
+	pModel->SetMaterial(pSkinnedMaterial, 2);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/eye1.png");
+	pModel->SetMaterial(pSkinnedMaterial, 3);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/eyebrow1.png");
+	pModel->SetMaterial(pSkinnedMaterial, 4);
+
+	m_pVisuals->GetTransform()->Scale(0.0001f);
+	m_pVisuals->GetTransform()->Rotate(0, 90, 0);
+	m_pVisuals->GetTransform()->Translate(0, -m_CharacterDesc.controller.height * .5f, 0);
 }
 
 void Character::Update(const SceneContext& sceneContext)

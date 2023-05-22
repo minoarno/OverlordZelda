@@ -17,14 +17,28 @@ void HardwareSkinningScene::Initialize()
 {
 	m_SceneContext.settings.enableOnGUI = true;
 
-	const auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
-	pSkinnedMaterial->SetDiffuseTexture(L"Textures/PeasantGirl_Diffuse.png");
+
 
 	const auto pObject = AddChild(new GameObject);
-	const auto pModel = pObject->AddComponent(new ModelComponent(L"Meshes/PeasantGirl.ovm"));
-	pModel->SetMaterial(pSkinnedMaterial);
+	const auto pModel = pObject->AddComponent(new ModelComponent(L"Meshes/Zelda/Link.ovm"));
+	auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
+	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/body.png");
+	pModel->SetMaterial(pSkinnedMaterial,0);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
+	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/mouth1.png");
+	pModel->SetMaterial(pSkinnedMaterial, 1);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
+	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/pupil.png");
+	pModel->SetMaterial(pSkinnedMaterial, 2);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
+	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/eye1.png");
+	pModel->SetMaterial(pSkinnedMaterial, 3);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
+	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/eyebrow1.png");
+	pModel->SetMaterial(pSkinnedMaterial, 4);
 
-	pObject->GetTransform()->Scale(0.15f);
+
+	pObject->GetTransform()->Scale(0.005f);
 
 	pAnimator = pModel->GetAnimator();
 	pAnimator->SetAnimation(m_AnimationClipId);

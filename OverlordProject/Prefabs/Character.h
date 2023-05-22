@@ -52,6 +52,7 @@ private:
 	CameraComponent* m_pCameraComponent{};
 	ControllerComponent* m_pControllerComponent{};
 
+	GameObject* m_pVisuals;
 	CharacterDesc m_CharacterDesc;
 	float m_MinPitch{-70}, m_MaxPitch{70};			
 	float m_TotalPitch{}, m_TotalYaw{};				//Total camera Pitch(X) and Yaw(Y) rotation
