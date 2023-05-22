@@ -52,4 +52,3 @@ private:
 	static int const NUM_TYPES{ 2 };
 	MaterialTechniqueContext m_GeneratorTechniqueContexts[NUM_TYPES];
 };
-

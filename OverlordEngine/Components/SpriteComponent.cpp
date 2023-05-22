@@ -12,6 +12,11 @@ void SpriteComponent::Initialize(const SceneContext& /*sceneContext*/)
 	m_pTexture = ContentManager::Load<TextureData>(m_SpriteAsset);
 }
 
+const XMFLOAT2& SpriteComponent::GetDimensions() const
+{
+	return m_pTexture->GetDimension();
+}
+
 void SpriteComponent::SetTexture(const std::wstring& spriteAsset)
 {
 	m_SpriteAsset = spriteAsset;
@@ -20,7 +25,7 @@ void SpriteComponent::SetTexture(const std::wstring& spriteAsset)
 
 void SpriteComponent::Draw(const SceneContext& sceneContext)
 {
-	if (!m_pTexture)
+	if (!m_pTexture || !m_IsActive)
 		return;
 
 	//Here you need to draw the SpriteComponent using the Draw of the sprite renderer

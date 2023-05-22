@@ -93,6 +93,11 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Prefabs\UI\Button.cpp" />
+    <ClCompile Include="Prefabs\UI\HUD.cpp" />
+    <ClCompile Include="Prefabs\UI\Text.cpp" />
+    <ClCompile Include="Scenes\Game\Level1.cpp" />
+    <ClCompile Include="Scenes\Game\MainMenu.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial_Skinned.cpp" />
     <ClCompile Include="Materials\Post\PostGrayscale.cpp" />
@@ -120,6 +125,7 @@
     <ClCompile Include="Scenes\Week 7\PickingScene.cpp" />
     <ClCompile Include="Scenes\Week 8\ShadowMappingScene.cpp" />
     <ClCompile Include="Scenes\Week 9\ParticleScene.cpp" />
+    <ClCompile Include="Materials\SeaMaterial.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
@@ -143,6 +149,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Prefabs\UI\Button.h" />
+    <ClInclude Include="Prefabs\UI\HUD.h" />
+    <ClInclude Include="Prefabs\UI\Text.h" />
+    <ClInclude Include="Scenes\Game\Level1.h" />
+    <ClInclude Include="Scenes\Game\MainMenu.h" />
     <ClInclude Include="Materials\DiffuseMaterial.h" />
     <ClInclude Include="Materials\DiffuseMaterial_Skinned.h" />
     <ClInclude Include="Materials\Post\PostGrayscale.h" />
@@ -172,6 +183,7 @@
     <ClInclude Include="Scenes\Week 7\PickingScene.h" />
     <ClInclude Include="Scenes\Week 8\ShadowMappingScene.h" />
     <ClInclude Include="Scenes\Week 9\ParticleScene.h" />
+    <ClInclude Include="Materials\SeaMaterial.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Scenes\Week 4\UberMaterialScene.h" />

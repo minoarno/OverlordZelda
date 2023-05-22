@@ -13,17 +13,21 @@ public:
 	SpriteComponent& operator=(SpriteComponent&& other) noexcept = delete;
 
 	const XMFLOAT2& GetPivot() const { return m_Pivot; }
+	const XMFLOAT2& GetDimensions() const;
 	const XMFLOAT4& GetColor() const { return m_Color; }
 
 	void SetPivot(const XMFLOAT2& pivot) { m_Pivot = pivot; }
 	void SetColor(const XMFLOAT4& color) { m_Color = color; }
 	void SetTexture(const std::wstring& spriteAsset);
 
+	void SetActive(bool value) { m_IsActive = value; };
 protected:
 	void Initialize(const SceneContext& sceneContext) override;
 	void Draw(const SceneContext& sceneContext) override;
 
 private:
+	bool m_IsActive{ true };
+
 	TextureData* m_pTexture{};
 	std::wstring m_SpriteAsset{};
 	XMFLOAT2 m_Pivot{};
