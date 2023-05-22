@@ -132,8 +132,8 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
     float4 finalColor = gWaterColor + gRippleColor * pow(voronoi, gRippleSlimness);
     
     float depthFade = DepthFade(input);
-    //return float4(depthFade,depthFade,depthFade,1);
-    return finalColor;
+    return float4(depthFade,depthFade,depthFade,1);
+    //return finalColor;
 }
 
 //--------------------------------------------------------------------------------------

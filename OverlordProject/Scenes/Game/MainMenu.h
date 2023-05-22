@@ -1,5 +1,6 @@
 #pragma once
 
+class Button;
 class MainMenu : public GameScene
 {
 public:
@@ -12,4 +13,5 @@ public:
 
 protected:
 	virtual void Initialize() override;
+	std::vector<Button*> m_pButtons;
 };

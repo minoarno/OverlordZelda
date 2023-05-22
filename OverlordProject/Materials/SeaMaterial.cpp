@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SeaMaterial.h"
+#include "Graphics/DepthRenderer.h"
 
 SeaMaterial::SeaMaterial()
 	: Material{ L"Effects/Zelda/SeaMaterial.fx" }
@@ -87,5 +88,5 @@ void SeaMaterial::OnUpdateModelVariables(const SceneContext& sceneContext, const
 
 	//sceneContext.
 
-	//SetVariable_Texture(L"gDepthBuffer", ActiveRenderer::Get()->GetRenderTarget());
+	SetVariable_Texture(L"gDepthBuffer", DepthRenderer::Get()->GetRenderTarget());
 }

@@ -1,11 +1,15 @@
 #include "stdafx.h"
 #include "FontTestScene.h"
-
+#include "Materials/Post/PostGrayscale.h"
 void FontTestScene::Initialize()
 {
 	m_SceneContext.settings.enableOnGUI = true;
 	m_SceneContext.settings.drawGrid = false;
 	m_SceneContext.settings.clearColor = XMFLOAT4{ 0.f,0.f,0.f,0.f };
+
+	auto pPostBlur = MaterialManager::Get()->CreateMaterial<PostGrayscale>();
+
+	AddPostProcessingEffect(pPostBlur);
 
 	m_pFont = ContentManager::Load<SpriteFont>(L"SpriteFonts/Consolas_32.fnt");
 }

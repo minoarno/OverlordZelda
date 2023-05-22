@@ -49,7 +49,7 @@ void HUD::SetAmountOfHearts(int amount)
 
 	for (size_t i = 0; i < m_pHearts.size(); i++)
 	{
-		m_pHearts[i]->SetActive(m_AmountOfHearts > i);
+		//m_pHearts[i]->SetActive(m_AmountOfHearts > i);
 	}
 }
 
