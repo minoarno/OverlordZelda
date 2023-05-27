@@ -23,7 +23,7 @@ void SpriteComponent::SetTexture(const std::wstring& spriteAsset)
 	m_pTexture = ContentManager::Load<TextureData>(m_SpriteAsset);
 }
 
-void SpriteComponent::Draw(const SceneContext& sceneContext)
+void SpriteComponent::Draw(const SceneContext& )
 {
 	if (!m_pTexture || !m_IsActive)
 		return;
@@ -43,6 +43,4 @@ void SpriteComponent::Draw(const SceneContext& sceneContext)
 		MathHelper::QuaternionToEuler(transform->GetRotation()).z,
 		transform->GetPosition().z
 	);
-
-	SpriteRenderer::Get()->Draw(sceneContext);
 }
