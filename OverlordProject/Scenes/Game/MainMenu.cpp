@@ -10,14 +10,14 @@ MainMenu::MainMenu()
 
 void MainMenu::Initialize()
 {
-	//auto pButton = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonActivated.png",[&]() 
-	//	{
-	//		OverlordGame::
-	//	} });
-	//m_pButtons.emplace_back(pButton);
-	//
-	//pButton = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonNormal.png",[&]() {
-	//	SceneManager::Get()->SetActiveGameScene(L"Level1");
-	//	} });
-	//m_pButtons.emplace_back(pButton);
+	auto pButton = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonActivated.png",[&]() 
+		{
+			OverlordGame::Stop();
+		} });
+	m_pButtons.emplace_back(pButton);
+	
+	pButton = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonNormal.png",[&]() {
+		SceneManager::Get()->SetActiveGameScene(L"Level1");
+		} });
+	m_pButtons.emplace_back(pButton);
 }
