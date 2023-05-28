@@ -28,7 +28,7 @@ void Level1::Initialize()
 
 void Level1::AddPlayer(PxMaterial* pDefaultMaterial)
 {
-	CharacterDesc characterDesc{ pDefaultMaterial, .25f,1.f };
+	CharacterDesc characterDesc{ pDefaultMaterial, .25f,.4f };
 	characterDesc.actionId_MoveForward = CharacterMoveForward;
 	characterDesc.actionId_MoveBackward = CharacterMoveBackward;
 	characterDesc.actionId_MoveLeft = CharacterMoveLeft;
@@ -58,13 +58,14 @@ void Level1::AddPlayer(PxMaterial* pDefaultMaterial)
 
 void Level1::AddLevel(PxMaterial* pDefaultMaterial)
 {
+	float scale = 2;
+
 	GameObject* pGameObject = new GameObject();
 	ModelComponent* pModelComponent = pGameObject->AddComponent(new ModelComponent(L"Meshes/Zelda/SmallIsland.ovm"));
 
 	const auto pTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Zelda/SmallIsland.ovpt");
 	auto pRigidBody = pGameObject->AddComponent(new RigidBodyComponent{ true });
-	pRigidBody->AddCollider(PxTriangleMeshGeometry{ pTriangleMesh }, *pDefaultMaterial);
-	pRigidBody->GetTransform()->Scale(2);
+	pRigidBody->AddCollider(PxTriangleMeshGeometry{ pTriangleMesh, physx::PxMeshScale{ scale } }, *pDefaultMaterial);
 
 	AddLevelObject(pModelComponent, 0, L"Woods");
 	AddLevelObject(pModelComponent, 1, L"Roofs");
@@ -75,7 +76,7 @@ void Level1::AddLevel(PxMaterial* pDefaultMaterial)
 	AddLevelObject(pModelComponent, 6, L"Grass");
 	AddLevelObject(pModelComponent, 7, L"RandomRocks");
 
-	pGameObject->GetTransform()->Scale(2);
+	pGameObject->GetTransform()->Scale(scale);
 	AddChild(pGameObject);
 }
 

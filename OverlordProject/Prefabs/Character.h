@@ -34,6 +34,16 @@ struct CharacterDesc
 class Character : public GameObject
 {
 public:
+	enum CharacterAnimation : uint8_t
+	{
+		Idle = 0,
+		Dying = 1,
+		Throwing = 4,
+		Running = 5,
+		Jumping = 6,
+		Climbing = 7
+	};
+
 	Character(const CharacterDesc& characterDesc);
 	~Character() override = default;
 
@@ -52,7 +62,15 @@ private:
 	CameraComponent* m_pCameraComponent{};
 	ControllerComponent* m_pControllerComponent{};
 
+	//Visuals
 	GameObject* m_pVisuals;
+	ModelAnimator* m_pAnimator{};
+
+	int m_AnimationClipId{ 0 };
+	float m_AnimationSpeed{ 1.f };
+
+	CharacterAnimation m_CharacterState{ CharacterAnimation::Idle };
+
 	CharacterDesc m_CharacterDesc;
 	float m_MinPitch{-70}, m_MaxPitch{70};			
 	float m_TotalPitch{}, m_TotalYaw{};				//Total camera Pitch(X) and Yaw(Y) rotation

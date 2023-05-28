@@ -21,7 +21,7 @@ void ShadowMapRenderer::Initialize()
 	renderTargetDesc.enableColorBuffer = false;
 	renderTargetDesc.enableDepthSRV = true;
 	renderTargetDesc.width = m_GameContext.windowWidth;
-	renderTargetDesc.height = m_GameContext.windowHeight;;
+	renderTargetDesc.height = m_GameContext.windowHeight;
 
 	auto hr = m_pShadowRenderTarget->Create(renderTargetDesc);
 	if (!FAILED(hr))

@@ -1,7 +1,7 @@
 #pragma once
 
 class Button;
-class MainMenu : public GameScene
+class MainMenu final : public GameScene
 {
 public:
 	MainMenu();
@@ -12,6 +12,7 @@ public:
 	~MainMenu() = default;
 
 protected:
-	virtual void Initialize() override;
+	void Initialize() override;
+	void Update() override;
 	std::vector<Button*> m_pButtons;
 };

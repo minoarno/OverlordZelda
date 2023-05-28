@@ -17,7 +17,8 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	m_pCameraComponent = pCamera->GetComponent<CameraComponent>();
 	m_pCameraComponent->SetActive(true); //Uncomment to make this camera the active camera
 
-	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * 1.5f, -5.f);
+	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * 1.5f, 10.f);
+	pCamera->GetTransform()->Rotate(0, 180, 0);
 
 	m_pVisuals = AddChild(new GameObject{});
 	auto pModel = m_pVisuals->AddComponent(new ModelComponent(L"Meshes/Zelda/Link.ovm"));
@@ -39,7 +40,15 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 
 	m_pVisuals->GetTransform()->Scale(0.0001f);
 	m_pVisuals->GetTransform()->Rotate(0, 90, 0);
-	m_pVisuals->GetTransform()->Translate(0, -m_CharacterDesc.controller.height * .5f, 0);
+	m_pVisuals->GetTransform()->Translate(0, -m_CharacterDesc.controller.height , 0);
+
+	m_pAnimator = pModel->GetAnimator();
+	m_CharacterState = CharacterAnimation::Idle;
+	m_pAnimator->SetAnimation(m_CharacterState);
+	m_pAnimator->SetAnimationSpeed(m_AnimationSpeed);
+	m_pAnimator->Play();
+	
+	SetTag(L"Link");
 }
 
 void Character::Update(const SceneContext& sceneContext)
@@ -119,11 +128,12 @@ void Character::Update(const SceneContext& sceneContext)
 		//Rotate this character based on the TotalPitch (X) and TotalYaw (Y)
 		float elapsedTime = sceneContext.pGameTime->GetElapsed();
 		m_TotalYaw += look.x * m_CharacterDesc.rotationSpeed * elapsedTime;
-		m_TotalPitch -= look.y * m_CharacterDesc.rotationSpeed * elapsedTime;
+		m_TotalPitch += look.y * m_CharacterDesc.rotationSpeed * elapsedTime;
 
 
 		m_TotalPitch = std::clamp(m_TotalPitch, m_MinPitch, m_MaxPitch);
 		GetTransform()->Rotate(m_TotalPitch, m_TotalYaw, 0);
+		m_pVisuals->GetTransform()->Rotate(-m_TotalPitch, 0, 0);
 
 		//********
 		//MOVEMENT
