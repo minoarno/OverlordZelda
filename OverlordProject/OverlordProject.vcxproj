@@ -93,6 +93,8 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Materials\Deferred\BasicMaterial.cpp" />
+    <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred.cpp" />
     <ClCompile Include="Prefabs\UI\Button.cpp" />
     <ClCompile Include="Prefabs\UI\HUD.cpp" />
     <ClCompile Include="Prefabs\UI\Text.cpp" />
@@ -109,6 +111,7 @@
     <ClCompile Include="Prefabs\BoneObject.cpp" />
     <ClCompile Include="Prefabs\Character.cpp" />
     <ClCompile Include="Scenes\Week 10\PostProcessingScene.cpp" />
+    <ClCompile Include="Scenes\Week 11\DeferredRenderingScene.cpp" />
     <ClCompile Include="Scenes\Week 3\MinionScene.cpp" />
     <ClCompile Include="Scenes\Week 6\HardwareSkinningScene.cpp" />
     <ClCompile Include="Scenes\Week 4\ModelTestScene.cpp" />
@@ -149,6 +152,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Materials\Deferred\BasicMaterial.h" />
+    <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred.h" />
     <ClInclude Include="Prefabs\UI\Button.h" />
     <ClInclude Include="Prefabs\UI\HUD.h" />
     <ClInclude Include="Prefabs\UI\Text.h" />
@@ -166,6 +171,7 @@
     <ClInclude Include="Prefabs\BoneObject.h" />
     <ClInclude Include="Prefabs\Character.h" />
     <ClInclude Include="Scenes\Week 10\PostProcessingScene.h" />
+    <ClInclude Include="Scenes\Week 11\DeferredRenderingScene.h" />
     <ClInclude Include="Scenes\Week 3\MinionScene.h" />
     <ClInclude Include="Scenes\Week 5\SkinnedVertex.h" />
     <ClInclude Include="Scenes\Week 6\HardwareSkinningScene.h" />

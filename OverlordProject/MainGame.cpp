@@ -10,12 +10,13 @@
 // #define W8
 // #define W9
 //#define W10
+#define W11
 
 /*MILESTONE Content*/
 // #define MILESTONE_1
 // #define MILESTONE_2
 
-#define ZeldaGame
+//#define ZeldaGame
 
 #pragma region Lab/Milestone Includes
 #ifdef W3
@@ -57,6 +58,10 @@
 
 #ifdef W10
 #include "Scenes/Week 10/PostProcessingScene.h"
+#endif
+
+#ifdef W11
+#include "Scenes/Week 11/DeferredRenderingScene.h"
 #endif
 
 #ifdef MILESTONE_1
@@ -139,6 +144,10 @@ void MainGame::Initialize()
 
 #ifdef W10
 	SceneManager::Get()->AddGameScene(new PostProcessingScene());
+#endif
+
+#ifdef W11
+	SceneManager::Get()->AddGameScene(new DeferredRenderingScene());
 #endif
 
 #ifdef MILESTONE_1

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "GameScene.h"
 
+#include "Deferred/DeferredRenderer.h"
+
 GameScene::GameScene(std::wstring sceneName):
 	m_SceneName(std::move(sceneName))
 {
@@ -169,6 +171,10 @@ void GameScene::RootDraw()
 #pragma endregion
 
 #pragma region USER PASS
+
+	//DEFERRED BEGIN
+	DeferredRenderer::Get()->Begin(m_SceneContext);
+
 	//USER_PASS
 	//+++++++++
 	//User-Scene Draw
@@ -180,11 +186,8 @@ void GameScene::RootDraw()
 		pChild->RootDraw(m_SceneContext);
 	}
 
-	//SpriteRenderer Draw
-	SpriteRenderer::Get()->Draw(m_SceneContext);
-
-	//TextRenderer Draw
-	TextRenderer::Get()->Draw(m_SceneContext);
+	//DEFERRED END
+	DeferredRenderer::Get()->End(m_SceneContext);
 
 	//Object-Scene Post-Draw
 	PostDraw();
@@ -240,6 +243,12 @@ void GameScene::RootDraw()
 		//Done!
 	}
 #pragma endregion
+
+	//SpriteRenderer Draw
+	SpriteRenderer::Get()->Draw(m_SceneContext);
+
+	//TextRenderer Draw
+	TextRenderer::Get()->Draw(m_SceneContext);
 }
 
 void GameScene::RootOnSceneActivated()
