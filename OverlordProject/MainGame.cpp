@@ -161,6 +161,7 @@ void MainGame::Initialize()
 #endif
 
 #ifdef ZeldaGame
+	SceneManager::Get()->AddGameScene(new MainMenu());
 	SceneManager::Get()->AddGameScene(new Level1());
 #endif
 }

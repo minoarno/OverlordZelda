@@ -93,11 +93,11 @@ void Level1::AddSea()
 	ModelComponent* pModelComponent = m_pSea->AddComponent(new ModelComponent(L"Meshes/Zelda/Sea.ovm"));
 	m_pSea->GetTransform()->Translate(0, 0.5f, 0);
 	m_pSea->GetTransform()->Rotate(90, 0, 0);
-	m_pSea->GetTransform()->Scale(100);
+	m_pSea->GetTransform()->Scale(1000, 1000, 1);
 	m_pSeaMaterial = MaterialManager::Get()->CreateMaterial<SeaMaterial>();
 	m_pSeaMaterial->SetWaterColor(DirectX::XMFLOAT4{ 0.2006942f, 0.3961588f, 0.7735849f, 1.f });
 	m_pSeaMaterial->SetRippleSpeed(2);
-	m_pSeaMaterial->SetRippleDensity(21);
+	m_pSeaMaterial->SetRippleDensity(359.1f);
 	m_pSeaMaterial->SetRippleSlimness(8);
 	m_pSeaMaterial->SetRippleColor(DirectX::XMFLOAT4{ 0.5506853f, 0.8630115f, 0.9339623f, 1.f });
 	m_pSeaMaterial->SetWaveSpeed(0.1f);
