@@ -51,6 +51,9 @@ void BasicMaterial_Deferred_Shadow::UseTransparency(bool /*enable*/)
 
 void BasicMaterial_Deferred_Shadow::InitializeEffectVariables()
 {
+	SetVariable_Scalar(L"gUseDiffuseMap", false);
+	SetVariable_Scalar(L"gUseNormalMap", false);
+	SetVariable_Scalar(L"gUseSpecularMap", false);
 }
 
 void BasicMaterial_Deferred_Shadow::OnUpdateModelVariables(const SceneContext& sceneContext, const ModelComponent* pModel) const

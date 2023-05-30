@@ -44,7 +44,7 @@ SamplerComparisonState cmpSampler
 RasterizerState gRasterizerState
 {
 	FillMode = SOLID;
-	CullMode = BACK;
+	CullMode = NONE;
 };
 
 BlendState gBlendState
@@ -123,7 +123,7 @@ int gShininess <
 	float UIMin = 1;
 	float UIMax = 100;
 	float UIStep = 0.1f;
-> = 15;
+> = 100;
 
 //AMBIENT
 //*******

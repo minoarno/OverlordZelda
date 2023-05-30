@@ -15,9 +15,9 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	//Camera
 	const auto pCamera = AddChild(new FixedCamera());
 	m_pCameraComponent = pCamera->GetComponent<CameraComponent>();
-	m_pCameraComponent->SetActive(false); //Uncomment to make this camera the active camera
+	m_pCameraComponent->SetActive(true); //Uncomment to make this camera the active camera
 
-	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * 1.5f, 10.f);
+	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * 1.5f, 15.f);
 	pCamera->GetTransform()->Rotate(0, 180, 0);
 
 	m_pVisuals = AddChild(new GameObject{});
@@ -38,9 +38,9 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/eyebrow1.png");
 	pModel->SetMaterial(pSkinnedMaterial, 4);
 
-	m_pVisuals->GetTransform()->Scale(0.0001f);
+	m_pVisuals->GetTransform()->Scale(0.0002f);
 	m_pVisuals->GetTransform()->Rotate(0, 90, 0);
-	m_pVisuals->GetTransform()->Translate(0, -m_CharacterDesc.controller.height , 0);
+	m_pVisuals->GetTransform()->Translate(0, -1.4f, 0);
 
 	m_pAnimator = pModel->GetAnimator();
 	m_CharacterState = CharacterAnimation::Idle;
@@ -251,5 +251,9 @@ void Character::DrawImGui()
 		{
 			m_pCameraComponent->SetActive(isActive);
 		}
+
+		float x = m_pVisuals->GetTransform()->GetPosition().y;
+		ImGui::DragFloat("Visual Offset", &x, 0.1f, 0.f, 0.f, "%.1f");
+		m_pVisuals->GetTransform()->Translate(0, x, 0);
 	}
 }

@@ -8,6 +8,9 @@ BasicMaterial_Deferred_Shadow_Skinned::BasicMaterial_Deferred_Shadow_Skinned()
 
 void BasicMaterial_Deferred_Shadow_Skinned::InitializeEffectVariables()
 {
+	SetVariable_Scalar(L"gUseDiffuseMap", false);
+	SetVariable_Scalar(L"gUseNormalMap", false);
+	SetVariable_Scalar(L"gUseSpecularMap", false);
 }
 
 void BasicMaterial_Deferred_Shadow_Skinned::OnUpdateModelVariables(const SceneContext& sceneContext, const ModelComponent* pModel) const

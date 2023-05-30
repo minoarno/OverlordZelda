@@ -93,6 +93,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Prefabs\Gem.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred_Shadow_Skinned.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred_Shadow.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial.cpp" />
@@ -100,6 +101,7 @@
     <ClCompile Include="Prefabs\UI\Button.cpp" />
     <ClCompile Include="Prefabs\UI\HUD.cpp" />
     <ClCompile Include="Prefabs\UI\Text.cpp" />
+    <ClCompile Include="Prefabs\Rock.cpp" />
     <ClCompile Include="Scenes\Game\Level1.cpp" />
     <ClCompile Include="Scenes\Game\MainMenu.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial.cpp" />
@@ -110,27 +112,14 @@
     <ClCompile Include="Materials\SpikyMaterial.cpp" />
     <ClCompile Include="Materials\UberMaterial.cpp" />
     <ClCompile Include="Materials\Post\PostBlur.cpp" />
-    <ClCompile Include="Prefabs\BoneObject.cpp" />
     <ClCompile Include="Prefabs\Character.cpp" />
-    <ClCompile Include="Scenes\Week 10\PostProcessingScene.cpp" />
     <ClCompile Include="Scenes\Week 11\DeferredRenderingScene.cpp" />
-    <ClCompile Include="Scenes\Week 3\MinionScene.cpp" />
     <ClCompile Include="Scenes\Week 6\HardwareSkinningScene.cpp" />
-    <ClCompile Include="Scenes\Week 4\ModelTestScene.cpp" />
-    <ClCompile Include="Scenes\Week 3\PongScene.cpp" />
-    <ClCompile Include="Prefabs\CubePrefab.cpp" />
-    <ClCompile Include="Prefabs\SpherePrefab.cpp" />
-    <ClCompile Include="Prefabs\TorusPrefab.cpp" />
     <ClCompile Include="Materials\ColorMaterial.cpp" />
-    <ClCompile Include="Scenes\Week 4\SpriteTestScene.cpp" />
-    <ClCompile Include="Scenes\Week 4\SpikyScene.cpp" />
-    <ClCompile Include="Scenes\Week 5\SoftwareSkinningScene_3.cpp" />
-    <ClCompile Include="Scenes\Week 7\CharacterScene.cpp" />
-    <ClCompile Include="Scenes\Week 7\FontTestScene.cpp" />
-    <ClCompile Include="Scenes\Week 7\PickingScene.cpp" />
     <ClCompile Include="Scenes\Week 8\ShadowMappingScene.cpp" />
     <ClCompile Include="Scenes\Week 9\ParticleScene.cpp" />
     <ClCompile Include="Materials\SeaMaterial.cpp" />
+    <ClCompile Include="Materials\SkyBoxMaterial.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
@@ -146,7 +135,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Scenes\Week 4\UberMaterialScene.cpp" />
+    <ClCompile Include="Prefabs\Tree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OverlordEngine\OverlordEngine.vcxproj">
@@ -154,6 +143,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Prefabs\Gem.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred_Shadow_Skinned.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred_Shadow.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial.h" />
@@ -161,6 +151,7 @@
     <ClInclude Include="Prefabs\UI\Button.h" />
     <ClInclude Include="Prefabs\UI\HUD.h" />
     <ClInclude Include="Prefabs\UI\Text.h" />
+    <ClInclude Include="Prefabs\Rock.h" />
     <ClInclude Include="Scenes\Game\Level1.h" />
     <ClInclude Include="Scenes\Game\MainMenu.h" />
     <ClInclude Include="Materials\DiffuseMaterial.h" />
@@ -172,31 +163,17 @@
     <ClInclude Include="Materials\SpikyMaterial.h" />
     <ClInclude Include="Materials\UberMaterial.h" />
     <ClInclude Include="Materials\Post\PostBlur.h" />
-    <ClInclude Include="Prefabs\BoneObject.h" />
     <ClInclude Include="Prefabs\Character.h" />
-    <ClInclude Include="Scenes\Week 10\PostProcessingScene.h" />
     <ClInclude Include="Scenes\Week 11\DeferredRenderingScene.h" />
-    <ClInclude Include="Scenes\Week 3\MinionScene.h" />
-    <ClInclude Include="Scenes\Week 5\SkinnedVertex.h" />
     <ClInclude Include="Scenes\Week 6\HardwareSkinningScene.h" />
-    <ClInclude Include="Scenes\Week 4\ModelTestScene.h" />
-    <ClInclude Include="Scenes\Week 3\PongScene.h" />
-    <ClInclude Include="Prefabs\CubePrefab.h" />
-    <ClInclude Include="Prefabs\SpherePrefab.h" />
-    <ClInclude Include="Prefabs\TorusPrefab.h" />
     <ClInclude Include="Materials\ColorMaterial.h" />
-    <ClInclude Include="Scenes\Week 4\SpriteTestScene.h" />
-    <ClInclude Include="Scenes\Week 4\SpikyScene.h" />
-    <ClInclude Include="Scenes\Week 5\SoftwareSkinningScene_3.h" />
-    <ClInclude Include="Scenes\Week 7\CharacterScene.h" />
-    <ClInclude Include="Scenes\Week 7\FontTestScene.h" />
-    <ClInclude Include="Scenes\Week 7\PickingScene.h" />
     <ClInclude Include="Scenes\Week 8\ShadowMappingScene.h" />
     <ClInclude Include="Scenes\Week 9\ParticleScene.h" />
     <ClInclude Include="Materials\SeaMaterial.h" />
+    <ClInclude Include="Materials\SkyBoxMaterial.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
-    <ClInclude Include="Scenes\Week 4\UberMaterialScene.h" />
+    <ClInclude Include="Prefabs\Tree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

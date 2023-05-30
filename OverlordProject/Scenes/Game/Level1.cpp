@@ -1,8 +1,15 @@
 #include "stdafx.h"
 #include "Level1.h"
-#include "Materials/DiffuseMaterial.h"
+#include "Materials/Shadow/DiffuseMaterial_Shadow.h"
+#include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
+#include "Materials/Deferred/BasicMaterial_Deferred_Shadow.h"
+#include "Materials/Deferred/BasicMaterial_Deferred_Shadow_Skinned.h"
+#include "Materials/SkyBoxMaterial.h"
 #include "Materials/SeaMaterial.h"
 #include "Prefabs/Character.h"
+#include "Prefabs/Tree.h"
+#include "Prefabs/Rock.h"
+#include "Prefabs/Gem.h"
 
 Level1::Level1()
 	: GameScene{L"Level1"}
@@ -15,7 +22,8 @@ Level1::Level1()
 void Level1::Initialize()
 {
 	m_SceneContext.settings.drawGrid = false;
-	m_SceneContext.settings.enableOnGUI = true;
+	m_SceneContext.settings.enableOnGUI = false;
+	m_SceneContext.useDeferredRendering = false;
 
 	auto physX = PhysXManager::Get()->GetPhysics();
 	const auto pDefaultMaterial = physX->createMaterial(1.f, 1.f, 0.f);
@@ -24,11 +32,12 @@ void Level1::Initialize()
 	AddPlayer(pDefaultMaterial);
 
 	AddSea();
+	AddSkyBox();
 }
 
 void Level1::AddPlayer(PxMaterial* pDefaultMaterial)
 {
-	CharacterDesc characterDesc{ pDefaultMaterial, .25f,.4f };
+	CharacterDesc characterDesc{ pDefaultMaterial, .5f,2.f };
 	characterDesc.actionId_MoveForward = CharacterMoveForward;
 	characterDesc.actionId_MoveBackward = CharacterMoveBackward;
 	characterDesc.actionId_MoveLeft = CharacterMoveLeft;
@@ -37,7 +46,6 @@ void Level1::AddPlayer(PxMaterial* pDefaultMaterial)
 
 	m_pCharacter = AddChild(new Character(characterDesc));
 	m_pCharacter->GetTransform()->Translate(0.f, 5.f, 0.f);
-	m_pCharacter->GetTransform()->Scale(0.5f);
 
 	//Input
 	auto inputAction = InputAction(CharacterMoveLeft, InputState::down, 'A');
@@ -78,13 +86,51 @@ void Level1::AddLevel(PxMaterial* pDefaultMaterial)
 
 	pGameObject->GetTransform()->Scale(scale);
 	AddChild(pGameObject);
+
+	AddTree({ 0,0,0 }, pDefaultMaterial);
+	AddTree({ 0,0,0 }, pDefaultMaterial);
+	AddTree({ 0,0,0 }, pDefaultMaterial);
+}
+
+void Level1::AddTree(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+{
+	Tree* pTree = AddChild(new Tree{ pDefaultMaterial });
+	pTree->GetTransform()->Translate(position);
 }
 
 void Level1::AddLevelObject(ModelComponent* pModelComponent, UINT8 id, const std::wstring& filename)
 {
-	DiffuseMaterial* pMat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial>();
+	DiffuseMaterial_Shadow* pMat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
 	pMat->SetDiffuseTexture(L"Textures/Zelda/" + filename + L".png");
 	pModelComponent->SetMaterial(pMat, id);
+}
+
+void Level1::ResetScene()
+{
+}
+
+void Level1::AddSmallExplodableRock(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+{
+	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Small", pDefaultMaterial));
+	pRock->GetTransform()->Translate(position);
+}
+
+void Level1::AddMediumExplodableRock(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+{
+	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Medium", pDefaultMaterial));
+	pRock->GetTransform()->Translate(position);
+}
+
+void Level1::AddBigExplodableRock(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+{
+	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Big", pDefaultMaterial));
+	pRock->GetTransform()->Translate(position);
+}
+
+void Level1::AddGem(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+{
+	Gem* pTree = AddChild(new Gem{ pDefaultMaterial });
+	pTree->GetTransform()->Translate(position);
 }
 
 void Level1::AddSea()
@@ -111,13 +157,24 @@ void Level1::AddSea()
 	pModelComponent->SetMaterial(m_pSeaMaterial);
 }
 
+void Level1::AddSkyBox()
+{
+	auto pSky = AddChild(new GameObject());
+	auto pModel = pSky->AddComponent(new ModelComponent(L"Meshes/SkyBox.ovm"));
+	auto pMaterial = MaterialManager::Get()->CreateMaterial<SkyBoxMaterial>();
+	pMaterial->SetSkyBoxTexture(L"Textures/SkyDawn.dds");
+	pModel->SetMaterial(pMaterial);
+}
+
 void Level1::OnGUI()
 {
 	m_pSeaMaterial->DrawImGui();
 
-	auto curPos = m_pSea->GetTransform()->GetWorldPosition();
-	float pos[3]{ curPos.x, curPos.y, curPos.z };
+	//auto curPos = m_pSea->GetTransform()->GetWorldPosition();
+	//float pos[3]{ curPos.x, curPos.y, curPos.z };
+	//
+	//ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
+	//m_pSea->GetTransform()->Translate(pos[0], pos[1], pos[2]);
 
-	ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
-	m_pSea->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+	m_pCharacter->DrawImGui();
 }
