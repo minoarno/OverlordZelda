@@ -41,9 +41,9 @@ void BasicMaterial_Deferred::SetSpecularMap(TextureData* pTextureData)
 	SetVariable_Texture(L"gSpecularMap", pTextureData);
 }
 
-void BasicMaterial_Deferred::UseTransparency(bool /*enable*/)
+void BasicMaterial_Deferred::UseTransparency(bool enable)
 {
-	//SetTechnique(enable ? L"Default_Alpha" : L"Default");
+	SetTechnique(enable ? L"Default_Alpha" : L"Default");
 }
 
 void BasicMaterial_Deferred::InitializeEffectVariables()

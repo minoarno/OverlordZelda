@@ -123,6 +123,7 @@ float4 MainPS(GS_DATA input) : SV_TARGET {
 	
 	//Simple Texture Sampling
 	float4 result = gParticleTexture.Sample(samPoint,input.TexCoord);
+    clip(result.a - .1f);
 	return input.Color * result;
 }
 

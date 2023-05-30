@@ -3,6 +3,7 @@
 
 #include "Materials/Deferred/BasicMaterial.h"
 #include "Materials/Deferred/BasicMaterial_Deferred.h"
+#include "Materials/Deferred/BasicMaterial_Deferred_Shadow.h"
 
 #define FULL_SPONZA
 
@@ -128,7 +129,7 @@ void DeferredRenderingScene::LoadSponzaMesh(const std::wstring& meshName, const 
 	{
 		//BASIC-EFFECT_DEFERRED
 		//*********************
-		const auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred>();
+		const auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
 		pModel->SetMaterial(pMaterial);
 		pMaterial->UseTransparency(useTransparency);
 
