@@ -22,6 +22,9 @@ float4x4 gViewInverse : VIEWINVERSE;
 // The World Matrix
 float4x4 gWorld : WORLD;
 
+//BONES
+float4x4 gBones[70];
+
 //SHADOW MAP VARIABLES
 float4x4 gWorldViewProj_Light;
 float gShadowMapBias = 0.01f;
@@ -44,7 +47,7 @@ SamplerComparisonState cmpSampler
 RasterizerState gRasterizerState
 {
 	FillMode = SOLID;
-	CullMode = BACK;
+	CullMode = NONE;
 };
 
 BlendState gBlendState
@@ -123,7 +126,7 @@ int gShininess <
 	float UIMin = 1;
 	float UIMax = 100;
 	float UIStep = 0.1f;
-> = 15;
+> = 100;
 
 //AMBIENT
 //*******
@@ -180,6 +183,8 @@ struct VS_Input
 	float3 Tangent: TANGENT;
 	float3 Binormal: BINORMAL;
 	float2 TexCoord: TEXCOORD0;
+    float4 BoneIndices : BLENDINDICES;
+    float4 BoneWeights : BLENDWEIGHTS;
 };
 
 struct VS_Output
@@ -205,15 +210,40 @@ VS_Output MainVS(VS_Input input) {
 
 	VS_Output output = (VS_Output)0;
 
-	output.Position = mul(float4(input.Position, 1.0), gWorldViewProj);
+    float4 originalPosition = float4(input.Position, 1.0f);
+    float4 transformedPosition = 0;
+    float3 transformedNormal = 0;
+    float3 transformedTangent = 0;
+    float3 transformedBinormal = 0;
+    float index;
+    for (float i = 0; i < 4; ++i)
+    {
+        index = input.BoneIndices[i];
+        if (index > -1)
+        {
+            transformedPosition += input.BoneWeights[i] * mul(originalPosition, gBones[index]);
+            transformedNormal += input.BoneWeights[i] * mul(input.Normal, (float3x3) gBones[index]);
+            transformedTangent += input.BoneWeights[i] * mul(input.Tangent, (float3x3) gBones[index]);
+            transformedBinormal += input.BoneWeights[i] * mul(input.Binormal, (float3x3) gBones[index]);
+        }
+    }
+    transformedPosition.w = 1;
+	
+	//output.Position = mul(float4(input.Position, 1.0), gWorldViewProj);
+    output.Position = mul(transformedPosition, gWorldViewProj);
+	
+	//output.Normal = normalize(mul(input.Normal, (float3x3)gWorld));
+    //output.Tangent = normalize(mul(input.Tangent, (float3x3) gWorld));
+    //output.Binormal = normalize(mul(input.Binormal, (float3x3) gWorld));
+    output.Normal = normalize(transformedNormal);
+    output.Tangent = normalize(transformedTangent);
+    output.Binormal = normalize(transformedBinormal);
 
-	output.Normal = normalize(mul(input.Normal, (float3x3)gWorld));
-	output.Tangent = normalize(mul(input.Tangent, (float3x3)gWorld));
-	output.Binormal = normalize(mul(input.Binormal, (float3x3)gWorld));
 
 	//store worldspace projected to light clip space with
     //a texcoord semantic to be interpolated across the surface
-    output.lPos = mul(float4(input.Position, 1.0f), gWorldViewProj_Light);
+    //output.lPos = mul(float4(input.Position, 1.0f), gWorldViewProj_Light);
+    output.lPos = mul(transformedPosition, gWorldViewProj_Light);
 	
 	output.TexCoord = input.TexCoord;
 

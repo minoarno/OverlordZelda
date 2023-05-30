@@ -6,6 +6,11 @@ BasicMaterial_Deferred_Shadow::BasicMaterial_Deferred_Shadow()
 {
 }
 
+BasicMaterial_Deferred_Shadow::BasicMaterial_Deferred_Shadow(const std::wstring& effectFile)
+	: Material{ effectFile }
+{
+}
+
 void BasicMaterial_Deferred_Shadow::SetDiffuseMap(const std::wstring& assetFile)
 {
 	SetDiffuseMap(ContentManager::Load<TextureData>(assetFile));
@@ -39,9 +44,9 @@ void BasicMaterial_Deferred_Shadow::SetSpecularMap(TextureData* pTextureData)
 	SetVariable_Texture(L"gSpecularMap", pTextureData);
 }
 
-void BasicMaterial_Deferred_Shadow::UseTransparency(bool enable)
+void BasicMaterial_Deferred_Shadow::UseTransparency(bool /*enable*/)
 {
-	SetTechnique(enable ? L"Default_Alpha" : L"Default");
+	//SetTechnique(enable ? L"Default_Alpha" : L"Default");
 }
 
 void BasicMaterial_Deferred_Shadow::InitializeEffectVariables()

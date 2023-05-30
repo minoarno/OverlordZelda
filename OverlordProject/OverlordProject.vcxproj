@@ -93,6 +93,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred_Shadow_Skinned.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred_Shadow.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred.cpp" />
@@ -153,6 +154,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred_Shadow_Skinned.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred_Shadow.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred.h" />
