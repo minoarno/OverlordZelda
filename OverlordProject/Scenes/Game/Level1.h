@@ -27,6 +27,8 @@ protected:
 
 	void ResetScene();
 
+	void PostDraw() override;
+
 	void OnGUI() override;
 private:
 	enum InputIds
@@ -43,5 +45,9 @@ private:
 	SeaMaterial* m_pSeaMaterial;
 
 	GameObject* m_pObject;
+
+	//Shadow map draw
+	bool m_DrawShadowMap{ false };
+	float m_ShadowMapScale{ 0.3f };
 };
 

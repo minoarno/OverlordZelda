@@ -31,6 +31,9 @@ void Level1::Initialize()
 	m_SceneContext.useDeferredRendering = false;
 #endif
 
+	//m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
+	m_SceneContext.pLights->SetDirectionalLight({ 100,100,0 }, { -100, -100, 0 });
+
 	auto physX = PhysXManager::Get()->GetPhysics();
 	const auto pDefaultMaterial = physX->createMaterial(1.f, 1.f, 0.f);
 
@@ -133,6 +136,15 @@ void Level1::ResetScene()
 {
 }
 
+void Level1::PostDraw()
+{
+	//Draw ShadowMap (Debug Visualization)
+	if (m_DrawShadowMap) {
+
+		ShadowMapRenderer::Get()->Debug_DrawDepthSRV({ m_SceneContext.windowWidth - 10.f, 10.f }, { m_ShadowMapScale, m_ShadowMapScale }, { 1.f,0.f });
+	}
+}
+
 GameObject* Level1::AddSmallExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial)
 {
 	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Small", pDefaultMaterial));
@@ -210,13 +222,23 @@ void Level1::OnGUI()
 {
 	//m_pSeaMaterial->DrawImGui();
 
-	auto curPos = m_pObject->GetTransform()->GetWorldPosition();
-	float pos[3]{ curPos.x, curPos.y, curPos.z };
-	
-	ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
-	m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+	//auto curPos = m_pObject->GetTransform()->GetWorldPosition();
+	//float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
+	//ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
+	//m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
 
 	//m_pCharacter->DrawImGui();
 
-	
+	auto curPos = m_SceneContext.pLights->GetDirectionalLight().position;
+	float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
+	ImGui::DragFloat4("Translation", pos, 0.1f, -1000, 1000);
+	m_SceneContext.pLights->GetDirectionalLight().position = XMFLOAT4{ pos[0], pos[1], pos[2], pos[3] };
+
+	curPos = m_SceneContext.pLights->GetDirectionalLight().direction;
+	float dir[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
+	ImGui::DragFloat4("Direction", dir, 0.1f, -1000, 1000);
+	m_SceneContext.pLights->GetDirectionalLight().direction = XMFLOAT4{ dir[0], dir[1], dir[2], dir[3]};
+
+	ImGui::Checkbox("Draw ShadowMap", &m_DrawShadowMap);
+	ImGui::SliderFloat("ShadowMap Scale", &m_ShadowMapScale, 0.f, 1.f);
 }
