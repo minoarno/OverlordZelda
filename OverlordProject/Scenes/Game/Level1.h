@@ -14,15 +14,15 @@ public:
 protected:
 	void Initialize() override;
 
-	void AddPlayer(PxMaterial* pDefaultMaterial);
-	void AddLevel(PxMaterial* pDefaultMaterial);
-	void AddTree(const XMFLOAT3& position, PxMaterial* pDefaultMaterial);
-	void AddSmallExplodableRock(const XMFLOAT3& position, PxMaterial* pDefaultMaterial);
-	void AddMediumExplodableRock(const XMFLOAT3& position, PxMaterial* pDefaultMaterial);
-	void AddBigExplodableRock(const XMFLOAT3& position, PxMaterial* pDefaultMaterial);
-	void AddGem(const XMFLOAT3& position, PxMaterial* pDefaultMaterial);
-	void AddSea();
-	void AddSkyBox();
+	GameObject* AddPlayer(PxMaterial* pDefaultMaterial);
+	GameObject* AddLevel(PxMaterial* pDefaultMaterial);
+	GameObject* AddTree(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial);
+	GameObject* AddSmallExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial);
+	GameObject* AddMediumExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial);
+	GameObject* AddBigExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial);
+	GameObject* AddGem(const XMFLOAT3& position, PxMaterial* pDefaultMaterial);
+	GameObject* AddSea();
+	GameObject* AddSkyBox();
 	void AddLevelObject(ModelComponent* pModelComponent, UINT8 id, const std::wstring& filename);
 
 	void ResetScene();
@@ -41,5 +41,7 @@ private:
 	Character* m_pCharacter;
 	GameObject* m_pSea;
 	SeaMaterial* m_pSeaMaterial;
+
+	GameObject* m_pObject;
 };
 

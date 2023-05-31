@@ -16,14 +16,20 @@ Level1::Level1()
 	, m_pCharacter{ nullptr }
 	, m_pSea{ nullptr }
 	, m_pSeaMaterial{ nullptr }
+	, m_pObject{ nullptr }
 {
 }
 
 void Level1::Initialize()
 {
 	m_SceneContext.settings.drawGrid = false;
-	m_SceneContext.settings.enableOnGUI = false;
+	m_SceneContext.settings.enableOnGUI = true;
+	m_SceneContext.settings.drawPhysXDebug = false;
+#ifdef Deferred
+	m_SceneContext.useDeferredRendering = true;
+#else
 	m_SceneContext.useDeferredRendering = false;
+#endif
 
 	auto physX = PhysXManager::Get()->GetPhysics();
 	const auto pDefaultMaterial = physX->createMaterial(1.f, 1.f, 0.f);
@@ -35,7 +41,7 @@ void Level1::Initialize()
 	AddSkyBox();
 }
 
-void Level1::AddPlayer(PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddPlayer(PxMaterial* pDefaultMaterial)
 {
 	CharacterDesc characterDesc{ pDefaultMaterial, .5f,2.f };
 	characterDesc.actionId_MoveForward = CharacterMoveForward;
@@ -62,17 +68,19 @@ void Level1::AddPlayer(PxMaterial* pDefaultMaterial)
 
 	inputAction = InputAction(CharacterJump, InputState::pressed, VK_SPACE, -1, XINPUT_GAMEPAD_A);
 	m_SceneContext.pInput->AddInputAction(inputAction);
+
+	return m_pCharacter;
 }
 
-void Level1::AddLevel(PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddLevel(PxMaterial* pDefaultMaterial)
 {
 	float scale = 2;
 
-	GameObject* pGameObject = new GameObject();
-	ModelComponent* pModelComponent = pGameObject->AddComponent(new ModelComponent(L"Meshes/Zelda/SmallIsland.ovm"));
+	GameObject* pLevel = new GameObject();
+	ModelComponent* pModelComponent = pLevel->AddComponent(new ModelComponent(L"Meshes/Zelda/SmallIsland.ovm"));
 
 	const auto pTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Zelda/SmallIsland.ovpt");
-	auto pRigidBody = pGameObject->AddComponent(new RigidBodyComponent{ true });
+	auto pRigidBody = pLevel->AddComponent(new RigidBodyComponent{ true });
 	pRigidBody->AddCollider(PxTriangleMeshGeometry{ pTriangleMesh, physx::PxMeshScale{ scale } }, *pDefaultMaterial);
 
 	AddLevelObject(pModelComponent, 0, L"Woods");
@@ -84,24 +92,40 @@ void Level1::AddLevel(PxMaterial* pDefaultMaterial)
 	AddLevelObject(pModelComponent, 6, L"Grass");
 	AddLevelObject(pModelComponent, 7, L"RandomRocks");
 
-	pGameObject->GetTransform()->Scale(scale);
-	AddChild(pGameObject);
+	pLevel->GetTransform()->Scale(scale);
+	AddChild(pLevel);
 
-	AddTree({ 0,0,0 }, pDefaultMaterial);
-	AddTree({ 0,0,0 }, pDefaultMaterial);
-	AddTree({ 0,0,0 }, pDefaultMaterial);
+	AddTree({ -9.2f,1.1f,-22.5f }, {}, .01f, pDefaultMaterial);
+	AddTree({ -30.8f,-.2f,-4.f }, {0,65,0}, .01f, pDefaultMaterial);
+	AddTree({ -33.1f,3.8f,-4.7f }, {0,135,0}, .01f, pDefaultMaterial);
+	AddTree({ -71.5f,20.f,-23.3f }, {0,190,0}, .01f, pDefaultMaterial);
+	AddTree({ 62.f,3.6f,-17.5f }, {0,-38,0}, .01f, pDefaultMaterial);
+	AddTree({ -3.8f,-0.7f, -4.f }, {0,273,0}, .01f, pDefaultMaterial);
+
+	m_pObject = AddBigExplodableRock({ 0,0,0 }, {}, .01f, pDefaultMaterial);
+
+
+	return pLevel;
 }
 
-void Level1::AddTree(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddTree(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial)
 {
 	Tree* pTree = AddChild(new Tree{ pDefaultMaterial });
 	pTree->GetTransform()->Translate(position);
+	pTree->GetTransform()->Rotate(rotation);
+	pTree->GetTransform()->Scale(scale);
+	return pTree;
 }
 
 void Level1::AddLevelObject(ModelComponent* pModelComponent, UINT8 id, const std::wstring& filename)
 {
+#ifdef Deferred
+	BasicMaterial_Deferred_Shadow* pMat = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
+	pMat->SetDiffuseMap(L"Textures/Zelda/" + filename + L".png");
+#else
 	DiffuseMaterial_Shadow* pMat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
 	pMat->SetDiffuseTexture(L"Textures/Zelda/" + filename + L".png");
+#endif
 	pModelComponent->SetMaterial(pMat, id);
 }
 
@@ -109,31 +133,43 @@ void Level1::ResetScene()
 {
 }
 
-void Level1::AddSmallExplodableRock(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddSmallExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial)
 {
 	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Small", pDefaultMaterial));
 	pRock->GetTransform()->Translate(position);
+	pRock->GetTransform()->Rotate(rotation);
+	pRock->GetTransform()->Scale(scale);
+	return pRock;
 }
 
-void Level1::AddMediumExplodableRock(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddMediumExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial)
 {
 	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Medium", pDefaultMaterial));
 	pRock->GetTransform()->Translate(position);
+	pRock->GetTransform()->Rotate(rotation);
+	pRock->GetTransform()->Scale(scale);
+	return pRock;
 }
 
-void Level1::AddBigExplodableRock(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddBigExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial)
 {
 	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Big", pDefaultMaterial));
 	pRock->GetTransform()->Translate(position);
+	pRock->GetTransform()->Rotate(rotation);
+	pRock->GetTransform()->Scale(scale);
+	return pRock;
 }
 
-void Level1::AddGem(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddGem(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
 {
-	Gem* pTree = AddChild(new Gem{ pDefaultMaterial });
-	pTree->GetTransform()->Translate(position);
+	Gem* pGem = AddChild(new Gem{ pDefaultMaterial });
+	pGem->GetTransform()->Translate(position);
+	pGem->GetTransform()->Rotate(0,static_cast<float>(rand() % 360), 0);
+
+	return pGem;
 }
 
-void Level1::AddSea()
+GameObject* Level1::AddSea()
 {
 	m_pSea = AddChild(new GameObject());
 	ModelComponent* pModelComponent = m_pSea->AddComponent(new ModelComponent(L"Meshes/Zelda/Sea.ovm"));
@@ -155,26 +191,32 @@ void Level1::AddSea()
 	m_pSeaMaterial->SetFoamColor(DirectX::XMFLOAT4{ 1.f,1.f,1.f, 1.f });
 	m_pSeaMaterial->SetPerlinNoise(L"Textures/Zelda/PerlinNoise.jpg");
 	pModelComponent->SetMaterial(m_pSeaMaterial);
+
+	return m_pSea;
 }
 
-void Level1::AddSkyBox()
+GameObject* Level1::AddSkyBox()
 {
 	auto pSky = AddChild(new GameObject());
 	auto pModel = pSky->AddComponent(new ModelComponent(L"Meshes/SkyBox.ovm"));
 	auto pMaterial = MaterialManager::Get()->CreateMaterial<SkyBoxMaterial>();
 	pMaterial->SetSkyBoxTexture(L"Textures/SkyDawn.dds");
 	pModel->SetMaterial(pMaterial);
+
+	return pSky;
 }
 
 void Level1::OnGUI()
 {
-	m_pSeaMaterial->DrawImGui();
+	//m_pSeaMaterial->DrawImGui();
 
-	//auto curPos = m_pSea->GetTransform()->GetWorldPosition();
-	//float pos[3]{ curPos.x, curPos.y, curPos.z };
-	//
-	//ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
-	//m_pSea->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+	auto curPos = m_pObject->GetTransform()->GetWorldPosition();
+	float pos[3]{ curPos.x, curPos.y, curPos.z };
+	
+	ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
+	m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
 
-	m_pCharacter->DrawImGui();
+	//m_pCharacter->DrawImGui();
+
+	
 }

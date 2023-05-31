@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Character.h"
 #include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
+#include "Materials/Deferred/BasicMaterial_Deferred_Shadow_Skinned.h"
 Character::Character(const CharacterDesc& characterDesc) :
 	m_CharacterDesc{ characterDesc },
 	m_MoveAcceleration(characterDesc.maxMoveSpeed / characterDesc.moveAccelerationTime),
@@ -9,6 +10,7 @@ Character::Character(const CharacterDesc& characterDesc) :
 
 void Character::Initialize(const SceneContext& /*sceneContext*/)
 {
+
 	//Controller
 	m_pControllerComponent = AddComponent(new ControllerComponent(m_CharacterDesc.controller));
 
@@ -19,9 +21,26 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 
 	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * 1.5f, 15.f);
 	pCamera->GetTransform()->Rotate(0, 180, 0);
-
+	
 	m_pVisuals = AddChild(new GameObject{});
 	auto pModel = m_pVisuals->AddComponent(new ModelComponent(L"Meshes/Zelda/Link.ovm"));
+#ifdef Deferred
+	auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow_Skinned>();
+	pSkinnedMaterial->SetDiffuseMap(L"Textures/Zelda/body.png");
+	pModel->SetMaterial(pSkinnedMaterial, 0);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow_Skinned>();
+	pSkinnedMaterial->SetDiffuseMap(L"Textures/Zelda/mouth1.png");
+	pModel->SetMaterial(pSkinnedMaterial, 1);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow_Skinned>();
+	pSkinnedMaterial->SetDiffuseMap(L"Textures/Zelda/pupil.png");
+	pModel->SetMaterial(pSkinnedMaterial, 2);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow_Skinned>();
+	pSkinnedMaterial->SetDiffuseMap(L"Textures/Zelda/eye1.png");
+	pModel->SetMaterial(pSkinnedMaterial, 3);
+	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow_Skinned>();
+	pSkinnedMaterial->SetDiffuseMap(L"Textures/Zelda/eyebrow1.png");
+	pModel->SetMaterial(pSkinnedMaterial, 4);
+#else
 	auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
 	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/body.png");
 	pModel->SetMaterial(pSkinnedMaterial, 0);
@@ -37,6 +56,7 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
 	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/eyebrow1.png");
 	pModel->SetMaterial(pSkinnedMaterial, 4);
+#endif
 
 	m_pVisuals->GetTransform()->Scale(0.0002f);
 	m_pVisuals->GetTransform()->Rotate(0, 90, 0);
@@ -46,7 +66,7 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	m_CharacterState = CharacterAnimation::Idle;
 	m_pAnimator->SetAnimation(m_CharacterState);
 	m_pAnimator->SetAnimationSpeed(m_AnimationSpeed);
-	m_pAnimator->Play();
+	m_pAnimator->Play(); 
 	
 	SetTag(L"Link");
 }

@@ -93,6 +93,8 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Prefabs\BombSpawner.cpp" />
+    <ClCompile Include="Prefabs\Bomb.cpp" />
     <ClCompile Include="Prefabs\Gem.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred_Shadow_Skinned.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred_Shadow.cpp" />
@@ -143,6 +145,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Prefabs\BombSpawner.h" />
+    <ClInclude Include="Prefabs\Bomb.h" />
     <ClInclude Include="Prefabs\Gem.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred_Shadow_Skinned.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred_Shadow.h" />

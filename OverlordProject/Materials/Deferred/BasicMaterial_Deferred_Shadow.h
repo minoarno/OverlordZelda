@@ -3,7 +3,6 @@ class BasicMaterial_Deferred_Shadow : public Material<BasicMaterial_Deferred_Sha
 {
 public:
 	BasicMaterial_Deferred_Shadow();
-	BasicMaterial_Deferred_Shadow(const std::wstring& effectFile);
 	~BasicMaterial_Deferred_Shadow() override = default;
 
 	BasicMaterial_Deferred_Shadow(const BasicMaterial_Deferred_Shadow& other) = delete;
@@ -21,7 +20,6 @@ public:
 	void SetSpecularMap(TextureData* pTextureData);
 
 	void UseTransparency(bool enable);
-
 protected:
 	void InitializeEffectVariables() override;
 	void OnUpdateModelVariables(const SceneContext& sceneContext, const ModelComponent* pModel) const;

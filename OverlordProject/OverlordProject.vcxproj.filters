@@ -32,6 +32,8 @@
     <ClCompile Include="Prefabs\Gem.cpp" />
     <ClCompile Include="Materials\SkyBoxMaterial.cpp" />
     <ClCompile Include="Prefabs\Rock.cpp" />
+    <ClCompile Include="Prefabs\Bomb.cpp" />
+    <ClCompile Include="Prefabs\BombSpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -65,5 +67,7 @@
     <ClInclude Include="Prefabs\Gem.h" />
     <ClInclude Include="Materials\SkyBoxMaterial.h" />
     <ClInclude Include="Prefabs\Rock.h" />
+    <ClInclude Include="Prefabs\Bomb.h" />
+    <ClInclude Include="Prefabs\BombSpawner.h" />
   </ItemGroup>
 </Project>

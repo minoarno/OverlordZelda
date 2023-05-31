@@ -6,11 +6,6 @@ BasicMaterial_Deferred_Shadow::BasicMaterial_Deferred_Shadow()
 {
 }
 
-BasicMaterial_Deferred_Shadow::BasicMaterial_Deferred_Shadow(const std::wstring& effectFile)
-	: Material{ effectFile }
-{
-}
-
 void BasicMaterial_Deferred_Shadow::SetDiffuseMap(const std::wstring& assetFile)
 {
 	SetDiffuseMap(ContentManager::Load<TextureData>(assetFile));

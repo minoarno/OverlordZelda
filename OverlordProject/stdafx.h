@@ -1,6 +1,8 @@
 #pragma once
 #include <vld.h>
 
+#define Deferred
+
 #pragma region WINDOWS
 //PhysX:you must suppress its definition of the macros min and max, as these are common C++ method names in the SDK
 #define NOMINMAX
