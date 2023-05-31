@@ -39,6 +39,10 @@ void BasicMaterial_Deferred_Shadow_Skinned::SetSpecularMap(TextureData* pTexture
 	SetVariable_Texture(L"gSpecularMap", pTextureData);
 }
 
+void BasicMaterial_Deferred_Shadow_Skinned::UseTransparency(bool )
+{
+}
+
 void BasicMaterial_Deferred_Shadow_Skinned::InitializeEffectVariables()
 {
 	SetVariable_Scalar(L"gUseDiffuseMap", false);
