@@ -50,7 +50,7 @@ GameObject* Level1::AddPlayer(PxMaterial* pDefaultMaterial)
 	characterDesc.actionId_MoveRight = CharacterMoveRight;
 	characterDesc.actionId_Jump = CharacterJump;
 
-	m_pCharacter = AddChild(new Character(characterDesc));
+	m_pCharacter = AddChild(new Character(characterDesc, {0,3,15}));
 	m_pCharacter->GetTransform()->Translate(0.f, 5.f, 0.f);
 
 	//Input
@@ -102,7 +102,7 @@ GameObject* Level1::AddLevel(PxMaterial* pDefaultMaterial)
 	AddTree({ 62.f,3.6f,-17.5f }, {0,-38,0}, .01f, pDefaultMaterial);
 	AddTree({ -3.8f,-0.7f, -4.f }, {0,273,0}, .01f, pDefaultMaterial);
 
-	m_pObject = AddBigExplodableRock({ 0,0,0 }, {}, .01f, pDefaultMaterial);
+	m_pObject = AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f, pDefaultMaterial);
 
 
 	return pLevel;

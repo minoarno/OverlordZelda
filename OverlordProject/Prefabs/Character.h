@@ -44,7 +44,7 @@ public:
 		Climbing = 7
 	};
 
-	Character(const CharacterDesc& characterDesc);
+	Character(const CharacterDesc& characterDesc, const XMFLOAT3& cameraOffset);
 	~Character() override = default;
 
 	Character(const Character& other) = delete;
@@ -59,7 +59,9 @@ protected:
 	void Update(const SceneContext&) override;
 
 private:
+	//Camera
 	CameraComponent* m_pCameraComponent{};
+	XMFLOAT3 m_CameraOffset{ 0,0,0 };
 	ControllerComponent* m_pControllerComponent{};
 
 	//Visuals
@@ -80,5 +82,7 @@ private:
 
 	XMFLOAT3 m_TotalVelocity{};						//TotalVelocity with X/Z for Horizontal Movement AND Y for Vertical Movement (fall/jump)
 	XMFLOAT3 m_CurrentDirection{};					//Current/Last Direction based on Camera forward/right (Stored for deacceleration)
+
+	void AdjustCamera();
 };
 

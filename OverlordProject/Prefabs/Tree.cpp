@@ -13,8 +13,6 @@ void Tree::Initialize(const SceneContext& )
 {
 	auto pModel = AddComponent(new ModelComponent(L"Meshes/PalmTree.ovm"));
 
-
-
 #ifdef Deferred
 	auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
 	pMaterial->SetDiffuseMap(L"Textures/PalmTree.png");

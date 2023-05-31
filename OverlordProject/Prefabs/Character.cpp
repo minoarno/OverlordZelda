@@ -2,10 +2,12 @@
 #include "Character.h"
 #include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
 #include "Materials/Deferred/BasicMaterial_Deferred_Shadow_Skinned.h"
-Character::Character(const CharacterDesc& characterDesc) :
-	m_CharacterDesc{ characterDesc },
-	m_MoveAcceleration(characterDesc.maxMoveSpeed / characterDesc.moveAccelerationTime),
-	m_FallAcceleration(characterDesc.maxFallSpeed / characterDesc.fallAccelerationTime)
+Character::Character(const CharacterDesc& characterDesc, const XMFLOAT3& cameraOffset) 
+	: m_CharacterDesc{ characterDesc }
+	, m_MoveAcceleration(characterDesc.maxMoveSpeed / characterDesc.moveAccelerationTime)
+	, m_FallAcceleration(characterDesc.maxFallSpeed / characterDesc.fallAccelerationTime)
+	, m_pVisuals{ nullptr }
+	, m_CameraOffset{ cameraOffset }
 {}
 
 void Character::Initialize(const SceneContext& /*sceneContext*/)
@@ -153,6 +155,12 @@ void Character::Update(const SceneContext& sceneContext)
 
 		m_TotalPitch = std::clamp(m_TotalPitch, m_MinPitch, m_MaxPitch);
 		GetTransform()->Rotate(m_TotalPitch, m_TotalYaw, 0);
+		
+		if (look.x < epsilon && look.y < epsilon)
+		{
+			//AdjustCamera();
+		}
+
 		m_pVisuals->GetTransform()->Rotate(-m_TotalPitch, 0, 0);
 
 		//********
@@ -231,6 +239,31 @@ void Character::Update(const SceneContext& sceneContext)
 
 		//The above is a simple implementation of Movement Dynamics, adjust the code to further improve the movement logic and behaviour.
 		//Also, it can be usefull to use a seperate RayCast to check if the character is grounded (more responsive)
+	}
+}
+
+void Character::AdjustCamera()
+{
+	physx::PxQueryFilterData filterData{};
+	//filterData.data.word0 = ~UINT(ignoreGroups);
+
+	auto player = GetTransform()->GetPosition();
+	auto camera = m_pCameraComponent->GetTransform()->GetPosition();
+
+	physx::PxVec3 start = { player.x, player.y, player.z };
+	physx::PxVec3 end = { player.x + m_CameraOffset.x, player.y + m_CameraOffset.y, player.z + m_CameraOffset.z };
+
+	physx::PxRaycastBuffer hit{};
+	auto activeScene = SceneManager::Get()->GetActiveScene();
+	if (activeScene->GetPhysxProxy()->Raycast(start,
+		(end - start).getNormalized(),
+		(end - start).magnitude(),
+		hit,
+		physx::PxHitFlag::eDEFAULT,
+		filterData))
+	{
+		auto const hitPoint = hit.getTouch(0).position - start;
+		m_pCameraComponent->GetTransform()->Translate(hitPoint.x, hitPoint.y, hitPoint.z);
 	}
 }
 

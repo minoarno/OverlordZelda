@@ -10,12 +10,15 @@ MainMenu::MainMenu()
 
 void MainMenu::Initialize()
 {
+	const auto pCamera = AddChild(new FixedCamera());
+	pCamera->GetComponent<CameraComponent>()->SetActive(true);
+
 	auto pButton = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonActivated.png",[&]() 
 		{
 			SceneManager::Get()->SetActiveGameScene(L"Level1");
 		} });
-	m_pButtons.emplace_back(pButton);
 	pButton->GetTransform()->Translate(100, 200, 0);
+	m_pButtons.emplace_back(pButton);
 
 	pButton = AddChild(new Button{ L"Textures/UI/ExitButtonNormal.png",L"Textures/UI/ExitButtonActivated.png",[&]() 
 		{
