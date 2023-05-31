@@ -11,5 +11,7 @@ public:
 
 protected:
 	void InitializeEffectVariables() override;
+
+	void OnUpdateModelVariables(const SceneContext& sceneContext, const ModelComponent* pModel) const override;
 };
 

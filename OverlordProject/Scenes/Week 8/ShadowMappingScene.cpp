@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ShadowMappingScene.h"
 
+#include "Materials/Shadow/DiffuseMaterial_Shadow.h"
+#include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
 #include "Materials/Deferred/BasicMaterial_Deferred_Shadow.h"
 #include "Materials/Deferred/BasicMaterial_Deferred_Shadow_Skinned.h"
 
@@ -9,18 +11,30 @@ void ShadowMappingScene::Initialize()
 {
 	m_SceneContext.settings.drawGrid = false;
 	m_SceneContext.settings.enableOnGUI = true;
+#ifdef Deferred
 	m_SceneContext.useDeferredRendering = true;
+#else
+	m_SceneContext.useDeferredRendering = false;
+#endif
 
 	m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
 
 	//Materials
 	//*********
+
+#ifdef Deferred
 	const auto pPeasantMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow_Skinned>();
 	pPeasantMaterial->SetDiffuseMap(L"Textures/PeasantGirl_Diffuse.png");
 
 	const auto pGroundMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
 	pGroundMaterial->SetDiffuseMap(L"Textures/GroundBrick.jpg");
+#else
+	const auto pPeasantMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+	pPeasantMaterial->SetDiffuseTexture(L"Textures/PeasantGirl_Diffuse.png");
 
+	const auto pGroundMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
+	pGroundMaterial->SetDiffuseTexture(L"Textures/GroundBrick.jpg");
+#endif
 	//Ground Mesh
 	//***********
 	const auto pGroundObj = new GameObject();
