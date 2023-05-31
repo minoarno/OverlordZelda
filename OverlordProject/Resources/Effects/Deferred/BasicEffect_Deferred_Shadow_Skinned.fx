@@ -47,7 +47,7 @@ SamplerComparisonState cmpSampler
 RasterizerState gRasterizerState
 {
 	FillMode = SOLID;
-	CullMode = NONE;
+    CullMode = BACK;
 };
 
 BlendState gBlendState
@@ -235,9 +235,9 @@ VS_Output MainVS(VS_Input input) {
 	//output.Normal = normalize(mul(input.Normal, (float3x3)gWorld));
     //output.Tangent = normalize(mul(input.Tangent, (float3x3) gWorld));
     //output.Binormal = normalize(mul(input.Binormal, (float3x3) gWorld));
-    output.Normal = normalize(transformedNormal);
-    output.Tangent = normalize(transformedTangent);
-    output.Binormal = normalize(transformedBinormal);
+    output.Normal = normalize(mul(transformedNormal, (float3x3) gWorld));
+    output.Tangent = normalize(mul(transformedTangent, (float3x3) gWorld));
+    output.Binormal = normalize(mul(transformedBinormal, (float3x3) gWorld));
 
 
 	//store worldspace projected to light clip space with
