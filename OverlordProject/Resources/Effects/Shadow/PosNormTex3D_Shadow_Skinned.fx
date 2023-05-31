@@ -104,12 +104,12 @@ float EvaluateShadowMap(float4 lpos)
 		lpos.y < -1.0f || lpos.y > 1.0f ||
 		lpos.z < 0.0f || lpos.z > 1.0f)
 	{		
-		return 0.0f;
+		return 1.0f;
 	}
 	
 	//transform clip space coords to texture space coords (-1:1 to 0:1)
-	lpos.x = lpos.x * 0.5f + 0.5f;
-	lpos.y = lpos.y * -0.5f + 0.5f;
+    lpos.x = lpos.x / 2.0f + 0.5f;
+    lpos.y = lpos.y / -2.0f + 0.5f;
 	
 	//apply shadow map bias
 	lpos.z -= gShadowMapBias;
@@ -127,8 +127,9 @@ float EvaluateShadowMap(float4 lpos)
 		}
 	}
 	
-	float shadowFactor = (sum / 16.0f);
-	return shadowFactor * 0.5f + 0.5f;
+    float shadowMapDepth = sum / 16.0;
+	
+    return shadowMapDepth;
 }
 
 //--------------------------------------------------------------------------------------

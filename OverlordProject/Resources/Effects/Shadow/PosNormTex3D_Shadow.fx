@@ -102,7 +102,7 @@ float EvaluateShadowMap(float4 lpos)
 		lpos.y < -1.0f || lpos.y > 1.0f ||
 		lpos.z < 0.0f || lpos.z > 1.0f)
 	{		
-		return 0.0f;
+		return 1.0f;
 	}
 	
 	//transform clip space coords to texture space coords (-1:1 to 0:1)
