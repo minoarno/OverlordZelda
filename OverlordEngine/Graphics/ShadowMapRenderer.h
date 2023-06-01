@@ -20,6 +20,12 @@ public:
 
 	void Debug_DrawDepthSRV(const XMFLOAT2& position = { 0.f,0.f }, const XMFLOAT2& scale = { 1.f,1.f }, const XMFLOAT2& pivot = {0.f,0.f}) const;
 
+	void SetNear(float value) { m_Near = value; };
+	float GetNear()const { return m_Near; }
+	void SetFar(float value) { m_Far = value; };
+	float GetFar()const { return m_Far; }
+	void SetSize(float value) { m_Size = value; };
+	float GetSize()const { return m_Size; }
 protected:
 	void Initialize() override;
 
@@ -36,6 +42,9 @@ private:
 	XMFLOAT4X4 m_LightVP{};
 
 	float m_Size = 100.f;
+	float m_Near = -20.f;
+	float m_Far = 160.f;
+
 
 	//Shadow Generator is responsible of drawing all shadow casting meshes to the ShadowMap
 	//There are two techniques, one for static (non-skinned) meshes, and another for skinned meshes (with bones, blendIndices, blendWeights)

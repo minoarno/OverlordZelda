@@ -54,6 +54,8 @@ public:
 
 	void DrawImGui();
 
+	void SetLightOffset(const XMFLOAT4& offset) { m_LightOffset = offset; };
+	XMFLOAT4 GetLightOffset()const { return m_LightOffset; };
 protected:
 	void Initialize(const SceneContext&) override;
 	void Update(const SceneContext&) override;
@@ -62,6 +64,8 @@ private:
 	//Camera
 	CameraComponent* m_pCameraComponent{};
 	XMFLOAT3 m_CameraOffset{ 0,0,0 };
+	//XMFLOAT4 m_LightOffset{ 35.7f,44.3f,-23.2f,0 };
+	XMFLOAT4 m_LightOffset{ 35.7f,44.3f,-23.2f,0 };
 	ControllerComponent* m_pControllerComponent{};
 
 	//Visuals

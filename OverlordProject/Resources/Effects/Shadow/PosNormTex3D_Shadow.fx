@@ -117,15 +117,19 @@ float EvaluateShadowMap(float4 lpos)
 	float x, y;
 	
 	//perform PCF filtering on a 4 x 4 texel neighborhood
-	for (y = -1.5f; y <= 1.5f; y += 1.0f)
+    float range = 3.5f;
+    float increment = .5f;
+    float i = 0;
+    for (y = -range; y <= range; y += increment)
 	{
-		for (x = -1.5f; x <= 1.5f; x += 1.0f)
+        for (x = -range; x <= range; x += increment)
 		{
 			sum += gShadowMap.SampleCmpLevelZero(cmpSampler, lpos.xy + texOffset(x, y), lpos.z);
-		}
+            i++;
+        }
 	}
 	
-	float shadowFactor = (sum / 16.0f);
+    float shadowFactor = (sum / i);
 	return shadowFactor * 0.5f + 0.5f;
 }
 

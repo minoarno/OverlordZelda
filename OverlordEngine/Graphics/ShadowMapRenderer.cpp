@@ -75,7 +75,7 @@ void ShadowMapRenderer::Begin(const SceneContext& sceneContext)
 	//		*viewHeight> 100.f
 	//		*nearZ>0.1f
 	//		*farZ>500.f
-	DirectX::XMMATRIX proj = DirectX::XMMatrixOrthographicLH(m_Size * sceneContext.aspectRatio, m_Size, 0.1f, 500.f);
+	DirectX::XMMATRIX proj = DirectX::XMMatrixOrthographicLH(m_Size * sceneContext.aspectRatio, m_Size, m_Near, m_Far);
 
 	//- Use XMMatrixLookAtLH to create a View Matrix
 	//		*eyePosition: Position of the Direction Light (SceneContext::pLights > Retrieve Directional Light)
@@ -141,7 +141,7 @@ void ShadowMapRenderer::DrawMesh(const SceneContext& sceneContext, MeshFilter* p
 			&offset);
 
 		//Set Primitive Topology
-		pDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		//Set Index Buffer
 		pDeviceContext->IASetIndexBuffer(subMesh.buffers.pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);

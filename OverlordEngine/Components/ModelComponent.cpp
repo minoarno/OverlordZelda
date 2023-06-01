@@ -89,7 +89,7 @@ void ModelComponent::Draw(const SceneContext& sceneContext)
 		pDeviceContext->IASetIndexBuffer(subMesh.buffers.pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 		//Set Primitive Topology
-		pDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		//DRAW
 		auto tech = pCurrMaterial->GetTechniqueContext().pTechnique;

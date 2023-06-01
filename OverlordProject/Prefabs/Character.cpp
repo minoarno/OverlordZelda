@@ -75,6 +75,9 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 
 void Character::Update(const SceneContext& sceneContext)
 {
+	auto pos = GetTransform()->GetPosition();
+	sceneContext.pLights->GetDirectionalLight().position = XMFLOAT4{ pos.x + m_LightOffset.x, pos.y + m_LightOffset.y, pos.z + m_LightOffset.z, m_LightOffset.w };
+
 	if (!sceneContext.pGameTime->IsRunning())return;
 
 	if (m_pCameraComponent->IsActive())

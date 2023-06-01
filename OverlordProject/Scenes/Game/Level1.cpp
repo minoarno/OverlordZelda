@@ -32,7 +32,7 @@ void Level1::Initialize()
 #endif
 
 	//m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
-	m_SceneContext.pLights->SetDirectionalLight({ 100,100,0 }, { -100, -100, 0 });
+	m_SceneContext.pLights->SetDirectionalLight({ 0,0,0 }, { -160, -66, 20 });
 
 	auto physX = PhysXManager::Get()->GetPhysics();
 	const auto pDefaultMaterial = physX->createMaterial(1.f, 1.f, 0.f);
@@ -185,7 +185,7 @@ GameObject* Level1::AddSea()
 {
 	m_pSea = AddChild(new GameObject());
 	ModelComponent* pModelComponent = m_pSea->AddComponent(new ModelComponent(L"Meshes/Zelda/Sea.ovm"));
-	m_pSea->GetTransform()->Translate(0, 0.5f, 0);
+	m_pSea->GetTransform()->Translate(0, -.5f, 0);
 	m_pSea->GetTransform()->Rotate(90, 0, 0);
 	m_pSea->GetTransform()->Scale(1000, 1000, 1);
 	m_pSeaMaterial = MaterialManager::Get()->CreateMaterial<SeaMaterial>();
@@ -194,8 +194,8 @@ GameObject* Level1::AddSea()
 	m_pSeaMaterial->SetRippleDensity(359.1f);
 	m_pSeaMaterial->SetRippleSlimness(8);
 	m_pSeaMaterial->SetRippleColor(DirectX::XMFLOAT4{ 0.5506853f, 0.8630115f, 0.9339623f, 1.f });
-	m_pSeaMaterial->SetWaveSpeed(0.1f);
-	m_pSeaMaterial->SetWaveScale(0.1f);
+	m_pSeaMaterial->SetWaveSpeed(0.01f);
+	m_pSeaMaterial->SetWaveScale(1.5f);
 	m_pSeaMaterial->SetFoamAmount(0.79f);
 	m_pSeaMaterial->SetFoamCutoff(2.7f);
 	m_pSeaMaterial->SetFoamScale(150.f);
@@ -229,16 +229,28 @@ void Level1::OnGUI()
 
 	//m_pCharacter->DrawImGui();
 
-	auto curPos = m_SceneContext.pLights->GetDirectionalLight().position;
+	auto curPos = m_pCharacter->GetLightOffset();
 	float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
 	ImGui::DragFloat4("Translation", pos, 0.1f, -1000, 1000);
-	m_SceneContext.pLights->GetDirectionalLight().position = XMFLOAT4{ pos[0], pos[1], pos[2], pos[3] };
-
+	m_pCharacter->SetLightOffset(XMFLOAT4{ pos[0], pos[1], pos[2], pos[3] });
+	
 	curPos = m_SceneContext.pLights->GetDirectionalLight().direction;
 	float dir[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
 	ImGui::DragFloat4("Direction", dir, 0.1f, -1000, 1000);
 	m_SceneContext.pLights->GetDirectionalLight().direction = XMFLOAT4{ dir[0], dir[1], dir[2], dir[3]};
-
+	
 	ImGui::Checkbox("Draw ShadowMap", &m_DrawShadowMap);
 	ImGui::SliderFloat("ShadowMap Scale", &m_ShadowMapScale, 0.f, 1.f);
+	
+	float value = ShadowMapRenderer::Get()->GetFar();
+	ImGui::DragFloat("Far", &value, 0.1f, -1000, 1000);
+	ShadowMapRenderer::Get()->SetFar(value);
+	
+	value = ShadowMapRenderer::Get()->GetNear();
+	ImGui::DragFloat("Near", &value, 0.1f, -1000, 1000);
+	ShadowMapRenderer::Get()->SetNear(value);
+	
+	value = ShadowMapRenderer::Get()->GetSize();
+	ImGui::DragFloat("Size", &value, 0.1f, -1000, 1000);
+	ShadowMapRenderer::Get()->SetSize(value);
 }

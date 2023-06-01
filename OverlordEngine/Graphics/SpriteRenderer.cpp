@@ -125,7 +125,7 @@ void SpriteRenderer::Draw(const SceneContext& sceneContext)
 	const auto pDeviceContext = sceneContext.d3dContext.pDeviceContext;
 
 	//Set Render Pipeline
-	pDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
+	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	constexpr UINT stride = sizeof(VertexSprite);
 	constexpr UINT offset = 0;
@@ -226,7 +226,7 @@ void SpriteRenderer::DrawImmediate(const D3D11Context& d3dContext, ID3D11ShaderR
 	}
 
 	//Set Render Pipeline
-	d3dContext.pDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
+	d3dContext.pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	unsigned int stride = sizeof(VertexSprite);
 	unsigned int offset = 0;

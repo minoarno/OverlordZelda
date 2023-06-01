@@ -95,41 +95,44 @@ float2 texOffset(int u, int v)
 
 float EvaluateShadowMap(float4 lpos)
 {
-	//re-homogenize position after interpolation
+    //re-homogenize position after interpolation
     lpos.xyz /= lpos.w;
 
 	//if position is not visible to the light - dont illuminate it
     //results in hard light frustum
-	if (lpos.x < -1.0f || lpos.x > 1.0f ||
+    if (lpos.x < -1.0f || lpos.x > 1.0f ||
 		lpos.y < -1.0f || lpos.y > 1.0f ||
 		lpos.z < 0.0f || lpos.z > 1.0f)
-	{		
-		return 1.0f;
-	}
+    {
+        return 1.0f;
+    }
 	
 	//transform clip space coords to texture space coords (-1:1 to 0:1)
-    lpos.x = lpos.x / 2.0f + 0.5f;
-    lpos.y = lpos.y / -2.0f + 0.5f;
+    lpos.x = lpos.x * 0.5f + 0.5f;
+    lpos.y = lpos.y * -0.5f + 0.5f;
 	
 	//apply shadow map bias
-	lpos.z -= gShadowMapBias;
+    lpos.z -= gShadowMapBias;
 	
 	//PCF sampling for shadow map
-	float sum = 0;
-	float x, y;
+    float sum = 0;
+    float x, y;
 	
 	//perform PCF filtering on a 4 x 4 texel neighborhood
-	for (y = -1.5f; y <= 1.5f; y += 1.0f)
-	{
-		for (x = -1.5f; x <= 1.5f; x += 1.0f)
-		{
-			sum += gShadowMap.SampleCmpLevelZero(cmpSampler, lpos.xy + texOffset(x, y), lpos.z);
-		}
-	}
+    float range = 3.5f;
+    float increment = .5f;
+    float i = 0;
+    for (y = -range; y <= range; y += increment)
+    {
+        for (x = -range; x <= range; x += increment)
+        {
+            sum += gShadowMap.SampleCmpLevelZero(cmpSampler, lpos.xy + texOffset(x, y), lpos.z);
+            i++;
+        }
+    }
 	
-    float shadowMapDepth = sum / 16.0;
-	
-    return shadowMapDepth;
+    float shadowFactor = (sum / i);
+    return shadowFactor * 0.5f + 0.5f;
 }
 
 //--------------------------------------------------------------------------------------

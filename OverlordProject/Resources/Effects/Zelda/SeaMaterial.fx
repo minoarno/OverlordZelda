@@ -17,6 +17,12 @@ float4 gFoamColor = float4(1, 1, 1, 1);
 float gTotalTime = 0;
 Texture2D gDepthBuffer;
 Texture2D gPerlinNoise;
+sampler gPerlinNoiseSampler
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = Wrap; // or Mirror or Clamp or Border
+    AddressV = Wrap;
+};
 
 struct VS_INPUT
 {
@@ -66,9 +72,12 @@ BlendState EnableBlending
 VS_OUTPUT VS(VS_INPUT input)
 {
 	VS_OUTPUT output;
-    float3 offset = float3(0, 0, gWaveScale);
-    offset = 0;
-    output.pos = mul(float4(input.pos + offset, 1.0f), gWorldViewProj);
+    float2 texCoordWaves = float2(input.pos.x + gWaveSpeed * gTotalTime, input.pos.y + gWaveSpeed * gTotalTime);
+    
+    //https://stackoverflow.com/questions/20940639/sampling-a-texture-within-vertex-shader
+    float perlinNoiseScale = gPerlinNoise.SampleLevel(gPerlinNoiseSampler, texCoordWaves, 0).r;
+    float3 offset = float3(0, 0, gWaveScale * perlinNoiseScale);
+    output.pos = mul(float4(input.pos - offset, 1.0f), gWorldViewProj);
 	output.normal = normalize(mul(input.normal, (float3x3)gWorld));
 
     output.color = input.color;
