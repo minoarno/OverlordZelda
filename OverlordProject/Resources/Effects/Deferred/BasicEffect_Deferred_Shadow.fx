@@ -103,7 +103,7 @@ float4 gSpecularColor
 <
 	string UIName = "Specular Color";
 	string UIWidget = "Color";
-> = float4(1, 1, 1, 1);
+> = float4(0, 0, 0, 1);
 
 Texture2D gSpecularMap
 <
