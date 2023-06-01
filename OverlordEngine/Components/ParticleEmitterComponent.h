@@ -49,6 +49,8 @@ public:
 	ParticleEmitterSettings& GetSettings() { return m_EmitterSettings; }; //EmitterSettings Getter (by reference) > allows settings changes
 	void DrawImGui();
 
+	void SetCanSpawnParticles(bool value) { m_CanSpawnParticles = value; };
+	bool GetCanSpawnParticles() const { return m_CanSpawnParticles; };
 protected:
 	void Initialize(const SceneContext&) override;
 	void Update(const SceneContext&) override;
@@ -58,6 +60,8 @@ private:
 	void CreateVertexBuffer(const SceneContext& sceneContext); //Method to create the vertex buffer
 	void UpdateParticle(Particle& p, float elapsedTime) const;
 	void SpawnParticle(Particle& p);
+
+	bool m_CanSpawnParticles{ true };
 
 	TextureData* m_pParticleTexture{};
 	static ParticleMaterial* m_pParticleMaterial; //Material used to render the particles (static >> shared by all emitters)

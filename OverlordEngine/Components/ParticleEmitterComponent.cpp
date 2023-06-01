@@ -126,7 +126,7 @@ void ParticleEmitterComponent::Update(const SceneContext& sceneContext)
 
 			UpdateParticle(m_ParticlesArray[i], elapsedTime);
 		}
-		if (!m_ParticlesArray[i].isActive && m_LastParticleSpawn >= particleInterval)
+		if (!m_ParticlesArray[i].isActive && m_LastParticleSpawn >= particleInterval && m_CanSpawnParticles)
 		{
 			//2. If the particle is NOT Active(do not use ‘else if’), and the value of m_LastParticleInit is
 			//bigger than or equal to particleInterval > Call SpawnParticle.Reason for not using
