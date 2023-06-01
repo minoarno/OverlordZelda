@@ -88,5 +88,7 @@ private:
 	XMFLOAT3 m_CurrentDirection{};					//Current/Last Direction based on Camera forward/right (Stored for deacceleration)
 
 	void AdjustCamera();
+	float m_CameraNormalOffset{.8f};
+	bool m_HasHitPreviousTime{ false };
 };
 

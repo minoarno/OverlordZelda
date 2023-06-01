@@ -86,6 +86,8 @@ GameObject* Level1::AddLevel(PxMaterial* pDefaultMaterial)
 	auto pRigidBody = pLevel->AddComponent(new RigidBodyComponent{ true });
 	pRigidBody->AddCollider(PxTriangleMeshGeometry{ pTriangleMesh, physx::PxMeshScale{ scale } }, *pDefaultMaterial);
 
+	pRigidBody->SetCollisionGroup(CollisionGroup::Group0 | CollisionGroup::Group1);
+
 	AddLevelObject(pModelComponent, 0, L"Woods");
 	AddLevelObject(pModelComponent, 1, L"Roofs");
 	AddLevelObject(pModelComponent, 2, L"Ballustrade");
@@ -227,30 +229,30 @@ void Level1::OnGUI()
 	//ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
 	//m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
 
-	//m_pCharacter->DrawImGui();
+	m_pCharacter->DrawImGui();
 
-	auto curPos = m_pCharacter->GetLightOffset();
-	float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
-	ImGui::DragFloat4("Translation", pos, 0.1f, -1000, 1000);
-	m_pCharacter->SetLightOffset(XMFLOAT4{ pos[0], pos[1], pos[2], pos[3] });
-	
-	curPos = m_SceneContext.pLights->GetDirectionalLight().direction;
-	float dir[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
-	ImGui::DragFloat4("Direction", dir, 0.1f, -1000, 1000);
-	m_SceneContext.pLights->GetDirectionalLight().direction = XMFLOAT4{ dir[0], dir[1], dir[2], dir[3]};
-	
-	ImGui::Checkbox("Draw ShadowMap", &m_DrawShadowMap);
-	ImGui::SliderFloat("ShadowMap Scale", &m_ShadowMapScale, 0.f, 1.f);
-	
-	float value = ShadowMapRenderer::Get()->GetFar();
-	ImGui::DragFloat("Far", &value, 0.1f, -1000, 1000);
-	ShadowMapRenderer::Get()->SetFar(value);
-	
-	value = ShadowMapRenderer::Get()->GetNear();
-	ImGui::DragFloat("Near", &value, 0.1f, -1000, 1000);
-	ShadowMapRenderer::Get()->SetNear(value);
-	
-	value = ShadowMapRenderer::Get()->GetSize();
-	ImGui::DragFloat("Size", &value, 0.1f, -1000, 1000);
-	ShadowMapRenderer::Get()->SetSize(value);
+	//auto curPos = m_pCharacter->GetLightOffset();
+	//float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
+	//ImGui::DragFloat4("Translation", pos, 0.1f, -1000, 1000);
+	//m_pCharacter->SetLightOffset(XMFLOAT4{ pos[0], pos[1], pos[2], pos[3] });
+	//
+	//curPos = m_SceneContext.pLights->GetDirectionalLight().direction;
+	//float dir[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
+	//ImGui::DragFloat4("Direction", dir, 0.1f, -1000, 1000);
+	//m_SceneContext.pLights->GetDirectionalLight().direction = XMFLOAT4{ dir[0], dir[1], dir[2], dir[3]};
+	//
+	//ImGui::Checkbox("Draw ShadowMap", &m_DrawShadowMap);
+	//ImGui::SliderFloat("ShadowMap Scale", &m_ShadowMapScale, 0.f, 1.f);
+	//
+	//float value = ShadowMapRenderer::Get()->GetFar();
+	//ImGui::DragFloat("Far", &value, 0.1f, -1000, 1000);
+	//ShadowMapRenderer::Get()->SetFar(value);
+	//
+	//value = ShadowMapRenderer::Get()->GetNear();
+	//ImGui::DragFloat("Near", &value, 0.1f, -1000, 1000);
+	//ShadowMapRenderer::Get()->SetNear(value);
+	//
+	//value = ShadowMapRenderer::Get()->GetSize();
+	//ImGui::DragFloat("Size", &value, 0.1f, -1000, 1000);
+	//ShadowMapRenderer::Get()->SetSize(value);
 }

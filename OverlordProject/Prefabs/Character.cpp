@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Character.h"
+#include "Scenegraph/GameObject.h"
 #include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
 #include "Materials/Deferred/BasicMaterial_Deferred_Shadow_Skinned.h"
 Character::Character(const CharacterDesc& characterDesc, const XMFLOAT3& cameraOffset) 
@@ -80,7 +81,7 @@ void Character::Update(const SceneContext& sceneContext)
 
 	if (!sceneContext.pGameTime->IsRunning())return;
 
-	if (m_pCameraComponent->IsActive())
+	//if (m_pCameraComponent->IsActive())
 	{
 		constexpr float epsilon{ 0.01f }; //Constant that can be used to compare if a float is near zero
 
@@ -159,10 +160,10 @@ void Character::Update(const SceneContext& sceneContext)
 		m_TotalPitch = std::clamp(m_TotalPitch, m_MinPitch, m_MaxPitch);
 		GetTransform()->Rotate(m_TotalPitch, m_TotalYaw, 0);
 		
-		if (look.x < epsilon && look.y < epsilon)
-		{
-			//AdjustCamera();
-		}
+		//if (look.x < epsilon && look.y < epsilon)
+		//{
+			AdjustCamera();
+		//}
 
 		m_pVisuals->GetTransform()->Rotate(-m_TotalPitch, 0, 0);
 
@@ -247,27 +248,41 @@ void Character::Update(const SceneContext& sceneContext)
 
 void Character::AdjustCamera()
 {
-	physx::PxQueryFilterData filterData{};
-	//filterData.data.word0 = ~UINT(ignoreGroups);
+	auto player = GetTransform()->GetWorldPosition();
+	auto camera = m_pCameraComponent->GetTransform()->GetWorldPosition();
+	auto cameraLocalPos = m_pCameraComponent->GetTransform()->GetPosition();
 
-	auto player = GetTransform()->GetPosition();
-	auto camera = m_pCameraComponent->GetTransform()->GetPosition();
+	float distance = PhysxHelper::ToPxVec3(m_CameraOffset).magnitude();
 
-	physx::PxVec3 start = { player.x, player.y, player.z };
-	physx::PxVec3 end = { player.x + m_CameraOffset.x, player.y + m_CameraOffset.y, player.z + m_CameraOffset.z };
+	physx::PxVec3 start = PhysxHelper::ToPxVec3(player);
+	physx::PxVec3 end = PhysxHelper::ToPxVec3(camera);
+	physx::PxVec3 localOffset = PhysxHelper::ToPxVec3(cameraLocalPos);
+
+	auto direction = (end - start).getNormalized();
+	auto localDirection = localOffset.getNormalized();
 
 	physx::PxRaycastBuffer hit{};
+
+	if (direction.magnitude() == 0)
+	{
+		direction = { 0, 1, 0 };
+	}
+
+	physx::PxQueryFilterData filterData{};
+	filterData.data.word0 = UINT(CollisionGroup::Group1);
+
 	auto activeScene = SceneManager::Get()->GetActiveScene();
 	if (activeScene->GetPhysxProxy()->Raycast(start,
-		(end - start).getNormalized(),
-		(end - start).magnitude(),
+		direction,
+		distance,
 		hit,
-		physx::PxHitFlag::eDEFAULT,
-		filterData))
+		physx::PxHitFlag::eDEFAULT | physx::PxHitFlag::eMESH_ANY | physx::PxHitFlag::eASSUME_NO_INITIAL_OVERLAP,
+		filterData) && hit.hasBlock)
 	{
-		auto const hitPoint = hit.getTouch(0).position - start;
-		m_pCameraComponent->GetTransform()->Translate(hitPoint.x, hitPoint.y, hitPoint.z);
+		distance = (hit.block.position - direction * m_CameraNormalOffset - start).magnitude();
 	}
+	XMFLOAT3 hitPointPos = { localDirection.x * distance, localDirection.y * distance, localDirection.z * distance };
+	m_pCameraComponent->GetTransform()->Translate(hitPointPos);
 }
 
 void Character::DrawImGui()
@@ -311,5 +326,7 @@ void Character::DrawImGui()
 		float x = m_pVisuals->GetTransform()->GetPosition().y;
 		ImGui::DragFloat("Visual Offset", &x, 0.1f, 0.f, 0.f, "%.1f");
 		m_pVisuals->GetTransform()->Translate(0, x, 0);
+
+		ImGui::DragFloat("Camera Normal Offset", &m_CameraNormalOffset, 0.1f, 0.f, 0.f, "%.1f");
 	}
 }
