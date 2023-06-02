@@ -170,6 +170,7 @@ float gOpacityLevel <
 	float UIMax = 1;
 > = 1.0f;
 
+float gOpacityCutOff = 0.1f;
 
 //VS IN & OUT
 //***********
@@ -284,7 +285,7 @@ PS_Output MainPS(VS_Output input)
 	
 	//ALPHA
     float alpha = diffuse.a * gOpacityLevel;
-    clip(alpha - .1f);
+    clip(alpha - gOpacityCutOff);
 	
 	//AMBIENT
     float4 ambient = gAmbientColor;

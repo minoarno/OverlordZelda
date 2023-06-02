@@ -9,9 +9,16 @@ public:
 	Gem& operator=(Gem&&) = delete;
 	~Gem() = default;
 
+	bool GetMarkForDelete()const { return m_MarkForDelete; };
 protected:
-	virtual void Initialize(const SceneContext& scenetext) override;
+	void Initialize(const SceneContext& scenetext) override;
+	void Update(const SceneContext&) override;
 
+	void OnHit(GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action);
 private:
+	bool m_MarkForDelete{ false };
+
 	PxMaterial* m_pMaterial;
+	float m_Rotation;
+	float m_RotationSpeed{90.f};
 };

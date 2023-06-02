@@ -11,6 +11,7 @@ Tree::Tree(PxMaterial* pMaterial)
 
 void Tree::Initialize(const SceneContext& )
 {
+	float scale{ .01f };
 	auto pModel = AddComponent(new ModelComponent(L"Meshes/PalmTree.ovm"));
 
 #ifdef Deferred
@@ -21,6 +22,9 @@ void Tree::Initialize(const SceneContext& )
 	pMaterial->SetDiffuseTexture(L"Textures/PalmTree.png");
 #endif
 	pModel->SetMaterial(pMaterial);
+	pModel->GetTransform()->Scale(scale);
 
-	pModel->GetTransform()->Scale(.01f);
+	const auto pTriangleMesh = ContentManager::Load<PxConvexMesh>(L"Meshes/PalmTree.ovpc");
+	auto pRigidBody = AddComponent(new RigidBodyComponent{ true });
+	pRigidBody->AddCollider(PxConvexMeshGeometry{ pTriangleMesh, physx::PxMeshScale{ scale } }, *m_pMaterial);
 }

@@ -10,6 +10,7 @@
 #include "Prefabs/Tree.h"
 #include "Prefabs/Rock.h"
 #include "Prefabs/Gem.h"
+#include "Prefabs/UI/HUD.h"
 
 Level1::Level1()
 	: GameScene{L"Level1"}
@@ -18,6 +19,7 @@ Level1::Level1()
 	, m_pSeaMaterial{ nullptr }
 	, m_pObject{ nullptr }
 {
+	m_pGems = std::vector<Gem*>();
 }
 
 void Level1::Initialize()
@@ -35,18 +37,32 @@ void Level1::Initialize()
 	m_SceneContext.pLights->SetDirectionalLight({ 0,0,0 }, { -160, -66, 20 });
 
 	auto physX = PhysXManager::Get()->GetPhysics();
-	const auto pDefaultMaterial = physX->createMaterial(1.f, 1.f, 0.f);
+	m_pDefaultMaterial = physX->createMaterial(1.f, 1.f, 0.f);
 
-	AddLevel(pDefaultMaterial);
-	AddPlayer(pDefaultMaterial);
+	AddLevel();
+	AddPlayer();
 
 	AddSea();
 	AddSkyBox();
+
+	AddChild(new HUD{});
 }
 
-GameObject* Level1::AddPlayer(PxMaterial* pDefaultMaterial)
+void Level1::Update()
 {
-	CharacterDesc characterDesc{ pDefaultMaterial, .5f,2.f };
+	for (int i = 0; i < m_pGems.size(); i++)
+	{
+		if (m_pGems[i] != nullptr && m_pGems[i]->GetMarkForDelete())
+		{
+			RemoveChild(m_pGems[i], true);
+			m_pGems[i] = nullptr;
+		}
+	}
+}
+
+GameObject* Level1::AddPlayer()
+{
+	CharacterDesc characterDesc{ m_pDefaultMaterial, .5f,2.f };
 	characterDesc.actionId_MoveForward = CharacterMoveForward;
 	characterDesc.actionId_MoveBackward = CharacterMoveBackward;
 	characterDesc.actionId_MoveLeft = CharacterMoveLeft;
@@ -75,7 +91,7 @@ GameObject* Level1::AddPlayer(PxMaterial* pDefaultMaterial)
 	return m_pCharacter;
 }
 
-GameObject* Level1::AddLevel(PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddLevel()
 {
 	float scale = 2;
 
@@ -84,7 +100,7 @@ GameObject* Level1::AddLevel(PxMaterial* pDefaultMaterial)
 
 	const auto pTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Zelda/SmallIsland.ovpt");
 	auto pRigidBody = pLevel->AddComponent(new RigidBodyComponent{ true });
-	pRigidBody->AddCollider(PxTriangleMeshGeometry{ pTriangleMesh, physx::PxMeshScale{ scale } }, *pDefaultMaterial);
+	pRigidBody->AddCollider(PxTriangleMeshGeometry{ pTriangleMesh, physx::PxMeshScale{ scale } }, *m_pDefaultMaterial);
 
 	pRigidBody->SetCollisionGroup(CollisionGroup::Group0 | CollisionGroup::Group1);
 
@@ -100,22 +116,21 @@ GameObject* Level1::AddLevel(PxMaterial* pDefaultMaterial)
 	pLevel->GetTransform()->Scale(scale);
 	AddChild(pLevel);
 
-	AddTree({ -9.2f,1.1f,-22.5f }, {}, .01f, pDefaultMaterial);
-	AddTree({ -30.8f,-.2f,-4.f }, {0,65,0}, .01f, pDefaultMaterial);
-	AddTree({ -33.1f,3.8f,-4.7f }, {0,135,0}, .01f, pDefaultMaterial);
-	AddTree({ -71.5f,20.f,-23.3f }, {0,190,0}, .01f, pDefaultMaterial);
-	AddTree({ 62.f,3.6f,-17.5f }, {0,-38,0}, .01f, pDefaultMaterial);
-	AddTree({ -3.8f,-0.7f, -4.f }, {0,273,0}, .01f, pDefaultMaterial);
+	AddTree({ -9.2f,1.1f,-22.5f }, {}, .01f);
+	AddTree({ -30.8f,-.2f,-4.f }, {0,65,0}, .01f);
+	AddTree({ -33.1f,3.8f,-4.7f }, {0,135,0}, .01f);
+	AddTree({ -71.5f,20.f,-23.3f }, {0,190,0}, .01f);
+	AddTree({ 62.f,3.6f,-17.5f }, {0,-38,0}, .01f);
+	AddTree({ -3.8f,-0.7f, -4.f }, {0,273,0}, .01f);
 
-	m_pObject = AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f, pDefaultMaterial);
-
+	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
 
 	return pLevel;
 }
 
-GameObject* Level1::AddTree(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddTree(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale)
 {
-	Tree* pTree = AddChild(new Tree{ pDefaultMaterial });
+	Tree* pTree = AddChild(new Tree{ m_pDefaultMaterial });
 	pTree->GetTransform()->Translate(position);
 	pTree->GetTransform()->Rotate(rotation);
 	pTree->GetTransform()->Scale(scale);
@@ -134,8 +149,31 @@ void Level1::AddLevelObject(ModelComponent* pModelComponent, UINT8 id, const std
 	pModelComponent->SetMaterial(pMat, id);
 }
 
+void Level1::OnSceneActivated()
+{
+	ResetScene();
+}
+
 void Level1::ResetScene()
 {
+	for (int i = 0; i < m_pGems.size(); i++)
+	{
+		RemoveChild(m_pGems[i], true);
+		m_pGems[i] = nullptr;
+	}
+	m_pGems.clear();
+
+	AddGem({ -10.f, -10.f, -10.f });
+	m_pObject = m_pGems[0];
+	AddGem({ -9.3f, 3.6f, 4.3f });
+	AddGem({ -20.f, 3.6f, 6.4f });
+	AddGem({ -29.1f, 3.6f, 5.5f });
+	AddGem({ -37.9f, 6.3f, -11.f });
+	AddGem({ -49.f, 8.5f, -7.1f });
+	AddGem({ -56.7f, 8.5f, -1.7f });
+	AddGem({ -54.f, 8.5f, -4.4f });
+	AddGem({ -35.5f, 9.3f, -26.6f });
+
 }
 
 void Level1::PostDraw()
@@ -147,38 +185,39 @@ void Level1::PostDraw()
 	}
 }
 
-GameObject* Level1::AddSmallExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddSmallExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale)
 {
-	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Small", pDefaultMaterial));
+	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Small", m_pDefaultMaterial));
 	pRock->GetTransform()->Translate(position);
 	pRock->GetTransform()->Rotate(rotation);
 	pRock->GetTransform()->Scale(scale);
 	return pRock;
 }
 
-GameObject* Level1::AddMediumExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddMediumExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale)
 {
-	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Medium", pDefaultMaterial));
+	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Medium", m_pDefaultMaterial));
 	pRock->GetTransform()->Translate(position);
 	pRock->GetTransform()->Rotate(rotation);
 	pRock->GetTransform()->Scale(scale);
 	return pRock;
 }
 
-GameObject* Level1::AddBigExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale, PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddBigExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale)
 {
-	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Big", pDefaultMaterial));
+	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Big", m_pDefaultMaterial));
 	pRock->GetTransform()->Translate(position);
 	pRock->GetTransform()->Rotate(rotation);
 	pRock->GetTransform()->Scale(scale);
 	return pRock;
 }
 
-GameObject* Level1::AddGem(const XMFLOAT3& position, PxMaterial* pDefaultMaterial)
+GameObject* Level1::AddGem(const XMFLOAT3& position)
 {
-	Gem* pGem = AddChild(new Gem{ pDefaultMaterial });
+	Gem* pGem = AddChild(new Gem{ m_pDefaultMaterial });
 	pGem->GetTransform()->Translate(position);
-	pGem->GetTransform()->Rotate(0,static_cast<float>(rand() % 360), 0);
+
+	m_pGems.emplace_back(pGem);
 
 	return pGem;
 }
@@ -206,6 +245,9 @@ GameObject* Level1::AddSea()
 	m_pSeaMaterial->SetPerlinNoise(L"Textures/Zelda/PerlinNoise.jpg");
 	pModelComponent->SetMaterial(m_pSeaMaterial);
 
+	RigidBodyComponent* pRigidBody = m_pSea->AddComponent(new RigidBodyComponent(true));
+	pRigidBody->AddCollider(PxBoxGeometry{ 500.f,500.f,.5f }, *m_pDefaultMaterial);
+
 	return m_pSea;
 }
 
@@ -224,10 +266,10 @@ void Level1::OnGUI()
 {
 	//m_pSeaMaterial->DrawImGui();
 
-	//auto curPos = m_pObject->GetTransform()->GetWorldPosition();
-	//float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
-	//ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
-	//m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+	auto curPos = m_pObject->GetTransform()->GetWorldPosition();
+	float pos[3]{ curPos.x, curPos.y, curPos.z};
+	ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
+	m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
 
 	m_pCharacter->DrawImGui();
 

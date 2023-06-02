@@ -6,29 +6,29 @@ HUD* HUD::m_pHUD{ nullptr };
 
 HUD::HUD()
 	: GameObject{ }
-	, m_AmountOfBoltsCollected{ 0 }
-	, m_pBoltsText{ nullptr }
+	, m_AmountOfRupeesCollected{ 0 }
+	, m_pRupeesText{ nullptr }
 {
 }
 
 void HUD::Initialize(const SceneContext&)
 {
 	float x{ 1000 };
-	m_pBoltsText = AddChild(new Text{ "" });
-	m_pBoltsText->GetTransform()->Translate(x, 20.f, 0.f);
-	UpdateBoltsText();
+	m_pRupeesText = AddChild(new Text{ "" });
+	m_pRupeesText->GetTransform()->Translate(x, 20.f, 0.f);
+	UpdateRupeesText();
 
 	auto go = AddChild(new GameObject{});
-	m_pNutBolt = go->AddComponent(new SpriteComponent{ L"Textures/NutBolt.png" });
-	go->GetTransform()->Translate(x - 45.f, 18.f, 0.f);
-	go->GetTransform()->Scale(.05f, .05f, 0.5f);
+	m_pRupee = go->AddComponent(new SpriteComponent{ L"Textures/UI/Rupees.png" });
+	go->GetTransform()->Translate(x - 45.f, 10.f, 0.f);
+	go->GetTransform()->Scale(.25f, .25f, 0.5f);
 
 	//Hearts
 	for (size_t i = 0; i < m_AmountOfHearts; i++)
 	{
 		m_pHearts.emplace_back(AddChild(new GameObject{}));
-		m_pNutBolt = m_pHearts[i]->AddComponent(new SpriteComponent{L"Textures/Heart.png"});
-		m_pHearts[i]->GetTransform()->Translate(45.f + 50 * i, 18.f, 0.f);
+		m_pHearts[i]->AddComponent(new SpriteComponent{L"Textures/UI/Heart.png"});
+		m_pHearts[i]->GetTransform()->Translate(45.f + 50 * i, 10.f, 0.f);
 		m_pHearts[i]->GetTransform()->Scale(.05f, .05f, 0.5f);
 	}
 
@@ -40,7 +40,7 @@ void HUD::Initialize(const SceneContext&)
 
 void HUD::Draw(const SceneContext& sceneContext)
 {
-	m_pBoltsText->Draw(sceneContext);
+	m_pRupeesText->Draw(sceneContext);
 }
 
 void HUD::SetAmountOfHearts(int amount)
@@ -49,23 +49,23 @@ void HUD::SetAmountOfHearts(int amount)
 
 	for (size_t i = 0; i < m_pHearts.size(); i++)
 	{
-		//m_pHearts[i]->SetActive(m_AmountOfHearts > i);
+		m_pHearts[i]->GetComponent<SpriteComponent>()->SetActive(m_AmountOfHearts > i);
 	}
 }
 
-void HUD::SetAmountBolts(int amount)
+void HUD::SetAmountRupees(int amount)
 {
-	m_AmountOfBoltsCollected = amount;
-	UpdateBoltsText();
+	m_AmountOfRupeesCollected = amount;
+	UpdateRupeesText();
 }
 
-void HUD::IncreaseBolts(int amount)
+void HUD::IncreaseRupees(int amount)
 {
-	m_AmountOfBoltsCollected += amount;
-	UpdateBoltsText();
+	m_AmountOfRupeesCollected += amount;
+	UpdateRupeesText();
 }
 
-void HUD::UpdateBoltsText()
+void HUD::UpdateRupeesText()
 {
-	m_pBoltsText->SetText(std::to_string(m_AmountOfBoltsCollected));
+	m_pRupeesText->SetText(std::to_string(m_AmountOfRupeesCollected));
 }

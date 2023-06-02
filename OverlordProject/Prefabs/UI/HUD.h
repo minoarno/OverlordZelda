@@ -16,15 +16,16 @@ public:
 
 	void SetAmountOfHearts(int amount);
 
-	void SetAmountBolts(int amount);
-	void IncreaseBolts(int amount);
+	void SetAmountRupees(int amount);
+	void IncreaseRupees(int amount);
 	static HUD* Get() { return m_pHUD; };
+	void ResetHUD() { m_pHUD = nullptr; };
 private:
 	static HUD* m_pHUD;
-	int m_AmountOfBoltsCollected{ 0 };
-	SpriteComponent* m_pNutBolt{nullptr};
-	Text* m_pBoltsText{nullptr};
-	void UpdateBoltsText();
+	int m_AmountOfRupeesCollected{ 0 };
+	SpriteComponent* m_pRupee{nullptr};
+	Text* m_pRupeesText{nullptr};
+	void UpdateRupeesText();
 
 	int m_AmountOfHearts{ 3 };
 	std::vector<GameObject*> m_pHearts{};
