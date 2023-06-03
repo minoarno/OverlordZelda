@@ -16,6 +16,7 @@ public:
 	void Update(const SceneContext&) override;
 
 	void Select();
+	void SetSelect(bool value);
 	void Press(const SceneContext& sceneContext);
 	bool IsSelected()const { return m_IsSelected; }
 	bool IsHovering(const SceneContext& sceneContext);

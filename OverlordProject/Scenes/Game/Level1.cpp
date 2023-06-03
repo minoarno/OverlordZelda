@@ -33,10 +33,8 @@ void Level1::Initialize()
 	m_SceneContext.settings.enableOnGUI = true;
 	m_SceneContext.settings.drawPhysXDebug = false;
 
-	m_SceneContext.useDeferredRendering = false;
+	m_SceneContext.useDeferredRendering = true;
 
-
-	//m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
 	m_SceneContext.pLights->SetDirectionalLight({ 0,0,0 }, { -160, -66, 20 });
 
 	auto physX = PhysXManager::Get()->GetPhysics();

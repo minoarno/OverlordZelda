@@ -26,10 +26,51 @@ void MainMenu::Initialize()
 		} });
 	pButton->GetTransform()->Translate(100, 400, 0);
 	m_pButtons.emplace_back(pButton);
+
+	auto inputAction = InputAction(SettingsMoveUp, InputState::pressed, -1, -1, XINPUT_GAMEPAD_DPAD_UP);
+	m_SceneContext.pInput->AddInputAction(inputAction);
+
+	inputAction = InputAction(SettingsMoveDown, InputState::pressed, -1, -1, XINPUT_GAMEPAD_DPAD_DOWN);
+	m_SceneContext.pInput->AddInputAction(inputAction);
 }
 
 void MainMenu::Update()
 {
+	if (m_SceneContext.pInput->IsActionTriggered(SettingsMoveUp))
+	{
+		if (m_SelectedButtonIndex == -1)
+		{
+			m_SelectedButtonIndex = 0;
+		}
+		else
+		{
+			m_SelectedButtonIndex--;
+			if (m_SelectedButtonIndex < 0) m_SelectedButtonIndex = static_cast<int>(m_pButtons.size()) - 1;
+		}
+		
+		for (size_t i = 0; i < m_pButtons.size(); i++)
+		{
+			m_pButtons[i]->SetSelect(m_SelectedButtonIndex == i);
+		}
+	}
+	if (m_SceneContext.pInput->IsActionTriggered(SettingsMoveUp))
+	{
+		if (m_SelectedButtonIndex == -1)
+		{
+			m_SelectedButtonIndex = 0;
+		}
+		else
+		{
+			m_SelectedButtonIndex++;
+			if (m_SelectedButtonIndex >= m_pButtons.size()) m_SelectedButtonIndex = 0;
+		}
+
+		for (size_t i = 0; i < m_pButtons.size(); i++)
+		{
+			m_pButtons[i]->SetSelect(m_SelectedButtonIndex == i);
+		}
+	}
+
 	if (InputManager::IsMouseButton(InputState::pressed, VK_LBUTTON))
 	{
 		for (Button* button : m_pButtons)

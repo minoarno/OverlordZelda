@@ -80,7 +80,7 @@ float4 PS(PS_INPUT input): SV_Target
     texCoord += shakeOffset;
 
     // Sample the color from the offset texture coordinates
-    float4 color = gTexture.Sample(samLinear, input.TexCoord);
+    float4 color = gTexture.Sample(samLinear, texCoord);
 
     return color;
 }

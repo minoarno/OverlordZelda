@@ -12,7 +12,14 @@ public:
 	~MainMenu() = default;
 
 protected:
+	enum InputIds
+	{
+		SettingsMoveUp = 7,
+		SettingsMoveDown = 8
+	};
+
 	void Initialize() override;
 	void Update() override;
 	std::vector<Button*> m_pButtons;
+	int m_SelectedButtonIndex = -1;
 };

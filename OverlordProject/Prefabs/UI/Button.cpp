@@ -26,12 +26,14 @@ void Button::Select()
 	m_IsSelected = !m_IsSelected;
 }
 
-void Button::Press(const SceneContext& sceneContext)
+void Button::SetSelect(bool value)
 {
-	auto mousePos = sceneContext.pInput->GetMousePosition();
-	auto pos = GetTransform()->GetPosition();
-	auto dims = m_pSpriteComponentNormal->GetDimensions();
-	if (pos.x < mousePos.x && pos.x + dims.x > mousePos.x && pos.y < mousePos.y && pos.y + dims.y > mousePos.y)
+	m_IsSelected = value;
+}
+
+void Button::Press(const SceneContext& )
+{
+	if (m_IsSelected)
 	{
 		m_Func();
 	}
