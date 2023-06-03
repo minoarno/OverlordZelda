@@ -14,13 +14,8 @@ void Rock::Initialize(const SceneContext& )
 {
 	auto pModel = AddComponent(new ModelComponent(L"Meshes/Rocks/" + m_Filepath + L".ovm"));
 
-#ifdef Deferred
 	auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
-	pMaterial->SetDiffuseMap(L"Textures/Rocks/WindWaker_Rocks.png");
-#else
-	auto pMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
 	pMaterial->SetDiffuseTexture(L"Textures/Rocks/WindWaker_Rocks.png");
-#endif
 
 	pModel->SetMaterial(pMaterial);
 

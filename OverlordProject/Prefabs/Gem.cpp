@@ -18,13 +18,9 @@ void Gem::Initialize(const SceneContext& )
 	float scale{ 0.005f };
 
 	auto pModel = AddComponent(new ModelComponent(L"Meshes/Gem.ovm"));
-#ifdef Deferred
+
 	auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
-	pMaterial->SetDiffuseMap(L"Textures/Gem.png");
-#else
-	auto pMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
 	pMaterial->SetDiffuseTexture(L"Textures/Gem.png");
-#endif // Deferred
 	pModel->SetMaterial(pMaterial);
 
 	GetTransform()->Scale(scale);

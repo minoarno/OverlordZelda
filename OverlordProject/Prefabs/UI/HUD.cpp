@@ -13,7 +13,7 @@ HUD::HUD()
 
 void HUD::Initialize(const SceneContext&)
 {
-	float x{ 1000 };
+	float x{ 1200 };
 	m_pRupeesText = AddChild(new Text{ "" });
 	m_pRupeesText->GetTransform()->Translate(x, 20.f, 0.f);
 	UpdateRupeesText();

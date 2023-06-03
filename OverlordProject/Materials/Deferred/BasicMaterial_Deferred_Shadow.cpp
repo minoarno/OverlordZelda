@@ -6,34 +6,39 @@ BasicMaterial_Deferred_Shadow::BasicMaterial_Deferred_Shadow()
 {
 }
 
-void BasicMaterial_Deferred_Shadow::SetDiffuseMap(const std::wstring& assetFile)
+void BasicMaterial_Deferred_Shadow::SetDiffuseTexture(const std::wstring& assetFile)
 {
-	SetDiffuseMap(ContentManager::Load<TextureData>(assetFile));
+	SetDiffuseTexture(ContentManager::Load<TextureData>(assetFile));
 }
 
-void BasicMaterial_Deferred_Shadow::SetDiffuseMap(TextureData* pTextureData)
+void BasicMaterial_Deferred_Shadow::SetDiffuseTexture(TextureData* pTextureData)
 {
 	SetVariable_Scalar(L"gUseDiffuseMap", pTextureData != nullptr);
 	SetVariable_Texture(L"gDiffuseMap", pTextureData);
 }
 
-void BasicMaterial_Deferred_Shadow::SetNormalMap(const std::wstring& assetFile)
+void BasicMaterial_Deferred_Shadow::SetDiffuseColor(DirectX::XMFLOAT4 color)
 {
-	SetNormalMap(ContentManager::Load<TextureData>(assetFile));
+	SetVariable_Vector(L"gDiffuseColor", color);
 }
 
-void BasicMaterial_Deferred_Shadow::SetNormalMap(TextureData* pTextureData)
+void BasicMaterial_Deferred_Shadow::SetNormalTexture(const std::wstring& assetFile)
+{
+	SetNormalTexture(ContentManager::Load<TextureData>(assetFile));
+}
+
+void BasicMaterial_Deferred_Shadow::SetNormalTexture(TextureData* pTextureData)
 {
 	SetVariable_Scalar(L"gUseNormalMap", pTextureData != nullptr);
 	SetVariable_Texture(L"gNormalMap", pTextureData);
 }
 
-void BasicMaterial_Deferred_Shadow::SetSpecularMap(const std::wstring& assetFile)
+void BasicMaterial_Deferred_Shadow::SetSpecularTexture(const std::wstring& assetFile)
 {
-	SetSpecularMap(ContentManager::Load<TextureData>(assetFile));
+	SetSpecularTexture(ContentManager::Load<TextureData>(assetFile));
 }
 
-void BasicMaterial_Deferred_Shadow::SetSpecularMap(TextureData* pTextureData)
+void BasicMaterial_Deferred_Shadow::SetSpecularTexture(TextureData* pTextureData)
 {
 	SetVariable_Scalar(L"gUseSpecularMap", pTextureData != nullptr);
 	SetVariable_Texture(L"gSpecularMap", pTextureData);

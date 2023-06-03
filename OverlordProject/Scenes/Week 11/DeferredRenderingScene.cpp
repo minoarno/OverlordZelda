@@ -137,19 +137,19 @@ void DeferredRenderingScene::LoadSponzaMesh(const std::wstring& meshName, const 
 		std::wstring texPath{};
 		if(GetSponzaTexture(meshName, L"Diffuse", L"", texPath))
 		{
-			pMaterial->SetDiffuseMap(texPath);
+			pMaterial->SetDiffuseTexture(texPath);
 		}
 
 		//Specular
 		if (GetSponzaTexture(meshName, L"Specular", specularMap, texPath))
 		{
-			pMaterial->SetSpecularMap(texPath);
+			pMaterial->SetSpecularTexture(texPath);
 		}
 
 		//Normal
 		if (GetSponzaTexture(meshName, L"Normal", normalMap, texPath))
 		{
-			pMaterial->SetNormalMap(texPath);
+			pMaterial->SetNormalTexture(texPath);
 		}
 	}
 	else

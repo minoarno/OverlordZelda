@@ -1,4 +1,5 @@
 #pragma once
+class Bomb;
 class BombSpawner final : public GameObject
 {
 public:
@@ -11,7 +12,9 @@ public:
 
 protected:
 	virtual void Initialize(const SceneContext& scenetext) override;
-
+	virtual void Update(const SceneContext&) override;
+	void SpawnBomb();
 private:
 	PxMaterial* m_pMaterial;
+	Bomb* m_pBomb;
 };

@@ -11,6 +11,7 @@
 #include "Prefabs/Rock.h"
 #include "Prefabs/Gem.h"
 #include "Prefabs/UI/HUD.h"
+#include "Prefabs/BombSpawner.h"
 
 Level1::Level1()
 	: GameScene{L"Level1"}
@@ -27,11 +28,9 @@ void Level1::Initialize()
 	m_SceneContext.settings.drawGrid = false;
 	m_SceneContext.settings.enableOnGUI = true;
 	m_SceneContext.settings.drawPhysXDebug = false;
-#ifdef Deferred
+
 	m_SceneContext.useDeferredRendering = true;
-#else
-	m_SceneContext.useDeferredRendering = false;
-#endif
+
 
 	//m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
 	m_SceneContext.pLights->SetDirectionalLight({ 0,0,0 }, { -160, -66, 20 });
@@ -68,6 +67,7 @@ GameObject* Level1::AddPlayer()
 	characterDesc.actionId_MoveLeft = CharacterMoveLeft;
 	characterDesc.actionId_MoveRight = CharacterMoveRight;
 	characterDesc.actionId_Jump = CharacterJump;
+	characterDesc.actionId_Throw = ThrowBomb;
 
 	m_pCharacter = AddChild(new Character(characterDesc, {0,3,15}));
 	m_pCharacter->GetTransform()->Translate(0.f, 5.f, 0.f);
@@ -88,6 +88,18 @@ GameObject* Level1::AddPlayer()
 	inputAction = InputAction(CharacterJump, InputState::pressed, VK_SPACE, -1, XINPUT_GAMEPAD_A);
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
+	inputAction = InputAction(ThrowBomb, InputState::pressed, 'E', -1, XINPUT_GAMEPAD_B);
+	m_SceneContext.pInput->AddInputAction(inputAction);
+
+	inputAction = InputAction(Settings, InputState::pressed, VK_ESCAPE, -1, XINPUT_GAMEPAD_START);
+	m_SceneContext.pInput->AddInputAction(inputAction);
+
+	inputAction = InputAction(SettingsMoveUp, InputState::pressed, -1, -1, XINPUT_GAMEPAD_DPAD_UP);
+	m_SceneContext.pInput->AddInputAction(inputAction);
+
+	inputAction = InputAction(SettingsMoveDown, InputState::pressed, -1, -1, XINPUT_GAMEPAD_DPAD_DOWN);
+	m_SceneContext.pInput->AddInputAction(inputAction);
+
 	return m_pCharacter;
 }
 
@@ -95,6 +107,7 @@ GameObject* Level1::AddLevel()
 {
 	float scale = 2;
 
+	//Island
 	GameObject* pLevel = new GameObject();
 	ModelComponent* pModelComponent = pLevel->AddComponent(new ModelComponent(L"Meshes/Zelda/SmallIsland.ovm"));
 
@@ -116,6 +129,7 @@ GameObject* Level1::AddLevel()
 	pLevel->GetTransform()->Scale(scale);
 	AddChild(pLevel);
 
+	//Trees
 	AddTree({ -9.2f,1.1f,-22.5f }, {}, .01f);
 	AddTree({ -30.8f,-.2f,-4.f }, {0,65,0}, .01f);
 	AddTree({ -33.1f,3.8f,-4.7f }, {0,135,0}, .01f);
@@ -123,7 +137,21 @@ GameObject* Level1::AddLevel()
 	AddTree({ 62.f,3.6f,-17.5f }, {0,-38,0}, .01f);
 	AddTree({ -3.8f,-0.7f, -4.f }, {0,273,0}, .01f);
 
+	AddBombSpawner({ -10.8f, 2.5f, -4.7f });
+	AddBombSpawner({ 42.5f, 1.8f, -34.5f });
+	
+	AddSmallExplodableRock({ 43.f, .75f, -22.f }, { }, .01f);
+	AddSmallExplodableRock({ -15.9f, .95f, 10.2f }, { }, .01f);
+	AddSmallExplodableRock({ 11.3f, .05f, -2.6f }, { }, .01f);
+	AddSmallExplodableRock({ -6.f, 1.25f, -26.9f }, { }, .01f);
+	
+	m_pObject = AddMediumExplodableRock({ }, { }, .01f);
+	AddMediumExplodableRock({ 9.8f, -.4f, -9.7f }, { }, .01f);
+	AddMediumExplodableRock({ -14.8f, 1.6f, -31.7f }, { }, .04f);
+	
 	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
+	AddBigExplodableRock({ }, { }, .01f);
+	AddBigExplodableRock({ }, { }, .01f);
 
 	return pLevel;
 }
@@ -139,13 +167,8 @@ GameObject* Level1::AddTree(const XMFLOAT3& position, const XMFLOAT3& rotation, 
 
 void Level1::AddLevelObject(ModelComponent* pModelComponent, UINT8 id, const std::wstring& filename)
 {
-#ifdef Deferred
 	BasicMaterial_Deferred_Shadow* pMat = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
-	pMat->SetDiffuseMap(L"Textures/Zelda/" + filename + L".png");
-#else
-	DiffuseMaterial_Shadow* pMat = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
 	pMat->SetDiffuseTexture(L"Textures/Zelda/" + filename + L".png");
-#endif
 	pModelComponent->SetMaterial(pMat, id);
 }
 
@@ -164,7 +187,6 @@ void Level1::ResetScene()
 	m_pGems.clear();
 
 	AddGem({ -10.f, -10.f, -10.f });
-	m_pObject = m_pGems[0];
 	AddGem({ -9.3f, 3.6f, 4.3f });
 	AddGem({ -20.f, 3.6f, 6.4f });
 	AddGem({ -29.1f, 3.6f, 5.5f });
@@ -222,6 +244,14 @@ GameObject* Level1::AddGem(const XMFLOAT3& position)
 	return pGem;
 }
 
+GameObject* Level1::AddBombSpawner(const XMFLOAT3& position)
+{
+	BombSpawner* pBombSpawner = AddChild(new BombSpawner{ m_pDefaultMaterial });
+	pBombSpawner->GetTransform()->Translate(position);
+
+	return pBombSpawner;
+}
+
 GameObject* Level1::AddSea()
 {
 	m_pSea = AddChild(new GameObject());
@@ -247,7 +277,7 @@ GameObject* Level1::AddSea()
 
 	RigidBodyComponent* pRigidBody = m_pSea->AddComponent(new RigidBodyComponent(true));
 	pRigidBody->AddCollider(PxBoxGeometry{ 500.f,500.f,.5f }, *m_pDefaultMaterial);
-
+	pRigidBody->SetCollisionGroup(CollisionGroup::Group0 | CollisionGroup::Group2);
 	return m_pSea;
 }
 
@@ -266,35 +296,35 @@ void Level1::OnGUI()
 {
 	//m_pSeaMaterial->DrawImGui();
 
-	auto curPos = m_pObject->GetTransform()->GetWorldPosition();
-	float pos[3]{ curPos.x, curPos.y, curPos.z};
-	ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
-	m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+	//auto curPos = m_pObject->GetTransform()->GetWorldPosition();
+	//float pos[3]{ curPos.x, curPos.y, curPos.z};
+	//ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
+	//m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+	//
+	//m_pCharacter->DrawImGui();
 
-	m_pCharacter->DrawImGui();
-
-	//auto curPos = m_pCharacter->GetLightOffset();
-	//float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
-	//ImGui::DragFloat4("Translation", pos, 0.1f, -1000, 1000);
-	//m_pCharacter->SetLightOffset(XMFLOAT4{ pos[0], pos[1], pos[2], pos[3] });
-	//
-	//curPos = m_SceneContext.pLights->GetDirectionalLight().direction;
-	//float dir[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
-	//ImGui::DragFloat4("Direction", dir, 0.1f, -1000, 1000);
-	//m_SceneContext.pLights->GetDirectionalLight().direction = XMFLOAT4{ dir[0], dir[1], dir[2], dir[3]};
-	//
-	//ImGui::Checkbox("Draw ShadowMap", &m_DrawShadowMap);
-	//ImGui::SliderFloat("ShadowMap Scale", &m_ShadowMapScale, 0.f, 1.f);
-	//
-	//float value = ShadowMapRenderer::Get()->GetFar();
-	//ImGui::DragFloat("Far", &value, 0.1f, -1000, 1000);
-	//ShadowMapRenderer::Get()->SetFar(value);
-	//
-	//value = ShadowMapRenderer::Get()->GetNear();
-	//ImGui::DragFloat("Near", &value, 0.1f, -1000, 1000);
-	//ShadowMapRenderer::Get()->SetNear(value);
-	//
-	//value = ShadowMapRenderer::Get()->GetSize();
-	//ImGui::DragFloat("Size", &value, 0.1f, -1000, 1000);
-	//ShadowMapRenderer::Get()->SetSize(value);
+	XMFLOAT4 curPos = m_SceneContext.pLights->GetDirectionalLight().position;
+	float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
+	ImGui::DragFloat4("Translation", pos, 0.1f, -1000, 1000);
+	m_SceneContext.pLights->GetDirectionalLight().position = XMFLOAT4{ pos[0], pos[1], pos[2], pos[3] };
+	
+	curPos = m_SceneContext.pLights->GetDirectionalLight().direction;
+	float dir[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
+	ImGui::DragFloat4("Direction", dir, 0.1f, -1000, 1000);
+	m_SceneContext.pLights->GetDirectionalLight().direction = XMFLOAT4{ dir[0], dir[1], dir[2], dir[3]};
+	
+	ImGui::Checkbox("Draw ShadowMap", &m_DrawShadowMap);
+	ImGui::SliderFloat("ShadowMap Scale", &m_ShadowMapScale, 0.f, 1.f);
+	
+	float value = ShadowMapRenderer::Get()->GetFar();
+	ImGui::DragFloat("Far", &value, 0.1f, -1000, 1000);
+	ShadowMapRenderer::Get()->SetFar(value);
+	
+	value = ShadowMapRenderer::Get()->GetNear();
+	ImGui::DragFloat("Near", &value, 0.1f, -1000, 1000);
+	ShadowMapRenderer::Get()->SetNear(value);
+	
+	value = ShadowMapRenderer::Get()->GetSize();
+	ImGui::DragFloat("Size", &value, 0.1f, -1000, 1000);
+	ShadowMapRenderer::Get()->SetSize(value);
 }

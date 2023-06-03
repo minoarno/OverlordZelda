@@ -24,6 +24,7 @@ protected:
 	GameObject* AddMediumExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale);
 	GameObject* AddBigExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale);
 	GameObject* AddGem(const XMFLOAT3& position);
+	GameObject* AddBombSpawner(const XMFLOAT3& position);
 	GameObject* AddSea();
 	GameObject* AddSkyBox();
 	void AddLevelObject(ModelComponent* pModelComponent, UINT8 id, const std::wstring& filename);
@@ -41,7 +42,11 @@ private:
 		CharacterMoveRight,
 		CharacterMoveForward,
 		CharacterMoveBackward,
-		CharacterJump
+		CharacterJump,
+		ThrowBomb,
+		Settings,
+		SettingsMoveUp,
+		SettingsMoveDown
 	};
 
 	Character* m_pCharacter;
