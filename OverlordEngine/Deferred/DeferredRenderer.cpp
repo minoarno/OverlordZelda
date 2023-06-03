@@ -132,6 +132,11 @@ void DeferredRenderer::End(const SceneContext& sceneContext) const
 	}
 }
 
+ID3D11ShaderResourceView* DeferredRenderer::GetDepthBuffer() const
+{
+	return m_ShaderResourceViews[int(eGBufferId::Depth)];
+}
+
 void DeferredRenderer::DrawImGui()
 {
 	ImGui::Checkbox("Draw GBuffer", &m_DrawImGui);

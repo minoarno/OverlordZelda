@@ -24,6 +24,7 @@ public:
 
 	void DrawImGui();
 
+	ID3D11ShaderResourceView* GetDepthBuffer() const;
 protected:
 	void Initialize() override;
 

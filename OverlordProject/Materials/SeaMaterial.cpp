@@ -89,5 +89,5 @@ void SeaMaterial::OnUpdateModelVariables(const SceneContext& sceneContext, const
 
 	//sceneContext.
 
-	//SetVariable_Texture(L"gDepthBuffer", DepthRenderer::Get()->GetRenderTarget());
+	SetVariable_Texture(L"gDepthBuffer", DeferredRenderer::Get()->GetDepthBuffer());
 }
