@@ -256,28 +256,28 @@ void Level1::AddPauseMenu()
 	{
 		SetPauseMenu(false);
 	} });
-	pButton->GetTransform()->Translate(600, 150, 0);
+	pButton->GetTransform()->Translate(500, 150, 0);
 	m_pButtons.emplace_back(pButton);
 
 	pButton = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonActivated.png",[&]()
 	{
 		SceneManager::Get()->SetActiveGameScene(L"Main Menu");
 	} });
-	pButton->GetTransform()->Translate(600, 300, 0);
+	pButton->GetTransform()->Translate(500, 300, 0);
 	m_pButtons.emplace_back(pButton);
 
 	pButton = AddChild(new Button{ L"Textures/UI/ExitButtonNormal.png",L"Textures/UI/ExitButtonActivated.png",[&]()
 	{
 		ResetScene();
 	} });
-	pButton->GetTransform()->Translate(600, 450, 0);
+	pButton->GetTransform()->Translate(500, 450, 0);
 	m_pButtons.emplace_back(pButton);
 
 	pButton = AddChild(new Button{ L"Textures/UI/ExitButtonNormal.png",L"Textures/UI/ExitButtonActivated.png",[&]()
 		{
 			OverlordGame::Stop();
 		} });
-	pButton->GetTransform()->Translate(600, 600, 0);
+	pButton->GetTransform()->Translate(500, 600, 0);
 	m_pButtons.emplace_back(pButton);
 }
 
