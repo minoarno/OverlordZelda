@@ -1,4 +1,5 @@
 #pragma once
+class PostBlur;
 class DeferredRenderingScene : public GameScene
 {
 public:
@@ -19,5 +20,6 @@ protected:
 
 	GameObject* m_pSponza{};
 	bool m_FlashLightMode{ false };
+	PostBlur* m_pPostBlur{nullptr};
 };
 

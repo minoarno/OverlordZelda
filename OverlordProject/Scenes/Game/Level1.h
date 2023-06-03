@@ -62,5 +62,10 @@ private:
 	float m_ShadowMapScale{ 0.3f };
 
 	PxMaterial* m_pDefaultMaterial;
+
+	//Audio
+	FMOD::Sound* m_pBackgroundSoundFx;
+	FMOD::ChannelGroup* m_pSoundEffectGroup;
+	float m_MusicVolume{};
 };
 

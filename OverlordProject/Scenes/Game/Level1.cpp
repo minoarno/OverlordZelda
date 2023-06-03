@@ -12,6 +12,10 @@
 #include "Prefabs/Gem.h"
 #include "Prefabs/UI/HUD.h"
 #include "Prefabs/BombSpawner.h"
+#include "Materials/Post/PostCameraShake.h"
+
+//Audio
+#include "Managers/SoundManager.h"
 
 Level1::Level1()
 	: GameScene{L"Level1"}
@@ -29,7 +33,7 @@ void Level1::Initialize()
 	m_SceneContext.settings.enableOnGUI = true;
 	m_SceneContext.settings.drawPhysXDebug = false;
 
-	m_SceneContext.useDeferredRendering = true;
+	m_SceneContext.useDeferredRendering = false;
 
 
 	//m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
@@ -43,8 +47,23 @@ void Level1::Initialize()
 
 	AddSea();
 	AddSkyBox();
-
+	
 	AddChild(new HUD{});
+
+	//Audio
+	auto fmodResult = SoundManager::Get()->GetSystem()->createChannelGroup("Sound Effects", &m_pSoundEffectGroup);
+	SoundManager::Get()->ErrorCheck(fmodResult);
+
+	m_MusicVolume = 0.3f;
+
+	SoundManager::Get()->GetSystem()->createStream("Resources/Audio/ReadyToFight.mp3", FMOD_DEFAULT, nullptr, &m_pBackgroundSoundFx);
+	SoundManager::Get()->ErrorCheck(fmodResult);
+
+	SoundManager::Get()->GetSystem()->playSound(m_pBackgroundSoundFx, m_pSoundEffectGroup, false, nullptr);
+	m_pSoundEffectGroup->setVolume(m_MusicVolume);
+
+	PostCameraShake* pPostCameraShake = MaterialManager::Get()->CreateMaterial<PostCameraShake>();
+	AddPostProcessingEffect(pPostCameraShake);
 }
 
 void Level1::Update()

@@ -5,6 +5,9 @@
 #include "Materials/Deferred/BasicMaterial_Deferred.h"
 #include "Materials/Deferred/BasicMaterial_Deferred_Shadow.h"
 
+#include "Materials/Post/PostCameraShake.h"
+#include "Materials/Post/PostBlur.h"
+
 #define FULL_SPONZA
 
 void DeferredRenderingScene::Initialize()
@@ -89,6 +92,12 @@ void DeferredRenderingScene::Initialize()
 	light.range = 30.0f;
 	light.type = LightType::Point;
 	m_SceneContext.pLights->AddLight(light);
+
+	//PostCameraShake* pPostCameraShake = MaterialManager::Get()->CreateMaterial<PostCameraShake>();
+	//AddPostProcessingEffect(pPostCameraShake);
+
+	m_pPostBlur = MaterialManager::Get()->CreateMaterial<PostBlur>();
+	AddPostProcessingEffect(m_pPostBlur);
 }
 
 void DeferredRenderingScene::Update()
@@ -113,6 +122,10 @@ void DeferredRenderingScene::Update()
 
 void DeferredRenderingScene::OnGUI()
 {
+	bool isEnabled = m_pPostBlur->IsEnabled();
+	ImGui::Checkbox("Blur PP", &isEnabled);
+	m_pPostBlur->SetIsEnabled(isEnabled);
+
 	DeferredRenderer::Get()->DrawImGui();
 
 	ImGui::Checkbox("Flashlight Mode", &m_FlashLightMode);

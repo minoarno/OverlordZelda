@@ -122,6 +122,7 @@ void DeferredRenderer::End(const SceneContext& sceneContext) const
 	//6. Reset Game RenderTarget (back to normal)
 	m_GameContext.pGame->SetRenderTarget(nullptr);
 
+	QuadRenderer::Get()->Draw(m_ShaderResourceViews[1], { 0,0,1,1 }); //Gets rid of the pink hue on top of the post processing.
 
 	//DEBUG >> Visualize GBUFFER
 	//Draw ImGui (to default RT)

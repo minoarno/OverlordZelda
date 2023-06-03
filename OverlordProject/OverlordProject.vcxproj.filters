@@ -34,6 +34,7 @@
     <ClCompile Include="Prefabs\Rock.cpp" />
     <ClCompile Include="Prefabs\Bomb.cpp" />
     <ClCompile Include="Prefabs\BombSpawner.cpp" />
+    <ClCompile Include="Materials\Post\PostCameraShake.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -69,5 +70,6 @@
     <ClInclude Include="Prefabs\Rock.h" />
     <ClInclude Include="Prefabs\Bomb.h" />
     <ClInclude Include="Prefabs\BombSpawner.h" />
+    <ClInclude Include="Materials\Post\PostCameraShake.h" />
   </ItemGroup>
 </Project>
