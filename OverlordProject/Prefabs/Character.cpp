@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "Character.h"
 #include "Scenegraph/GameObject.h"
-#include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
+#include "Prefabs/Bomb.h"
+
 #include "Materials/Deferred/BasicMaterial_Deferred_Shadow_Skinned.h"
+
+
 Character::Character(const CharacterDesc& characterDesc, const XMFLOAT3& cameraOffset) 
 	: m_CharacterDesc{ characterDesc }
 	, m_MoveAcceleration(characterDesc.maxMoveSpeed / characterDesc.moveAccelerationTime)
@@ -11,11 +14,21 @@ Character::Character(const CharacterDesc& characterDesc, const XMFLOAT3& cameraO
 	, m_CameraOffset{ cameraOffset }
 {}
 
+bool Character::PickUpBomb(Bomb* pBomb)
+{
+	if (m_pBomb == nullptr)
+	{
+		m_pBomb = pBomb;
+		return true;
+	}
+	return false;
+}
+
 void Character::Initialize(const SceneContext& /*sceneContext*/)
 {
-
 	//Controller
 	m_pControllerComponent = AddComponent(new ControllerComponent(m_CharacterDesc.controller));
+	SetTag(L"Link");
 
 	//Camera
 	const auto pCamera = AddChild(new FixedCamera());
@@ -27,7 +40,7 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	
 	m_pVisuals = AddChild(new GameObject{});
 	auto pModel = m_pVisuals->AddComponent(new ModelComponent(L"Meshes/Zelda/Link.ovm"));
-#ifdef Deferred
+
 	auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow_Skinned>();
 	pSkinnedMaterial->SetDiffuseMap(L"Textures/Zelda/body.png");
 	pModel->SetMaterial(pSkinnedMaterial, 0);
@@ -43,23 +56,6 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow_Skinned>();
 	pSkinnedMaterial->SetDiffuseMap(L"Textures/Zelda/eyebrow1.png");
 	pModel->SetMaterial(pSkinnedMaterial, 4);
-#else
-	auto pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/body.png");
-	pModel->SetMaterial(pSkinnedMaterial, 0);
-	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/mouth1.png");
-	pModel->SetMaterial(pSkinnedMaterial, 1);
-	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/pupil.png");
-	pModel->SetMaterial(pSkinnedMaterial, 2);
-	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/eye1.png");
-	pModel->SetMaterial(pSkinnedMaterial, 3);
-	pSkinnedMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
-	pSkinnedMaterial->SetDiffuseTexture(L"Textures/Zelda/eyebrow1.png");
-	pModel->SetMaterial(pSkinnedMaterial, 4);
-#endif
 
 	m_pVisuals->GetTransform()->Scale(0.0002f);
 	m_pVisuals->GetTransform()->Rotate(0, 90, 0);
@@ -70,8 +66,6 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	m_pAnimator->SetAnimation(m_CharacterState);
 	m_pAnimator->SetAnimationSpeed(m_AnimationSpeed);
 	m_pAnimator->Play(); 
-	
-	SetTag(L"Link");
 }
 
 void Character::Update(const SceneContext& sceneContext)
@@ -81,7 +75,7 @@ void Character::Update(const SceneContext& sceneContext)
 
 	if (!sceneContext.pGameTime->IsRunning())return;
 
-	//if (m_pCameraComponent->IsActive())
+	if (m_pCameraComponent->IsActive())
 	{
 		constexpr float epsilon{ 0.01f }; //Constant that can be used to compare if a float is near zero
 
@@ -133,7 +127,7 @@ void Character::Update(const SceneContext& sceneContext)
 		{
 			look = DirectX::XMFLOAT2{ (float)mouseMovement.x, -(float)mouseMovement.y };
 		}
-		else if (abs(look.x) < epsilon && abs(look.y) < epsilon)
+		if (abs(look.x) < epsilon && abs(look.y) < epsilon)
 		{
 			look = sceneContext.pInput->GetThumbstickPosition(false);
 		}
@@ -241,8 +235,90 @@ void Character::Update(const SceneContext& sceneContext)
 		DirectX::XMStoreFloat3(&displacementFloat3, DirectX::XMLoadFloat3(&m_TotalVelocity) * sceneContext.pGameTime->GetElapsed());
 		m_pControllerComponent->Move(displacementFloat3, epsilon);
 
+		if (m_pBomb != nullptr)
+		{
+			m_pBomb->GetTransform()->Translate(pos.x, pos.y + m_CharacterDesc.controller.height * .5f, pos.z);
+		}
+
 		//The above is a simple implementation of Movement Dynamics, adjust the code to further improve the movement logic and behaviour.
 		//Also, it can be usefull to use a seperate RayCast to check if the character is grounded (more responsive)
+
+
+		float distance = 1.6f;
+		if (m_CharacterState != CharacterAnimation::Throw)
+		{
+			if (abs(m_TotalVelocity.x) < epsilon && abs(m_TotalVelocity.y) < 1 && abs(m_TotalVelocity.z) < epsilon)
+			{
+				physx::PxVec3 start = PhysxHelper::ToPxVec3(pos);
+				physx::PxRaycastBuffer hit{};
+				physx::PxQueryFilterData filterData{};
+				filterData.data.word0 = UINT(CollisionGroup::Group2);
+
+				auto activeScene = SceneManager::Get()->GetActiveScene();
+				if (activeScene->GetPhysxProxy()->Raycast(start,
+					{0,-1,0},
+					distance,
+					hit,
+					physx::PxHitFlag::eDEFAULT | physx::PxHitFlag::eMESH_ANY,
+					filterData) && hit.hasBlock)
+				{
+					SetCharacterAnimation(CharacterAnimation::SwimmingIdle);
+				}
+				else
+				{
+					SetCharacterAnimation(CharacterAnimation::Idle);
+				}
+			}
+			else if (m_TotalVelocity.y > 1)
+			{
+				SetCharacterAnimation(CharacterAnimation::Jump);
+			}
+			else if (m_TotalVelocity.y < -1)
+			{
+				SetCharacterAnimation(CharacterAnimation::Falling);
+			}
+			else
+			{
+				physx::PxVec3 start = PhysxHelper::ToPxVec3(pos);
+				physx::PxRaycastBuffer hit{};
+				physx::PxQueryFilterData filterData{};
+				filterData.data.word0 = UINT(CollisionGroup::Group2);
+
+				auto activeScene = SceneManager::Get()->GetActiveScene();
+				if (activeScene->GetPhysxProxy()->Raycast(start,
+					{ 0,-1,0 },
+					distance,
+					hit,
+					physx::PxHitFlag::eDEFAULT | physx::PxHitFlag::eMESH_ANY,
+					filterData) && hit.hasBlock)
+				{
+					SetCharacterAnimation(CharacterAnimation::Swimming);
+				}
+				else
+				{
+					SetCharacterAnimation(CharacterAnimation::Running);
+				}
+			}
+		}
+		else
+		{
+			if (m_LastAnimationTime + m_AnimationDuration > sceneContext.pGameTime->GetTotal())
+			{
+				SetCharacterAnimation(CharacterAnimation::Idle);
+			}
+		}
+
+		if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_Throw))
+		{
+			if (m_CharacterState != CharacterAnimation::Throw)
+			{
+
+				SetCharacterAnimation(CharacterAnimation::Throw);
+
+				m_LastAnimationTime = sceneContext.pGameTime->GetTotal();
+				ThrowBomb();
+			}
+		}
 	}
 }
 
@@ -283,6 +359,43 @@ void Character::AdjustCamera()
 	}
 	XMFLOAT3 hitPointPos = { localDirection.x * distance, localDirection.y * distance, localDirection.z * distance };
 	m_pCameraComponent->GetTransform()->Translate(hitPointPos);
+}
+
+void Character::ThrowBomb()
+{
+	if (m_pBomb == nullptr) return;
+
+	XMFLOAT3 forward{};
+	XMStoreFloat3(&forward, XMLoadFloat3(&GetTransform()->GetForward()) * -1);
+	forward.y += .1f;
+	XMStoreFloat3(&forward, XMVector3Normalize(XMLoadFloat3(&forward)));
+	XMStoreFloat3(&forward, XMLoadFloat3(&forward) * 15);
+
+	XMFLOAT3 bulletPos{ GetTransform()->GetPosition() };
+	XMStoreFloat3(&bulletPos, XMVectorAdd(XMLoadFloat3(&bulletPos), XMLoadFloat3(&forward)));
+	m_pBomb->GetTransform()->Translate(bulletPos);
+	m_pBomb->Launch(forward);
+
+	m_pBomb = nullptr;
+}
+
+void Character::SetCharacterAnimation(CharacterAnimation newAnimationState)
+{
+	if (m_CharacterState == newAnimationState) return;
+
+	switch (newAnimationState)
+	{
+	case CharacterAnimation::Swimming:
+	case CharacterAnimation::SwimmingIdle:
+		m_pVisuals->GetTransform()->Translate(0, -2.6f, 0);
+		break;
+	default:
+		m_pVisuals->GetTransform()->Translate(0, -1.4f, 0);
+		break;
+	}
+
+	m_pAnimator->SetAnimation(newAnimationState);
+	m_CharacterState = newAnimationState;
 }
 
 void Character::DrawImGui()

@@ -28,20 +28,25 @@ struct CharacterDesc
 	int actionId_MoveRight{ -1 };
 	int actionId_MoveForward{ -1 };
 	int actionId_MoveBackward{ -1 };
+	int actionId_Throw{ -1 };
 	int actionId_Jump{ -1 };
 };
 
+class Bomb;
 class Character : public GameObject
 {
 public:
 	enum CharacterAnimation : uint8_t
 	{
 		Idle = 0,
-		Dying = 1,
-		Throwing = 4,
-		Running = 5,
-		Jumping = 6,
-		Climbing = 7
+		Throw = 1,
+		Swimming = 2,
+		Running = 3,
+		Jump = 4,
+		Dying = 5,
+		Climbing = 6,
+		Falling = 7,
+		SwimmingIdle = 8
 	};
 
 	Character(const CharacterDesc& characterDesc, const XMFLOAT3& cameraOffset);
@@ -56,6 +61,8 @@ public:
 
 	void SetLightOffset(const XMFLOAT4& offset) { m_LightOffset = offset; };
 	XMFLOAT4 GetLightOffset()const { return m_LightOffset; };
+
+	bool PickUpBomb(Bomb* pBomb);
 protected:
 	void Initialize(const SceneContext&) override;
 	void Update(const SceneContext&) override;
@@ -88,7 +95,13 @@ private:
 	XMFLOAT3 m_CurrentDirection{};					//Current/Last Direction based on Camera forward/right (Stored for deacceleration)
 
 	void AdjustCamera();
+	void ThrowBomb();
+	void SetCharacterAnimation(CharacterAnimation newAnimationState);
 	float m_CameraNormalOffset{.8f};
 	bool m_HasHitPreviousTime{ false };
+
+	float m_LastAnimationTime{ }, m_AnimationDuration{ 1.f };
+
+	Bomb* m_pBomb{ nullptr };
 };
 
