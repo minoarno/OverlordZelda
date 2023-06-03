@@ -13,6 +13,9 @@
 #include "Prefabs/UI/HUD.h"
 #include "Prefabs/BombSpawner.h"
 #include "Materials/Post/PostCameraShake.h"
+#include "Materials/Post/PostBlur.h"
+
+#include "Prefabs/UI/Button.h"
 
 //Audio
 #include "Managers/SoundManager.h"
@@ -40,39 +43,56 @@ void Level1::Initialize()
 	auto physX = PhysXManager::Get()->GetPhysics();
 	m_pDefaultMaterial = physX->createMaterial(1.f, 1.f, 0.f);
 
+	//Level
 	AddLevel();
 	AddPlayer();
-
+	
 	AddSea();
 	AddSkyBox();
 	
 	AddChild(new HUD{});
-
+	
 	//Audio
 	auto fmodResult = SoundManager::Get()->GetSystem()->createChannelGroup("Sound Effects", &m_pSoundEffectGroup);
 	SoundManager::Get()->ErrorCheck(fmodResult);
-
+	
 	m_MusicVolume = 0.3f;
-
+	
 	SoundManager::Get()->GetSystem()->createStream("Resources/Audio/ReadyToFight.mp3", FMOD_DEFAULT, nullptr, &m_pBackgroundSoundFx);
 	SoundManager::Get()->ErrorCheck(fmodResult);
-
+	
 	SoundManager::Get()->GetSystem()->playSound(m_pBackgroundSoundFx, m_pSoundEffectGroup, false, nullptr);
 	m_pSoundEffectGroup->setVolume(m_MusicVolume);
+	
+	//Post Processing
+	m_pCameraShake = MaterialManager::Get()->CreateMaterial<PostCameraShake>();
 
-	PostCameraShake* pPostCameraShake = MaterialManager::Get()->CreateMaterial<PostCameraShake>();
-	AddPostProcessingEffect(pPostCameraShake);
+	//UI
+	AddPauseMenu();
 }
 
 void Level1::Update()
 {
-	for (int i = 0; i < m_pGems.size(); i++)
+	if (m_SceneContext.pInput->IsActionTriggered(Settings))
 	{
-		if (m_pGems[i] != nullptr && m_pGems[i]->GetMarkForDelete())
+		if (m_SceneContext.pGameTime->IsRunning())
 		{
-			RemoveChild(m_pGems[i], true);
-			m_pGems[i] = nullptr;
+			SetPauseMenu(true);
 		}
+		else
+		{
+			SetPauseMenu(false);
+		}
+		return;
+	}
+
+	if (m_SceneContext.pGameTime->IsRunning())
+	{
+		UpdateScene();
+	}
+	else
+	{
+		UpdatePause();
 	}
 }
 
@@ -115,6 +135,9 @@ GameObject* Level1::AddPlayer()
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
 	inputAction = InputAction(SettingsMoveDown, InputState::pressed, -1, -1, XINPUT_GAMEPAD_DPAD_DOWN);
+	m_SceneContext.pInput->AddInputAction(inputAction);
+
+	inputAction = InputAction(SettingsPress, InputState::pressed, -1, -1, XINPUT_GAMEPAD_A);
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
 	return m_pCharacter;
@@ -196,6 +219,8 @@ void Level1::OnSceneActivated()
 
 void Level1::ResetScene()
 {
+	RemovePostProcessingEffect(m_pCameraShake);
+
 	for (int i = 0; i < m_pGems.size(); i++)
 	{
 		RemoveChild(m_pGems[i], true);
@@ -221,6 +246,61 @@ void Level1::PostDraw()
 	if (m_DrawShadowMap) {
 
 		ShadowMapRenderer::Get()->Debug_DrawDepthSRV({ m_SceneContext.windowWidth - 10.f, 10.f }, { m_ShadowMapScale, m_ShadowMapScale }, { 1.f,0.f });
+	}
+}
+
+void Level1::AddPauseMenu()
+{
+	auto pButton = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonActivated.png",[&]()
+	{
+		SetPauseMenu(false);
+	} });
+	pButton->GetTransform()->Translate(600, 150, 0);
+	m_pButtons.emplace_back(pButton);
+
+	pButton = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonActivated.png",[&]()
+	{
+		SceneManager::Get()->SetActiveGameScene(L"Main Menu");
+	} });
+	pButton->GetTransform()->Translate(600, 300, 0);
+	m_pButtons.emplace_back(pButton);
+
+	pButton = AddChild(new Button{ L"Textures/UI/ExitButtonNormal.png",L"Textures/UI/ExitButtonActivated.png",[&]()
+	{
+		ResetScene();
+	} });
+	pButton->GetTransform()->Translate(600, 450, 0);
+	m_pButtons.emplace_back(pButton);
+
+	pButton = AddChild(new Button{ L"Textures/UI/ExitButtonNormal.png",L"Textures/UI/ExitButtonActivated.png",[&]()
+		{
+			OverlordGame::Stop();
+		} });
+	pButton->GetTransform()->Translate(600, 600, 0);
+	m_pButtons.emplace_back(pButton);
+}
+
+void Level1::SetPauseMenu(bool isVisible)
+{
+	if (isVisible)
+	{
+		std::cout << "stop\n";
+		for (size_t i = 0; i < m_pButtons.size(); i++)
+		{
+			m_pButtons[i]->Enable();
+		}
+
+		m_SceneContext.pGameTime->Stop();
+	}
+	else
+	{
+		std::cout << "start\n";
+		m_SceneContext.pGameTime->Start();
+
+		for (size_t i = 0; i < m_pButtons.size(); i++)
+		{
+			m_pButtons[i]->Disable();
+		}
 	}
 }
 
@@ -344,4 +424,83 @@ void Level1::OnGUI()
 	value = ShadowMapRenderer::Get()->GetSize();
 	ImGui::DragFloat("Size", &value, 0.1f, -1000, 1000);
 	ShadowMapRenderer::Get()->SetSize(value);
+}
+
+void Level1::UpdatePause()
+{
+	if (m_SceneContext.pInput->IsActionTriggered(SettingsMoveUp))
+	{
+		if (m_SelectedButtonIndex == -1)
+		{
+			m_SelectedButtonIndex = 0;
+		}
+		else
+		{
+			m_SelectedButtonIndex--;
+			if (m_SelectedButtonIndex < 0) m_SelectedButtonIndex = static_cast<int>(m_pButtons.size()) - 1;
+		}
+
+		for (size_t i = 0; i < m_pButtons.size(); i++)
+		{
+			m_pButtons[i]->SetSelect(m_SelectedButtonIndex == i);
+		}
+	}
+
+	if (m_SceneContext.pInput->IsActionTriggered(SettingsMoveDown))
+	{
+		if (m_SelectedButtonIndex == -1)
+		{
+			m_SelectedButtonIndex = 0;
+		}
+		else
+		{
+			m_SelectedButtonIndex++;
+			if (m_SelectedButtonIndex >= m_pButtons.size()) m_SelectedButtonIndex = 0;
+		}
+
+		for (size_t i = 0; i < m_pButtons.size(); i++)
+		{
+			m_pButtons[i]->SetSelect(m_SelectedButtonIndex == i);
+		}
+	}
+
+	if (m_SceneContext.pInput->IsActionTriggered(SettingsPress))
+	{
+		for (Button* button : m_pButtons)
+		{
+			button->Press(m_SceneContext);
+		}
+	}
+	if (m_SceneContext.pInput->IsMouseButton(InputState::pressed, VK_LBUTTON))
+	{
+		for (Button* button : m_pButtons)
+		{
+			if (button->IsHovering(m_SceneContext))
+			{
+				button->Press(m_SceneContext);
+			}
+		}
+	}
+	POINT mousePos = InputManager::GetMousePosition();
+	POINT prevMousePos = InputManager::GetMousePosition(true);
+	if (mousePos.x != prevMousePos.x || mousePos.y != prevMousePos.y)
+	{
+		m_SelectedButtonIndex = -1;
+		for (Button* button : m_pButtons)
+		{
+			button->IsHovering(m_SceneContext);
+		}
+	}
+}
+
+void Level1::UpdateScene()
+{
+	for (int i = 0; i < m_pGems.size(); i++)
+	{
+		if (m_pGems[i] != nullptr && m_pGems[i]->GetMarkForDelete())
+		{
+			RemoveChild(m_pGems[i], true);
+			m_pGems[i] = nullptr;
+		}
+	}
 }

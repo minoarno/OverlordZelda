@@ -1,7 +1,10 @@
 #pragma once
-class SeaMaterial;
-class Character;
 class Gem;
+class Button;
+class PostBlur;
+class Character;
+class SeaMaterial;
+class PostCameraShake;
 class Level1 final : public GameScene
 {
 public:
@@ -34,6 +37,9 @@ protected:
 
 	void PostDraw() override;
 
+	void AddPauseMenu();
+	void SetPauseMenu(bool isVisible);
+
 	void OnGUI() override;
 private:
 	enum InputIds
@@ -46,7 +52,8 @@ private:
 		ThrowBomb,
 		Settings,
 		SettingsMoveUp,
-		SettingsMoveDown
+		SettingsMoveDown,
+		SettingsPress
 	};
 
 	Character* m_pCharacter;
@@ -67,5 +74,13 @@ private:
 	FMOD::Sound* m_pBackgroundSoundFx;
 	FMOD::ChannelGroup* m_pSoundEffectGroup;
 	float m_MusicVolume{};
+
+	void UpdateScene();
+
+	void UpdatePause();
+	std::vector<Button*> m_pButtons;
+	int m_SelectedButtonIndex = -1;
+
+	PostCameraShake* m_pCameraShake{nullptr};
 };
 

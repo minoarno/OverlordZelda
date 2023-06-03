@@ -15,7 +15,8 @@ protected:
 	enum InputIds
 	{
 		SettingsMoveUp = 7,
-		SettingsMoveDown = 8
+		SettingsMoveDown = 8,
+		SettingsPress = 9
 	};
 
 	void Initialize() override;

@@ -83,6 +83,8 @@ void SeaMaterial::InitializeEffectVariables()
 
 void SeaMaterial::OnUpdateModelVariables(const SceneContext& sceneContext, const ModelComponent* ) const
 {
+	if (!sceneContext.pGameTime->IsRunning())return;
+
 	SetVariable_Scalar(L"gTotalTime", sceneContext.pGameTime->GetTotal());
 
 	//sceneContext.

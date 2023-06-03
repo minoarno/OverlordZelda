@@ -21,7 +21,13 @@ public:
 	bool IsSelected()const { return m_IsSelected; }
 	bool IsHovering(const SceneContext& sceneContext);
 
+
+	void Enable();
+	void Disable();
 private:
+	void UpdateSprites();
+
+	bool m_Disabled{ false };
 	bool m_IsSelected{ false };
 	SpriteComponent* m_pSpriteComponentNormal{};
 	SpriteComponent* m_pSpriteComponentActivated{};

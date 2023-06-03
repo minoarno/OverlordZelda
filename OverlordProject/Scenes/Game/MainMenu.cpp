@@ -32,6 +32,9 @@ void MainMenu::Initialize()
 
 	inputAction = InputAction(SettingsMoveDown, InputState::pressed, -1, -1, XINPUT_GAMEPAD_DPAD_DOWN);
 	m_SceneContext.pInput->AddInputAction(inputAction);
+
+	inputAction = InputAction(SettingsPress, InputState::pressed, -1, VK_LBUTTON, XINPUT_GAMEPAD_A);
+	m_SceneContext.pInput->AddInputAction(inputAction);
 }
 
 void MainMenu::Update()
@@ -53,7 +56,7 @@ void MainMenu::Update()
 			m_pButtons[i]->SetSelect(m_SelectedButtonIndex == i);
 		}
 	}
-	if (m_SceneContext.pInput->IsActionTriggered(SettingsMoveUp))
+	if (m_SceneContext.pInput->IsActionTriggered(SettingsMoveDown))
 	{
 		if (m_SelectedButtonIndex == -1)
 		{
@@ -71,17 +74,29 @@ void MainMenu::Update()
 		}
 	}
 
-	if (InputManager::IsMouseButton(InputState::pressed, VK_LBUTTON))
+	if (m_SceneContext.pInput->IsActionTriggered(SettingsPress))
 	{
 		for (Button* button : m_pButtons)
 		{
 			button->Press(m_SceneContext);
 		}
 	}
+	if (m_SceneContext.pInput->IsMouseButton(InputState::pressed, VK_LBUTTON))
+	{
+		for (Button* button : m_pButtons)
+		{
+			if (button->IsHovering(m_SceneContext))
+			{
+				button->Press(m_SceneContext);
+			}
+		}
+	}
 	POINT mousePos = InputManager::GetMousePosition();
 	POINT prevMousePos = InputManager::GetMousePosition(true);
 	if (mousePos.x != prevMousePos.x || mousePos.y != prevMousePos.y)
 	{
+		m_SelectedButtonIndex = -1;
+		std::cout << "Mouse moved\n";
 		for (Button* button : m_pButtons)
 		{
 			button->IsHovering(m_SceneContext);
