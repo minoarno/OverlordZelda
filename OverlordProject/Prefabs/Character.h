@@ -97,6 +97,7 @@ private:
 	void AdjustCamera();
 	void ThrowBomb();
 	void SetCharacterAnimation(CharacterAnimation newAnimationState);
+	bool DoesRaycastHitCollisionGroup(CollisionGroup collisionGroup, float distance) const;
 	float m_CameraNormalOffset{.8f};
 	bool m_HasHitPreviousTime{ false };
 

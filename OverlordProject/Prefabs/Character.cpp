@@ -244,23 +244,12 @@ void Character::Update(const SceneContext& sceneContext)
 		//Also, it can be usefull to use a seperate RayCast to check if the character is grounded (more responsive)
 
 
-		float distance = 1.6f;
+		float distance = 1.65f;
 		if (m_CharacterState != CharacterAnimation::Throw)
 		{
 			if (abs(m_TotalVelocity.x) < epsilon && abs(m_TotalVelocity.y) < 1 && abs(m_TotalVelocity.z) < epsilon)
 			{
-				physx::PxVec3 start = PhysxHelper::ToPxVec3(pos);
-				physx::PxRaycastBuffer hit{};
-				physx::PxQueryFilterData filterData{};
-				filterData.data.word0 = UINT(CollisionGroup::Group2);
-
-				auto activeScene = SceneManager::Get()->GetActiveScene();
-				if (activeScene->GetPhysxProxy()->Raycast(start,
-					{0,-1,0},
-					distance,
-					hit,
-					physx::PxHitFlag::eDEFAULT | physx::PxHitFlag::eMESH_ANY,
-					filterData) && hit.hasBlock)
+				if (DoesRaycastHitCollisionGroup(CollisionGroup::Group2, distance))
 				{
 					SetCharacterAnimation(CharacterAnimation::SwimmingIdle);
 				}
@@ -275,22 +264,14 @@ void Character::Update(const SceneContext& sceneContext)
 			}
 			else if (m_TotalVelocity.y < -1)
 			{
-				SetCharacterAnimation(CharacterAnimation::Falling);
+				if (!DoesRaycastHitCollisionGroup(CollisionGroup::Group1, 2))
+				{
+					SetCharacterAnimation(CharacterAnimation::Falling);
+				}
 			}
 			else
 			{
-				physx::PxVec3 start = PhysxHelper::ToPxVec3(pos);
-				physx::PxRaycastBuffer hit{};
-				physx::PxQueryFilterData filterData{};
-				filterData.data.word0 = UINT(CollisionGroup::Group2);
-
-				auto activeScene = SceneManager::Get()->GetActiveScene();
-				if (activeScene->GetPhysxProxy()->Raycast(start,
-					{ 0,-1,0 },
-					distance,
-					hit,
-					physx::PxHitFlag::eDEFAULT | physx::PxHitFlag::eMESH_ANY,
-					filterData) && hit.hasBlock)
+				if (DoesRaycastHitCollisionGroup(CollisionGroup::Group2,distance))
 				{
 					SetCharacterAnimation(CharacterAnimation::Swimming);
 				}
@@ -396,6 +377,22 @@ void Character::SetCharacterAnimation(CharacterAnimation newAnimationState)
 
 	m_pAnimator->SetAnimation(newAnimationState);
 	m_CharacterState = newAnimationState;
+}
+
+bool Character::DoesRaycastHitCollisionGroup(CollisionGroup collisionGroup, float distance) const
+{
+	auto activeScene = SceneManager::Get()->GetActiveScene();
+	physx::PxVec3 start = PhysxHelper::ToPxVec3(GetTransform()->GetPosition());
+	physx::PxRaycastBuffer hit{};
+	physx::PxQueryFilterData filterData{};
+	filterData.data.word0 = UINT(collisionGroup);
+
+	return activeScene->GetPhysxProxy()->Raycast(start,
+		{ 0,-1,0 },
+		distance,
+		hit,
+		physx::PxHitFlag::eDEFAULT | physx::PxHitFlag::eMESH_ANY | physx::PxHitFlag::eASSUME_NO_INITIAL_OVERLAP,
+		filterData) && hit.hasBlock;
 }
 
 void Character::DrawImGui()
