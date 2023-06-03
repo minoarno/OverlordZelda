@@ -11,4 +11,6 @@ public:
 
 protected:
 	void Initialize(const GameContext& /*gameContext*/) override {}
+
+	void UpdateBaseEffectVariables(const SceneContext& sceneContext, RenderTarget* pSource) override;
 };
