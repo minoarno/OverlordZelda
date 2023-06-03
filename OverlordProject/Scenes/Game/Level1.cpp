@@ -69,6 +69,7 @@ void Level1::Initialize()
 
 	//UI
 	AddPauseMenu();
+	SetPauseMenu(false);
 }
 
 void Level1::Update()
@@ -284,7 +285,6 @@ void Level1::SetPauseMenu(bool isVisible)
 {
 	if (isVisible)
 	{
-		std::cout << "stop\n";
 		for (size_t i = 0; i < m_pButtons.size(); i++)
 		{
 			m_pButtons[i]->Enable();
@@ -294,7 +294,6 @@ void Level1::SetPauseMenu(bool isVisible)
 	}
 	else
 	{
-		std::cout << "start\n";
 		m_SceneContext.pGameTime->Start();
 
 		for (size_t i = 0; i < m_pButtons.size(); i++)

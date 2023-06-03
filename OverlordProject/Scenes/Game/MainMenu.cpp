@@ -96,7 +96,6 @@ void MainMenu::Update()
 	if (mousePos.x != prevMousePos.x || mousePos.y != prevMousePos.y)
 	{
 		m_SelectedButtonIndex = -1;
-		std::cout << "Mouse moved\n";
 		for (Button* button : m_pButtons)
 		{
 			button->IsHovering(m_SceneContext);
