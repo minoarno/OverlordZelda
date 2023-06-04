@@ -29,7 +29,7 @@ void HUD::Initialize(const SceneContext&)
 	UpdateRedRupeesText();
 
 	go = AddChild(new GameObject{});
-	m_pRedRupee = go->AddComponent(new SpriteComponent{ L"Textures/UI/Rupees.png" });
+	m_pRedRupee = go->AddComponent(new SpriteComponent{ L"Textures/UI/RedRupees.png" });
 	m_pRedRupee->SetColor(XMFLOAT4{ 1,0,0,1 });
 	go->GetTransform()->Translate(x - 185.f, 10.f, 0.f);
 	go->GetTransform()->Scale(.25f, .25f, 0.5f);

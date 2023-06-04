@@ -34,8 +34,13 @@ void RedGem::Initialize(const SceneContext& )
 		});
 }
 
-void RedGem::Update(const SceneContext& )
+void RedGem::Update(const SceneContext& sceneContext)
 {
+	m_Rotation += m_RotationSpeed * sceneContext.pGameTime->GetElapsed();
+	if (m_Rotation > 360)m_Rotation -= 360;
+	else if (m_Rotation < 0) m_Rotation += 360;
+
+	GetTransform()->Rotate(0, m_Rotation, 0);
 }
 
 void RedGem::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction )
@@ -43,6 +48,6 @@ void RedGem::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction )
 	if (!m_MarkForDelete && pOtherObject->GetTag() == L"Link")
 	{
 		m_MarkForDelete = true;
-		HUD::Get()->IncreaseRupees(1);
+		HUD::Get()->IncreaseRedRupees(1);
 	}
 }

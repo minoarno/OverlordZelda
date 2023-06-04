@@ -2,6 +2,8 @@
 class Gem;
 class Rock;
 class Button;
+class RedGem;
+class Bridge;
 class PostBlur;
 class Character;
 class SeaMaterial;
@@ -63,7 +65,7 @@ private:
 	SeaMaterial* m_pSeaMaterial;
 
 	std::vector<Gem*> m_pGems;
-	std::vector<Gem*> m_pRedGems;
+	std::vector<RedGem*> m_pRedGems;
 	std::vector<Rock*> m_pRocks;
 
 	GameObject* m_pObject;
@@ -89,5 +91,7 @@ private:
 	SpriteComponent* m_pControlSchemeBackground{ nullptr };
 
 	PostCameraShake* m_pCameraShake{nullptr};
+
+	Bridge* m_pBridge{ nullptr };
 };
 

@@ -10,8 +10,10 @@
 #include "Prefabs/Tree.h"
 #include "Prefabs/Rock.h"
 #include "Prefabs/Gem.h"
+#include "Prefabs/RedGem.h"
 #include "Prefabs/UI/HUD.h"
 #include "Prefabs/BombSpawner.h"
+#include "Prefabs/Bridge.h"
 #include "Materials/Post/PostCameraShake.h"
 #include "Materials/Post/PostBlur.h"
 
@@ -28,6 +30,7 @@ Level1::Level1()
 	, m_pObject{ nullptr }
 {
 	m_pGems = std::vector<Gem*>();
+	m_pRedGems = std::vector<RedGem*>();
 }
 
 void Level1::Initialize()
@@ -42,6 +45,8 @@ void Level1::Initialize()
 
 	auto physX = PhysXManager::Get()->GetPhysics();
 	m_pDefaultMaterial = physX->createMaterial(1.f, 1.f, 0.f);
+
+	//m_pObject = AddChild(new Bridge{ m_pDefaultMaterial });
 
 	//Level
 	AddLevel();
@@ -235,6 +240,19 @@ void Level1::ResetScene()
 	AddGem({ -54.f, 8.5f, -4.4f });
 	AddGem({ -35.5f, 9.3f, -26.6f });
 
+	for (int i = 0; i < m_pRedGems.size(); i++)
+	{
+		if (m_pRedGems[i] != nullptr)
+		{
+			RemoveChild(m_pRedGems[i], true);
+			m_pRedGems[i] = nullptr;
+		}
+	}
+
+	m_pObject = AddRedGem({ 10,5,10 });
+	AddRedGem({ -13.3f, 5.f,-31.9f });
+	AddRedGem({ });
+
 	for (int i = 0; i < m_pRocks.size(); i++)
 	{
 		if (m_pRocks[i] != nullptr)
@@ -367,6 +385,16 @@ GameObject* Level1::AddGem(const XMFLOAT3& position)
 	return pGem;
 }
 
+GameObject* Level1::AddRedGem(const XMFLOAT3& position)
+{
+	RedGem* pRedGem = AddChild(new RedGem{ m_pDefaultMaterial });
+	pRedGem->GetTransform()->Translate(position);
+
+	m_pRedGems.emplace_back(pRedGem);
+
+	return pRedGem;
+}
+
 GameObject* Level1::AddBombSpawner(const XMFLOAT3& position)
 {
 	BombSpawner* pBombSpawner = AddChild(new BombSpawner{ m_pDefaultMaterial });
@@ -419,37 +447,37 @@ void Level1::OnGUI()
 {
 	//m_pSeaMaterial->DrawImGui();
 
-	//auto curPos = m_pObject->GetTransform()->GetWorldPosition();
-	//float pos[3]{ curPos.x, curPos.y, curPos.z};
-	//ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
-	//m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
-	//
-	//m_pCharacter->DrawImGui();
+	auto curPos = m_pObject->GetTransform()->GetWorldPosition();
+	float pos[3]{ curPos.x, curPos.y, curPos.z};
+	ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
+	m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+	
+	m_pCharacter->DrawImGui();
 
-	XMFLOAT4 curPos = m_SceneContext.pLights->GetDirectionalLight().position;
-	float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
-	ImGui::DragFloat4("Translation", pos, 0.1f, -1000, 1000);
-	m_SceneContext.pLights->GetDirectionalLight().position = XMFLOAT4{ pos[0], pos[1], pos[2], pos[3] };
-	
-	curPos = m_SceneContext.pLights->GetDirectionalLight().direction;
-	float dir[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
-	ImGui::DragFloat4("Direction", dir, 0.1f, -1000, 1000);
-	m_SceneContext.pLights->GetDirectionalLight().direction = XMFLOAT4{ dir[0], dir[1], dir[2], dir[3]};
-	
-	ImGui::Checkbox("Draw ShadowMap", &m_DrawShadowMap);
-	ImGui::SliderFloat("ShadowMap Scale", &m_ShadowMapScale, 0.f, 1.f);
-	
-	float value = ShadowMapRenderer::Get()->GetFar();
-	ImGui::DragFloat("Far", &value, 0.1f, -1000, 1000);
-	ShadowMapRenderer::Get()->SetFar(value);
-	
-	value = ShadowMapRenderer::Get()->GetNear();
-	ImGui::DragFloat("Near", &value, 0.1f, -1000, 1000);
-	ShadowMapRenderer::Get()->SetNear(value);
-	
-	value = ShadowMapRenderer::Get()->GetSize();
-	ImGui::DragFloat("Size", &value, 0.1f, -1000, 1000);
-	ShadowMapRenderer::Get()->SetSize(value);
+	//XMFLOAT4 curPos = m_SceneContext.pLights->GetDirectionalLight().position;
+	//float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
+	//ImGui::DragFloat4("Translation", pos, 0.1f, -1000, 1000);
+	//m_SceneContext.pLights->GetDirectionalLight().position = XMFLOAT4{ pos[0], pos[1], pos[2], pos[3] };
+	//
+	//curPos = m_SceneContext.pLights->GetDirectionalLight().direction;
+	//float dir[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
+	//ImGui::DragFloat4("Direction", dir, 0.1f, -1000, 1000);
+	//m_SceneContext.pLights->GetDirectionalLight().direction = XMFLOAT4{ dir[0], dir[1], dir[2], dir[3]};
+	//
+	//ImGui::Checkbox("Draw ShadowMap", &m_DrawShadowMap);
+	//ImGui::SliderFloat("ShadowMap Scale", &m_ShadowMapScale, 0.f, 1.f);
+	//
+	//float value = ShadowMapRenderer::Get()->GetFar();
+	//ImGui::DragFloat("Far", &value, 0.1f, -1000, 1000);
+	//ShadowMapRenderer::Get()->SetFar(value);
+	//
+	//value = ShadowMapRenderer::Get()->GetNear();
+	//ImGui::DragFloat("Near", &value, 0.1f, -1000, 1000);
+	//ShadowMapRenderer::Get()->SetNear(value);
+	//
+	//value = ShadowMapRenderer::Get()->GetSize();
+	//ImGui::DragFloat("Size", &value, 0.1f, -1000, 1000);
+	//ShadowMapRenderer::Get()->SetSize(value);
 }
 
 void Level1::UpdatePause()
@@ -539,12 +567,25 @@ void Level1::UpdateScene()
 		}
 	}
 
+	bool areAllCollected = true;
 	for (int i = 0; i < m_pRedGems.size(); i++)
 	{
-		if (m_pRedGems[i] != nullptr && m_pRedGems[i]->GetMarkForDelete())
+		if (m_pRedGems[i] == nullptr) continue;
+		else if (m_pRedGems[i]->GetMarkForDelete())
 		{
 			RemoveChild(m_pRedGems[i], true);
 			m_pRedGems[i] = nullptr;
 		}
+		else
+		{
+			areAllCollected = false;
+		}
+	}
+
+	if (areAllCollected)
+	{
+		//Spawn Bridge
+		m_pObject = AddChild(new Bridge{ m_pDefaultMaterial });
+		//m_pBridge->GetTransform()->Translate();
 	}
 }

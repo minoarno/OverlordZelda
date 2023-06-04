@@ -30,10 +30,6 @@ void Character::Die()
 	HUD::Get()->DecreaseHearts();
 
 	SetCharacterAnimation(CharacterAnimation::Dying);
-	if (HUD::Get()->GetAmountOfHearts() < 1)
-	{
-		SceneManager::Get()->SetActiveGameScene(L"LoseScene");
-	}
 }
 
 void Character::Initialize(const SceneContext& sceneContext)
@@ -93,6 +89,11 @@ void Character::Update(const SceneContext& sceneContext)
 	{
 		if (m_LastAnimationTime + m_DeathAnimationDuration > sceneContext.pGameTime->GetTotal()) return;
 
+		if (HUD::Get()->GetAmountOfHearts() < 1)
+		{
+			SceneManager::Get()->SetActiveGameScene(L"LoseScene");
+			return;
+		}
 		GetTransform()->Translate(m_RespawnPosition);
 		SetCharacterAnimation(CharacterAnimation::Idle);
 	}

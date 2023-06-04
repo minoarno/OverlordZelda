@@ -36,7 +36,7 @@
     <ClCompile Include="Prefabs\BombSpawner.cpp" />
     <ClCompile Include="Materials\Post\PostCameraShake.cpp" />
     <ClCompile Include="Prefabs\BombExplosion.cpp" />
-    <ClCompile Include="Bridge.cpp" />
+    <ClCompile Include="Prefabs\Bridge.cpp" />
     <ClCompile Include="Scenes\Game\WinScene.cpp" />
     <ClCompile Include="Scenes\Game\LoseScene.cpp" />
     <ClCompile Include="Scenes\Game\ControlSchemeScene.cpp" />
@@ -78,7 +78,7 @@
     <ClInclude Include="Prefabs\BombSpawner.h" />
     <ClInclude Include="Materials\Post\PostCameraShake.h" />
     <ClInclude Include="Prefabs\BombExplosion.h" />
-    <ClInclude Include="Bridge.h" />
+    <ClInclude Include="Prefabs\Bridge.h" />
     <ClInclude Include="Scenes\Game\WinScene.h" />
     <ClInclude Include="Scenes\Game\LoseScene.h" />
     <ClInclude Include="Scenes\Game\ControlSchemeScene.h" />
