@@ -17,3 +17,8 @@ void LightManager::SetDirectionalLight(const XMFLOAT3& position, const XMFLOAT3&
 	m_DirectionalLight.direction = { direction.x, direction.y, direction.z , 1.0f };
 	m_DirectionalLight.position = { position.x, position.y, position.z , 1.0f };
 }
+
+void LightManager::ClearLights()
+{
+	m_Lights.clear();
+}

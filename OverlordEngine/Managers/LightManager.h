@@ -49,6 +49,7 @@ public:
 	Light& GetDirectionalLight() { return m_DirectionalLight; }
 	void SetDirectionalLight(const XMFLOAT3& position, const XMFLOAT3& direction);
 
+	void ClearLights();
 private:
 
 	std::vector<Light> m_Lights{};

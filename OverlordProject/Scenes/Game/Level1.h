@@ -30,7 +30,7 @@ protected:
 	GameObject* AddMediumExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale);
 	GameObject* AddBigExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale);
 	GameObject* AddGem(const XMFLOAT3& position);
-	GameObject* AddRedGem(const XMFLOAT3& position);
+	GameObject* AddRedGem(const XMFLOAT4& position);
 	GameObject* AddBombSpawner(const XMFLOAT3& position);
 	GameObject* AddSea();
 	GameObject* AddSkyBox();

@@ -4,14 +4,14 @@
 #include "Materials/Deferred/BasicMaterial_Deferred_Shadow.h"
 #include "UI/HUD.h"
 
-RedGem::RedGem(PxMaterial* pMaterial, const XMFLOAT4& pos)
+RedGem::RedGem(PxMaterial* pMaterial, UINT lightIndex)
 	: GameObject{ }
 	, m_pMaterial{ pMaterial }
-	, m_Position{ pos }
+	, m_LightIndex{ lightIndex }
 {
 }
 
-void RedGem::Initialize(const SceneContext& sceneContext)
+void RedGem::Initialize(const SceneContext& )
 {
 	float scale{ 0.005f };
 
@@ -33,16 +33,6 @@ void RedGem::Initialize(const SceneContext& sceneContext)
 		{
 			OnHit(pTriggerObject, pOtherObject, action);
 		});
-
-	Light light = {};
-	light.isEnabled = true;
-	light.position = m_Position;
-	light.direction = { 0.f,0.f,1.f,0.f };
-	light.color = { 0.7f,0.f,0.f,1.f };
-	light.intensity = 1.0f;
-	light.range = 10.0f;
-	light.type = LightType::Point;
-	sceneContext.pLights->AddLight(light);
 }
 
 void RedGem::Update(const SceneContext& sceneContext)

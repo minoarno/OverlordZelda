@@ -22,6 +22,7 @@ void Rock::Initialize(const SceneContext& )
 	auto pRigidBody = AddComponent(new RigidBodyComponent{ });
 	pRigidBody->SetConstraint(RigidBodyConstraint::All, false);
 	pRigidBody->AddCollider(PxConvexMeshGeometry{ pTriangleMesh, physx::PxMeshScale{ m_Scale } }, *m_pMaterial);
+	pRigidBody->SetCollisionGroup(CollisionGroup::Group0 | CollisionGroup::Group1);
 
 	pModel->SetMaterial(pMaterial);
 	SetTag(L"Rock");

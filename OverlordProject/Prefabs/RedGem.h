@@ -2,7 +2,7 @@
 class RedGem final : public GameObject
 {
 public:
-	RedGem(PxMaterial* pMaterial, const XMFLOAT4& pos);
+	RedGem(PxMaterial* pMaterial, UINT lightIndex);
 	RedGem(const RedGem&) = delete;
 	RedGem& operator=(const RedGem&) = delete;
 	RedGem(RedGem&&) = delete;
@@ -22,6 +22,6 @@ private:
 
 	float m_Rotation;
 	float m_RotationSpeed{ 90.f };
-	XMFLOAT4 m_Position{};
+
 	UINT m_LightIndex;
 };

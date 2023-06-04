@@ -32,6 +32,13 @@ void Character::Die()
 	SetCharacterAnimation(CharacterAnimation::Dying);
 }
 
+void Character::Reset()
+{
+	GetTransform()->Translate(m_RespawnPosition);
+	m_TotalVelocity = { 0,0,0 };
+	SetCharacterAnimation(CharacterAnimation::Idle);
+}
+
 CameraComponent* Character::GetCamera() const
 {
 	return m_pCameraComponent;

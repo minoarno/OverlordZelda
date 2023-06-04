@@ -108,9 +108,9 @@ void GameScene::RootInitialize(const GameContext& gameContext)
 	Initialize();
 
 	//Root-Scene Initialize
-	for (const auto pChild : m_pChildren)
+	for (size_t i = 0; i < m_pChildren.size(); i++)
 	{
-		pChild->RootInitialize(m_SceneContext);
+		m_pChildren[i]->RootInitialize(m_SceneContext);
 	}
 
 	m_IsInitialized = true;
@@ -119,9 +119,9 @@ void GameScene::RootInitialize(const GameContext& gameContext)
 void GameScene::RootPostInitialize()
 {
 	//Root-Scene Initialize
-	for (const auto pChild : m_pChildren)
+	for (size_t i = 0; i < m_pChildren.size(); i++)
 	{
-		pChild->RootPostInitialize(m_SceneContext);
+		m_pChildren[i]->RootPostInitialize(m_SceneContext);
 	}
 
 	PostInitialize();
@@ -143,9 +143,9 @@ void GameScene::RootUpdate()
 	Update();
 
 	//Root-Scene Update
-	for (const auto pChild : m_pChildren)
+	for (size_t i = 0; i < m_pChildren.size(); i++)
 	{
-		pChild->RootUpdate(m_SceneContext);
+		m_pChildren[i]->RootUpdate(m_SceneContext);
 	}
 
 	m_pPhysxProxy->Update(m_SceneContext);
@@ -181,9 +181,9 @@ void GameScene::RootDraw()
 	Draw();
 
 	//Object-Scene Draw
-	for (const auto pChild : m_pChildren)
+	for (size_t i = 0; i < m_pChildren.size(); i++)
 	{
-		pChild->RootDraw(m_SceneContext);
+		m_pChildren[i]->RootDraw(m_SceneContext);
 	}
 
 	//DEFERRED END
@@ -191,9 +191,9 @@ void GameScene::RootDraw()
 
 	//Object-Scene Post-Draw
 	PostDraw();
-	for (const auto pChild : m_pChildren)
+	for (size_t i = 0; i < m_pChildren.size(); i++)
 	{
-		pChild->RootPostDraw(m_SceneContext);
+		m_pChildren[i]->RootPostDraw(m_SceneContext);
 	}
 
 	//Draw PhysX

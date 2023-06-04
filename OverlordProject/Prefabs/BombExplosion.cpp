@@ -30,7 +30,13 @@ void BombExplosion::Initialize(const SceneContext& sceneContext)
 			OnHit(pTriggerObject, pOtherObject, action);
 		});
 
-	AddComponent(new ParticleEmitterComponent{ L"Textures/Smoke.png" });
+	ParticleEmitterSettings particleEmitterSettings{};
+	particleEmitterSettings.minSize = 1.f;
+	particleEmitterSettings.maxSize = 3.f;
+	particleEmitterSettings.minEmitterRadius = 4.f;
+	particleEmitterSettings.minEmitterRadius = 5.f;
+
+	AddComponent(new ParticleEmitterComponent{ L"Textures/Smoke.png", particleEmitterSettings });
 }
 
 void BombExplosion::Update(const SceneContext& sceneContext)

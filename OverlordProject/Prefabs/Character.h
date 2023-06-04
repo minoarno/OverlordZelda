@@ -66,6 +66,7 @@ public:
 	bool PickUpBomb(Bomb* pBomb);
 	void Die();
 
+	void Reset();
 	CameraComponent* GetCamera()const;
 protected:
 	void Initialize(const SceneContext& sceneContext) override;

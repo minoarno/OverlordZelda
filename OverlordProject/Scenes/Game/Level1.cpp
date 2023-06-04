@@ -14,6 +14,7 @@
 #include "Prefabs/UI/HUD.h"
 #include "Prefabs/BombSpawner.h"
 #include "Prefabs/Bridge.h"
+#include "Prefabs/WinArea.h"
 #include "Materials/Post/PostCameraShake.h"
 #include "Materials/Post/PostBlur.h"
 
@@ -29,8 +30,6 @@ Level1::Level1()
 	, m_pSeaMaterial{ nullptr }
 	, m_pObject{ nullptr }
 {
-	m_pGems = std::vector<Gem*>();
-	m_pRedGems = std::vector<RedGem*>();
 }
 
 void Level1::Initialize()
@@ -60,24 +59,22 @@ void Level1::Initialize()
 	m_pBridgeCamera->GetTransform()->Rotate(0, 160, 0);
 
 	//Audio
-	/*
+	
 	auto fmodResult = SoundManager::Get()->GetSystem()->createChannelGroup("Sound Effects", &m_pSoundEffectGroup);
 	SoundManager::Get()->ErrorCheck(fmodResult);
 	
 	m_MusicVolume = 0.3f;
 	
-	SoundManager::Get()->GetSystem()->createStream("Resources/Audio/ReadyToFight.mp3", FMOD_DEFAULT, nullptr, &m_pBackgroundSoundFx);
+	SoundManager::Get()->GetSystem()->createStream("Resources/Audio/BeachBackgroundMusic.mp3", FMOD_LOOP_NORMAL, nullptr, &m_pBackgroundSoundFx);
 	SoundManager::Get()->ErrorCheck(fmodResult);
 	
 	SoundManager::Get()->GetSystem()->playSound(m_pBackgroundSoundFx, m_pSoundEffectGroup, false, nullptr);
 	m_pSoundEffectGroup->setVolume(m_MusicVolume);
-	*/
+	
 
 	//UI
 	AddPauseMenu();
 	SetPauseMenu(false);
-
-	//AddChild(new GameObject{});
 }
 
 void Level1::Update()
@@ -190,6 +187,10 @@ GameObject* Level1::AddLevel()
 	AddBombSpawner({ -10.8f, 2.5f, -4.7f });
 	AddBombSpawner({ 42.5f, 1.8f, -34.5f });
 
+	auto pWinArea = AddChild(new WinArea{ m_pDefaultMaterial });
+	pWinArea->GetTransform()->Translate(-2.2f,38.5f,-59.2f);
+	m_pObject = pWinArea;
+
 	return pLevel;
 }
 
@@ -216,12 +217,14 @@ void Level1::OnSceneActivated()
 
 void Level1::ResetScene()
 {
+	m_SceneContext.pLights->ClearLights();
 	SetPauseMenu(false);
 
 	HUD::Get()->SetAmountOfHearts(3);
 	HUD::Get()->SetAmountRupees(0);
 
-	m_pCharacter->GetTransform()->Translate(0.f,5.f,0.f);
+	m_pCharacter->Reset();
+
 	RemovePostProcessingEffect(m_pCameraShake);
 
 	for (int i = 0; i < m_pGems.size(); i++)
@@ -253,9 +256,9 @@ void Level1::ResetScene()
 		}
 	}
 
-	AddRedGem({ -58.8f,9.4f,0.5f });
-	AddRedGem({ -13.3f, 5.f,-31.9f });
-	AddRedGem({ 44.8f, 5.2f, -39.4f });
+	AddRedGem({ -58.8f,9.4f,0.5f, 1 });
+	AddRedGem({ -13.3f, 5.f,-31.9f, 1 });
+	AddRedGem({ 44.8f, 5.2f, -39.4f, 1 });
 
 	for (int i = 0; i < m_pRocks.size(); i++)
 	{
@@ -268,17 +271,17 @@ void Level1::ResetScene()
 	m_pRocks.clear();
 
 	AddSmallExplodableRock({ 43.f, .75f, -22.f }, { }, .01f);
-	//AddSmallExplodableRock({ -15.9f, .95f, 10.2f }, { }, .01f);
-	//AddSmallExplodableRock({ 11.3f, .05f, -2.6f }, { }, .01f);
-	//AddSmallExplodableRock({ -6.f, 1.25f, -26.9f }, { }, .01f);
-	//
-	//AddMediumExplodableRock({ 19.8f, -.4f, -9.7f }, { }, .01f);
-	//AddMediumExplodableRock({ 9.8f, -.4f, -9.7f }, { }, .01f);
-	//AddMediumExplodableRock({ -14.8f, 1.6f, -31.7f }, { }, .04f);
-	//
-	//AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
-	//AddBigExplodableRock({ 20,3,7 }, { }, .01f);
-	m_pObject = AddBigExplodableRock({ 44.8f, 2.2f, -39.4f }, { }, .01f);
+	AddSmallExplodableRock({ -15.9f, .95f, 10.2f }, { }, .01f);
+	AddSmallExplodableRock({ 11.3f, .05f, -2.6f }, { }, .01f);
+	AddSmallExplodableRock({ -6.f, 1.25f, -26.9f }, { }, .01f);
+	
+	AddMediumExplodableRock({ 19.8f, -.4f, -9.7f }, { }, .01f);
+	AddMediumExplodableRock({ 9.8f, -.4f, -9.7f }, { }, .01f);
+	AddMediumExplodableRock({ -14.8f, 1.6f, -31.7f }, { }, .04f);
+	
+	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
+	AddBigExplodableRock({ 20,3,7 }, { }, .01f);
+	AddBigExplodableRock({ 44.8f, 2.2f, -39.4f }, { }, .01f);
 
 	if (m_pBridge != nullptr) RemoveChild(m_pBridge, true);
 }
@@ -391,10 +394,20 @@ GameObject* Level1::AddGem(const XMFLOAT3& position)
 	return pGem;
 }
 
-GameObject* Level1::AddRedGem(const XMFLOAT3& position)
+GameObject* Level1::AddRedGem(const XMFLOAT4& position)
 {
-	RedGem* pRedGem = AddChild(new RedGem{ m_pDefaultMaterial });
-	pRedGem->GetTransform()->Translate(position);
+	Light light = {};
+	light.isEnabled = true;
+	light.position = position;
+	light.direction = { 0.f,0.f,1.f,0.f };
+	light.color = { 0.7f,0.f,0.f,1.f };
+	light.intensity = 1.0f;
+	light.range = 10.0f;
+	light.type = LightType::Point;
+	UINT index = m_SceneContext.pLights->AddLight(light);
+
+	RedGem* pRedGem = AddChild(new RedGem{ m_pDefaultMaterial, index });
+	pRedGem->GetTransform()->Translate(position.x, position.y, position.z);
 
 	m_pRedGems.emplace_back(pRedGem);
 
@@ -589,6 +602,8 @@ void Level1::UpdateScene()
 		if (m_pRedGems[i] == nullptr) continue;
 		else if (m_pRedGems[i]->GetMarkForDelete())
 		{
+			m_SceneContext.pLights->GetLight(m_pRedGems[i]->GetLightIndex()).isEnabled = false;
+
 			RemoveChild(m_pRedGems[i], true);
 			m_pRedGems[i] = nullptr;
 		}
