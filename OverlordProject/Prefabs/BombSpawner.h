@@ -18,5 +18,5 @@ private:
 	float m_BombSpawnDuration{ 5.f };
 	PxMaterial* m_pMaterial{ nullptr };
 	Bomb* m_pBomb{ nullptr };
-	GameTime* m_pGameTime{ nullptr };
+	bool m_HasUpdateStarted{ false };
 };

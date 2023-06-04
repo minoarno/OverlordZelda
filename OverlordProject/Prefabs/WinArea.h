@@ -10,7 +10,7 @@ public:
 	~WinArea() override = default;
 
 protected:
-	virtual void Initialize(const SceneContext& scenetext) override;
+	void Initialize(const SceneContext& scenetext) override;
 	void OnHit(GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action);
 private:
 	PxMaterial* m_pMaterial;

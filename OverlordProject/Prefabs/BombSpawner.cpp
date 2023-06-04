@@ -18,29 +18,32 @@ void BombSpawner::Initialize(const SceneContext& sceneContext)
 	pMaterial->SetDiffuseTexture(L"Textures/Bomb/Bomb.png");
 	pModel->SetMaterial(pMaterial);
 	pModel->GetTransform()->Scale(.01f);
-	
-	m_pGameTime = sceneContext.pGameTime;
 
 	auto pRigidBody = AddComponent(new RigidBodyComponent());
 	pRigidBody->AddCollider(PxBoxGeometry{ 2.f, 2.f, 2.f }, *m_pMaterial, true);
 	pRigidBody->SetConstraint(RigidBodyConstraint::All, false);
-
-	m_StartBombSpawn = sceneContext.pGameTime->GetTotal();
 }
 
-void BombSpawner::Update(const SceneContext& )
+void BombSpawner::Update(const SceneContext& sceneContext)
 {
+	if (!m_HasUpdateStarted)
+	{
+		m_StartBombSpawn = sceneContext.pGameTime->GetTotal() - 3;
+		m_HasUpdateStarted;
+		return;
+	}
+
 	if (m_pBomb != nullptr)
 	{
 		if (m_pBomb->IsBombPickedUp())
 		{
 			m_pBomb = nullptr;
-			m_StartBombSpawn = m_pGameTime->GetTotal();
+			m_StartBombSpawn = sceneContext.pGameTime->GetTotal();
 		}
 		return;
 	}
 
-	if (m_StartBombSpawn + m_BombSpawnDuration < m_pGameTime->GetTotal())
+	if (m_StartBombSpawn + m_BombSpawnDuration < sceneContext.pGameTime->GetTotal())
 	{
 		m_pBomb = GetScene()->AddChild(new Bomb(m_pMaterial));
 		auto pos = GetTransform()->GetPosition();
