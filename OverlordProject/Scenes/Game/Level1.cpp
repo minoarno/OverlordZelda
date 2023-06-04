@@ -188,9 +188,8 @@ GameObject* Level1::AddLevel()
 	AddBombSpawner({ -10.8f, 2.5f, -4.7f });
 	AddBombSpawner({ 42.5f, 1.8f, -34.5f });
 
-	auto pWinArea = AddChild(new WinArea{ m_pDefaultMaterial });
-	pWinArea->GetTransform()->Translate(-2.2f,38.5f,-59.2f);
-	m_pObject = pWinArea;
+	m_pWinArea = AddChild(new WinArea{ m_pDefaultMaterial });
+	m_pWinArea->GetTransform()->Translate(-2.2f,38.5f,-59.2f);
 
 	return pLevel;
 }
@@ -225,6 +224,7 @@ void Level1::ResetScene()
 	HUD::Get()->SetAmountRupees(0);
 
 	m_pCharacter->Reset();
+	m_pWinArea->SetIsAllowedToWin(false);
 
 	RemovePostProcessingEffect(m_pCameraShake);
 
@@ -635,6 +635,7 @@ void Level1::UpdateScene()
 		//Spawn Bridge
 		m_pBridge = AddChild(new Bridge{ m_pDefaultMaterial });
 		m_pBridge->GetTransform()->Translate(21.9f, 33.8f, -58.2f);
+		m_pWinArea->SetIsAllowedToWin(true);
 	}
 	if (m_StartBridgeCameraTime + m_CameraSwitchDuration < m_SceneContext.pGameTime->GetTotal())
 	{

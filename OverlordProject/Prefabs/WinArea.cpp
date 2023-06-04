@@ -33,9 +33,13 @@ void WinArea::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction )
 		Character* pCharacter = reinterpret_cast<Character*>(pOtherObject);
 		pCharacter->Reset();
 
-		SceneManager::Get()->SetActiveGameScene(L"WinScene");
-	
-		SoundManager::Get()->GetSystem()->playSound(m_pVictorySoundFx, m_pSoundEffectGroup, false, nullptr);
-		m_pSoundEffectGroup->setVolume(.2f);
+		if (m_IsAllowedToWin)
+		{
+			SceneManager::Get()->SetActiveGameScene(L"WinScene");
+			m_IsAllowedToWin = false;
+
+			SoundManager::Get()->GetSystem()->playSound(m_pVictorySoundFx, m_pSoundEffectGroup, false, nullptr);
+			m_pSoundEffectGroup->setVolume(.2f);
+		}
 	}
 }

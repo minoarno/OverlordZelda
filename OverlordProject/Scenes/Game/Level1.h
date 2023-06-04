@@ -4,6 +4,7 @@ class Rock;
 class Button;
 class RedGem;
 class Bridge;
+class WinArea;
 class PostBlur;
 class Character;
 class SeaMaterial;
@@ -92,6 +93,7 @@ private:
 
 	PostCameraShake* m_pCameraShake{nullptr};
 
+	WinArea* m_pWinArea;
 	Bridge* m_pBridge{ nullptr };
 	FixedCamera* m_pBridgeCamera{ nullptr };
 	float m_StartBridgeCameraTime{}, m_CameraSwitchDuration{3.f}, m_TimeBeforeBridgeSpawnsIn{1.5f};

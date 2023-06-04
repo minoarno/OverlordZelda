@@ -9,11 +9,13 @@ public:
 	WinArea& operator=(WinArea&&) = delete;
 	~WinArea() override = default;
 
+	void SetIsAllowedToWin(bool value) { m_IsAllowedToWin = value; }
 protected:
 	void Initialize(const SceneContext& scenetext) override;
 	void OnHit(GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action);
 private:
 	PxMaterial* m_pMaterial;
+	bool m_IsAllowedToWin{ false };
 
 	//Audio
 	FMOD::Sound* m_pVictorySoundFx{ nullptr };

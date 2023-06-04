@@ -11,7 +11,7 @@ BombSpawner::BombSpawner(PxMaterial* pMaterial)
 {
 }
 
-void BombSpawner::Initialize(const SceneContext& sceneContext)
+void BombSpawner::Initialize(const SceneContext& )
 {
 	auto pModel = AddComponent(new ModelComponent(L"Meshes/Bomb/BombLeaves.ovm"));
 	auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
@@ -29,7 +29,7 @@ void BombSpawner::Update(const SceneContext& sceneContext)
 	if (!m_HasUpdateStarted)
 	{
 		m_StartBombSpawn = sceneContext.pGameTime->GetTotal() - 3;
-		m_HasUpdateStarted;
+		m_HasUpdateStarted = true;
 		return;
 	}
 
