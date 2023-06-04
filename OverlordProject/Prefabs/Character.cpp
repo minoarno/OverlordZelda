@@ -30,6 +30,7 @@ void Character::Die()
 	HUD::Get()->DecreaseHearts();
 
 	SetCharacterAnimation(CharacterAnimation::Dying);
+	SoundManager::Get()->GetSystem()->playSound(m_pFailureSoundFx, m_pSoundEffectGroup, false, nullptr);
 }
 
 void Character::Reset()
@@ -87,7 +88,19 @@ void Character::Initialize(const SceneContext& sceneContext)
 	m_CharacterState = CharacterAnimation::Idle;
 	m_pAnimator->SetAnimation(m_CharacterState);
 	m_pAnimator->SetAnimationSpeed(m_AnimationSpeed);
-	m_pAnimator->Play(); 
+	m_pAnimator->Play();
+
+	auto fmodResult = SoundManager::Get()->GetSystem()->createChannelGroup("Sound Effects", &m_pSoundEffectGroup);
+	SoundManager::Get()->ErrorCheck(fmodResult);
+
+	SoundManager::Get()->GetSystem()->createStream("Resources/Audio/Splash.mp3", FMOD_DEFAULT, nullptr, &m_pSplashSoundFx);
+	SoundManager::Get()->ErrorCheck(fmodResult);
+
+	SoundManager::Get()->GetSystem()->createStream("Resources/Audio/Footsteps.mp3", FMOD_DEFAULT, nullptr, &m_pFootstepsSoundFx);
+	SoundManager::Get()->ErrorCheck(fmodResult);
+
+	SoundManager::Get()->GetSystem()->createStream("Resources/Audio/Failure.mp3", FMOD_DEFAULT, nullptr, &m_pFailureSoundFx);
+	SoundManager::Get()->ErrorCheck(fmodResult);
 }
 
 void Character::Update(const SceneContext& sceneContext)
@@ -103,6 +116,7 @@ void Character::Update(const SceneContext& sceneContext)
 
 		if (HUD::Get()->GetAmountOfHearts() < 1)
 		{
+			SoundManager::Get()->GetSystem()->playSound(m_pFailureSoundFx, m_pSoundEffectGroup, false, nullptr);
 			SceneManager::Get()->SetActiveGameScene(L"LoseScene");
 			return;
 		}
@@ -309,10 +323,12 @@ void Character::Update(const SceneContext& sceneContext)
 				if (DoesRaycastHitCollisionGroup(CollisionGroup::Group2,distance))
 				{
 					SetCharacterAnimation(CharacterAnimation::Swimming);
+					SoundManager::Get()->GetSystem()->playSound(m_pSplashSoundFx, m_pSoundEffectGroup, false, nullptr);
 				}
 				else
 				{
 					SetCharacterAnimation(CharacterAnimation::Running);
+					SoundManager::Get()->GetSystem()->playSound(m_pFootstepsSoundFx, m_pSoundEffectGroup, false, nullptr);
 				}
 			}
 		}

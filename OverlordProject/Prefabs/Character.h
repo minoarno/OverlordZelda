@@ -111,5 +111,12 @@ private:
 
 	Bomb* m_pBomb{ nullptr };
 	GameTime* m_pGameTime{ nullptr };
+
+	//Audio
+	FMOD::Sound* m_pFootstepsSoundFx{ nullptr };
+	FMOD::Sound* m_pFailureSoundFx{ nullptr };
+	FMOD::Sound* m_pSplashSoundFx{ nullptr };
+	FMOD::ChannelGroup* m_pSoundEffectGroup{ nullptr };
+	float m_MusicVolume{ .3f };
 };
 

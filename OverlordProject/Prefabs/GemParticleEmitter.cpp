@@ -15,11 +15,13 @@ void GemParticleEmitter::Initialize(const SceneContext& sceneContext)
 	ParticleEmitterSettings settings{};
 	settings.color = m_Color;
 	settings.useParticleEmitterVelocity = false;
-	settings.minEmitterRadius = .1f;
-	settings.maxEmitterRadius = .5f;
+	settings.minEmitterRadius = 1.5f;
+	settings.maxEmitterRadius = 3.f;
 	settings.minSize = .1f;
-	settings.minSize = .4f;
-	AddComponent(new ParticleEmitterComponent{ L"Textures/Sparkles.png",settings, 15 });
+	settings.maxSize = 1.6f;
+	settings.velocity = { 0,1,0 };
+	settings.useParticleEmitterVelocity = true;
+	AddComponent(new ParticleEmitterComponent{ L"Textures/Sparkles.png",settings, 10 });
 
 	auto fmodResult = SoundManager::Get()->GetSystem()->createChannelGroup("Sound Effects", &m_pSoundEffectGroup);
 	SoundManager::Get()->ErrorCheck(fmodResult);

@@ -18,6 +18,12 @@ void WinArea::Initialize(const SceneContext& )
 		{
 			OnHit(pTriggerObject, pOtherObject, action);
 		});
+
+	auto fmodResult = SoundManager::Get()->GetSystem()->createChannelGroup("Sound Effects", &m_pSoundEffectGroup);
+	SoundManager::Get()->ErrorCheck(fmodResult);
+
+	SoundManager::Get()->GetSystem()->createStream("Resources/Audio/Victory.mp3", FMOD_DEFAULT, nullptr, &m_pVictorySoundFx);
+	SoundManager::Get()->ErrorCheck(fmodResult);
 }
 
 void WinArea::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction )
@@ -28,5 +34,8 @@ void WinArea::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction )
 		pCharacter->Reset();
 
 		SceneManager::Get()->SetActiveGameScene(L"WinScene");
+	
+		SoundManager::Get()->GetSystem()->playSound(m_pVictorySoundFx, m_pSoundEffectGroup, false, nullptr);
+		m_pSoundEffectGroup->setVolume(.2f);
 	}
 }

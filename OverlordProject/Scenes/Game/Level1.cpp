@@ -583,7 +583,7 @@ void Level1::UpdateScene()
 	{
 		if (m_pGems[i] != nullptr && m_pGems[i]->GetMarkForDelete())
 		{
-			auto pEmitter = AddChild(new GemParticleEmitter{ XMFLOAT4{0.f,1.f,0.f,1.f} });
+			auto pEmitter = AddChild(new GemParticleEmitter{ XMFLOAT4{0.f,2.f,0.f,1.f} });
 			pEmitter->GetTransform()->Translate(m_pGems[i]->GetTransform()->GetWorldPosition());
 
 			RemoveChild(m_pGems[i], true);
@@ -607,7 +607,7 @@ void Level1::UpdateScene()
 		else if (m_pRedGems[i]->GetMarkForDelete())
 		{
 			m_SceneContext.pLights->GetLight(m_pRedGems[i]->GetLightIndex()).isEnabled = false;
-			auto pEmitter = AddChild(new GemParticleEmitter{ XMFLOAT4{0.39f, 0.39f, 0.07f,1.f} });
+			auto pEmitter = AddChild(new GemParticleEmitter{ XMFLOAT4{0.60f, 0.9f, 0.14f,1.f} });
 			pEmitter->GetTransform()->Translate(m_pRedGems[i]->GetTransform()->GetWorldPosition());
 
 			RemoveChild(m_pRedGems[i], true);
