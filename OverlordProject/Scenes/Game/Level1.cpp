@@ -253,7 +253,7 @@ void Level1::ResetScene()
 		}
 	}
 
-	m_pObject = AddRedGem({ 10,5,10 });
+	AddRedGem({ -58.8f,9.4f,0.5f });
 	AddRedGem({ -13.3f, 5.f,-31.9f });
 	AddRedGem({ 44.8f, 5.2f, -39.4f });
 
