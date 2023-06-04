@@ -1,0 +1,24 @@
+#pragma once
+class RedGem final : public GameObject
+{
+public:
+	RedGem(PxMaterial* pMaterial);
+	RedGem(const RedGem&) = delete;
+	RedGem& operator=(const RedGem&) = delete;
+	RedGem(RedGem&&) = delete;
+	RedGem& operator=(RedGem&&) = delete;
+	~RedGem() override = default;
+
+	bool GetMarkForDelete()const { return m_MarkForDelete; };
+protected:
+	void Initialize(const SceneContext& sceneContext) override;
+	void Update(const SceneContext&) override;
+
+	void OnHit(GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action);
+private:
+	bool m_MarkForDelete{ false };
+	PxMaterial* m_pMaterial{ nullptr };
+
+	float m_Rotation;
+	float m_RotationSpeed{ 90.f };
+};

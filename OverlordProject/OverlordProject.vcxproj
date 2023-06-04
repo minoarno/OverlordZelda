@@ -94,6 +94,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bridge.cpp" />
+    <ClCompile Include="Prefabs\RedGem.cpp" />
+    <ClCompile Include="Scenes\Game\ControlSchemeScene.cpp" />
     <ClCompile Include="Scenes\Game\LoseScene.cpp" />
     <ClCompile Include="Prefabs\BombExplosion.cpp" />
     <ClCompile Include="Materials\Post\PostCameraShake.cpp" />
@@ -151,6 +153,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bridge.h" />
+    <ClInclude Include="Prefabs\RedGem.h" />
+    <ClInclude Include="Scenes\Game\ControlSchemeScene.h" />
     <ClInclude Include="Scenes\Game\LoseScene.h" />
     <ClInclude Include="Prefabs\BombExplosion.h" />
     <ClInclude Include="Materials\Post\PostCameraShake.h" />

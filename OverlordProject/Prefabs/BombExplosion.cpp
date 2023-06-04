@@ -45,12 +45,11 @@ void BombExplosion::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerActio
 {
 	if (pOtherObject->GetTag() == L"Link")
 	{
-		std::cout << "Link\n";
-		//Character* pCharacter = reinterpret_cast<Character*>(pOtherObject);
+		Character* pCharacter = reinterpret_cast<Character*>(pOtherObject);
+		pCharacter->Die();
 	}
 	if (pOtherObject->GetTag() == L"Rock")
 	{
-		std::cout << "Rock\n";
 		Rock* pRock = reinterpret_cast<Rock*>(pOtherObject);
 		pRock->SetMarkForDelete(true);
 	}

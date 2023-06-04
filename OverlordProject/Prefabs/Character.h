@@ -32,6 +32,7 @@ struct CharacterDesc
 	int actionId_Jump{ -1 };
 };
 
+class GameTime;
 class Bomb;
 class Character : public GameObject
 {
@@ -49,7 +50,7 @@ public:
 		SwimmingIdle = 8
 	};
 
-	Character(const CharacterDesc& characterDesc, const XMFLOAT3& cameraOffset);
+	Character(const CharacterDesc& characterDesc, const XMFLOAT3& cameraOffset, const XMFLOAT3& respawnPosition);
 	~Character() override = default;
 
 	Character(const Character& other) = delete;
@@ -63,15 +64,15 @@ public:
 	XMFLOAT4 GetLightOffset()const { return m_LightOffset; };
 
 	bool PickUpBomb(Bomb* pBomb);
+	void Die();
 protected:
-	void Initialize(const SceneContext&) override;
+	void Initialize(const SceneContext& sceneContext) override;
 	void Update(const SceneContext&) override;
 
 private:
 	//Camera
 	CameraComponent* m_pCameraComponent{};
 	XMFLOAT3 m_CameraOffset{ 0,0,0 };
-	//XMFLOAT4 m_LightOffset{ 35.7f,44.3f,-23.2f,0 };
 	XMFLOAT4 m_LightOffset{ 35.7f,44.3f,-23.2f,0 };
 	ControllerComponent* m_pControllerComponent{};
 
@@ -94,6 +95,8 @@ private:
 	XMFLOAT3 m_TotalVelocity{};						//TotalVelocity with X/Z for Horizontal Movement AND Y for Vertical Movement (fall/jump)
 	XMFLOAT3 m_CurrentDirection{};					//Current/Last Direction based on Camera forward/right (Stored for deacceleration)
 
+	XMFLOAT3 m_RespawnPosition{};
+
 	void AdjustCamera();
 	void ThrowBomb();
 	void SetCharacterAnimation(CharacterAnimation newAnimationState);
@@ -101,8 +104,9 @@ private:
 	float m_CameraNormalOffset{.8f};
 	bool m_HasHitPreviousTime{ false };
 
-	float m_LastAnimationTime{ }, m_AnimationDuration{ 1.f };
+	float m_LastAnimationTime{ }, m_AnimationDuration{ 1.f }, m_DeathAnimationDuration{ 1.5f };
 
 	Bomb* m_pBomb{ nullptr };
+	GameTime* m_pGameTime{ nullptr };
 };
 

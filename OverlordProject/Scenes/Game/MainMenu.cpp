@@ -17,7 +17,7 @@ void MainMenu::Initialize()
 
 	auto pButton = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonActivated.png",[&]() 
 		{
-			SceneManager::Get()->SetActiveGameScene(L"Level1");
+			SceneManager::Get()->SetActiveGameScene(L"ControlSchemeScene");
 		} });
 	pButton->GetTransform()->Translate(490, 480, 0);
 	m_pButtons.emplace_back(pButton);

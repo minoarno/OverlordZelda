@@ -22,7 +22,7 @@ void LoseScene::Initialize()
 
 	auto pButton = AddChild(new Button{ L"Textures/UI/RestartButtonNormal.png",L"Textures/UI/RestartButtonActivated.png",[&]()
 		{
-			SceneManager::Get()->SetActiveGameScene(L"Level1");
+			SceneManager::Get()->SetActiveGameScene(L"ControlSchemeScene");
 		} });
 	pButton->GetTransform()->Translate(490, 440, 0);
 	m_pButtons.emplace_back(pButton);

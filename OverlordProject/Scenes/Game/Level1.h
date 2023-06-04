@@ -28,6 +28,7 @@ protected:
 	GameObject* AddMediumExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale);
 	GameObject* AddBigExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale);
 	GameObject* AddGem(const XMFLOAT3& position);
+	GameObject* AddRedGem(const XMFLOAT3& position);
 	GameObject* AddBombSpawner(const XMFLOAT3& position);
 	GameObject* AddSea();
 	GameObject* AddSkyBox();
@@ -62,6 +63,7 @@ private:
 	SeaMaterial* m_pSeaMaterial;
 
 	std::vector<Gem*> m_pGems;
+	std::vector<Gem*> m_pRedGems;
 	std::vector<Rock*> m_pRocks;
 
 	GameObject* m_pObject;
@@ -82,6 +84,9 @@ private:
 	void UpdatePause();
 	std::vector<Button*> m_pButtons;
 	int m_SelectedButtonIndex = -1;
+
+	Button* m_pControlSchemeStart{ nullptr };
+	SpriteComponent* m_pControlSchemeBackground{ nullptr };
 
 	PostCameraShake* m_pCameraShake{nullptr};
 };

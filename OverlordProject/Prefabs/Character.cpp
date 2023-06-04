@@ -4,14 +4,15 @@
 #include "Prefabs/Bomb.h"
 
 #include "Materials/Deferred/BasicMaterial_Deferred_Shadow_Skinned.h"
+#include "UI/HUD.h"
 
-
-Character::Character(const CharacterDesc& characterDesc, const XMFLOAT3& cameraOffset) 
+Character::Character(const CharacterDesc& characterDesc, const XMFLOAT3& cameraOffset, const XMFLOAT3& respawnPosition)
 	: m_CharacterDesc{ characterDesc }
 	, m_MoveAcceleration(characterDesc.maxMoveSpeed / characterDesc.moveAccelerationTime)
 	, m_FallAcceleration(characterDesc.maxFallSpeed / characterDesc.fallAccelerationTime)
 	, m_pVisuals{ nullptr }
 	, m_CameraOffset{ cameraOffset }
+	, m_RespawnPosition{ respawnPosition }
 {}
 
 bool Character::PickUpBomb(Bomb* pBomb)
@@ -24,11 +25,24 @@ bool Character::PickUpBomb(Bomb* pBomb)
 	return false;
 }
 
-void Character::Initialize(const SceneContext& /*sceneContext*/)
+void Character::Die()
+{
+	HUD::Get()->DecreaseHearts();
+
+	SetCharacterAnimation(CharacterAnimation::Dying);
+	if (HUD::Get()->GetAmountOfHearts() < 1)
+	{
+		SceneManager::Get()->SetActiveGameScene(L"LoseScene");
+	}
+}
+
+void Character::Initialize(const SceneContext& sceneContext)
 {
 	//Controller
 	m_pControllerComponent = AddComponent(new ControllerComponent(m_CharacterDesc.controller));
 	SetTag(L"Link");
+
+	m_pGameTime = sceneContext.pGameTime;
 
 	//Camera
 	const auto pCamera = AddChild(new FixedCamera());
@@ -74,6 +88,14 @@ void Character::Update(const SceneContext& sceneContext)
 	sceneContext.pLights->GetDirectionalLight().position = XMFLOAT4{ pos.x + m_LightOffset.x, pos.y + m_LightOffset.y, pos.z + m_LightOffset.z, m_LightOffset.w };
 
 	if (!sceneContext.pGameTime->IsRunning())return;
+
+	if (m_CharacterState == CharacterAnimation::Dying)
+	{
+		if (m_LastAnimationTime + m_DeathAnimationDuration > sceneContext.pGameTime->GetTotal()) return;
+
+		GetTransform()->Translate(m_RespawnPosition);
+		SetCharacterAnimation(CharacterAnimation::Idle);
+	}
 
 	if (m_pCameraComponent->IsActive())
 	{
@@ -374,6 +396,8 @@ void Character::SetCharacterAnimation(CharacterAnimation newAnimationState)
 		m_pVisuals->GetTransform()->Translate(0, -1.4f, 0);
 		break;
 	}
+	
+	m_LastAnimationTime = m_pGameTime->GetTotal();
 
 	m_pAnimator->SetAnimation(newAnimationState);
 	m_CharacterState = newAnimationState;

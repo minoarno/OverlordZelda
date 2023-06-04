@@ -1,18 +1,16 @@
 #include "stdafx.h"
-#include "Gem.h"
+#include "RedGem.h"
 
 #include "Materials/Deferred/BasicMaterial_Deferred_Shadow.h"
-
 #include "UI/HUD.h"
 
-Gem::Gem(PxMaterial* pMaterial)
-	: GameObject{}
+RedGem::RedGem(PxMaterial* pMaterial)
+	: GameObject{ }
 	, m_pMaterial{ pMaterial }
-	, m_Rotation{ static_cast<float>(rand() % 360) }
 {
 }
 
-void Gem::Initialize(const SceneContext& )
+void RedGem::Initialize(const SceneContext& )
 {
 	float scale{ 0.005f };
 
@@ -20,10 +18,11 @@ void Gem::Initialize(const SceneContext& )
 
 	auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
 	pMaterial->SetDiffuseTexture(L"Textures/Gem.png");
+	pMaterial->SetDiffuseColor(XMFLOAT4{ 1,0,0,1 });
 	pModel->SetMaterial(pMaterial);
 
 	GetTransform()->Scale(scale);
-	
+
 	GetTransform()->Rotate(0, m_Rotation, 0);
 
 	RigidBodyComponent* pRigidBody = AddComponent(new RigidBodyComponent(true));
@@ -35,16 +34,11 @@ void Gem::Initialize(const SceneContext& )
 		});
 }
 
-void Gem::Update(const SceneContext& sceneContext)
+void RedGem::Update(const SceneContext& )
 {
-	m_Rotation += m_RotationSpeed * sceneContext.pGameTime->GetElapsed();
-	if(m_Rotation > 360)m_Rotation -= 360;
-	else if(m_Rotation < 0) m_Rotation += 360;
-
-	GetTransform()->Rotate(0, m_Rotation, 0);
 }
 
-void Gem::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction )
+void RedGem::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction )
 {
 	if (!m_MarkForDelete && pOtherObject->GetTag() == L"Link")
 	{

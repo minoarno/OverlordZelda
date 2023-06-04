@@ -23,6 +23,17 @@ void HUD::Initialize(const SceneContext&)
 	go->GetTransform()->Translate(x - 45.f, 10.f, 0.f);
 	go->GetTransform()->Scale(.25f, .25f, 0.5f);
 
+
+	m_pRedRupeesText = AddChild(new Text{ "Test" });
+	m_pRedRupeesText->GetTransform()->Translate(x - 140, 20.f, 0.f);
+	UpdateRedRupeesText();
+
+	go = AddChild(new GameObject{});
+	m_pRedRupee = go->AddComponent(new SpriteComponent{ L"Textures/UI/Rupees.png" });
+	m_pRedRupee->SetColor(XMFLOAT4{ 1,0,0,1 });
+	go->GetTransform()->Translate(x - 185.f, 10.f, 0.f);
+	go->GetTransform()->Scale(.25f, .25f, 0.5f);
+
 	//Hearts
 	for (size_t i = 0; i < m_AmountOfHearts; i++)
 	{
@@ -53,16 +64,43 @@ void HUD::SetAmountOfHearts(int amount)
 	}
 }
 
+void HUD::DecreaseHearts()
+{
+	m_AmountOfHearts--;
+
+	for (size_t i = 0; i < m_pHearts.size(); i++)
+	{
+		m_pHearts[i]->GetComponent<SpriteComponent>()->SetActive(m_AmountOfHearts > i);
+	}
+}
+
 void HUD::SetAmountRupees(int amount)
 {
 	m_AmountOfRupeesCollected = amount;
 	UpdateRupeesText();
 }
 
+void HUD::SetAmountRedRupees(int amount)
+{
+	m_AmountOfRedRupeesCollected = amount;
+	UpdateRedRupeesText();
+}
+
 void HUD::IncreaseRupees(int amount)
 {
 	m_AmountOfRupeesCollected += amount;
 	UpdateRupeesText();
+}
+
+void HUD::IncreaseRedRupees(int amount)
+{
+	m_AmountOfRedRupeesCollected += amount;
+	UpdateRedRupeesText();
+}
+
+void HUD::UpdateRedRupeesText()
+{
+	m_pRedRupeesText->SetText(std::to_string(m_AmountOfRedRupeesCollected) + " / " + std::to_string(m_MaxAmountOfRedRupeesCollected));
 }
 
 void HUD::UpdateRupeesText()

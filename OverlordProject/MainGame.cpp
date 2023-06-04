@@ -31,6 +31,7 @@
 #include "Scenes/Game/Level1.h"
 #include "Scenes/Game/LoseScene.h"
 #include "Scenes/Game/WinScene.h"
+#include "Scenes/Game/ControlSchemeScene.h"
 #endif
 
 #pragma endregion
@@ -70,6 +71,7 @@ void MainGame::Initialize()
 	SceneManager::Get()->AddGameScene(new Level1());
 	SceneManager::Get()->AddGameScene(new LoseScene());
 	SceneManager::Get()->AddGameScene(new WinScene());
+	SceneManager::Get()->AddGameScene(new ControlSchemeScene());
 #endif
 }
 

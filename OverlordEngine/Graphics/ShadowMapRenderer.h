@@ -42,8 +42,8 @@ private:
 	XMFLOAT4X4 m_LightVP{};
 
 	float m_Size = 100.f;
-	float m_Near = -20.f;
-	float m_Far = 160.f;
+	float m_Near = -60.f;
+	float m_Far = 140.f;
 
 
 	//Shadow Generator is responsible of drawing all shadow casting meshes to the ShadowMap

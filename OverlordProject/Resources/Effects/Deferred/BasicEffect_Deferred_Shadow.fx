@@ -170,7 +170,7 @@ float gOpacityLevel <
 	float UIMax = 1;
 > = 1.0f;
 
-float gOpacityCutOff = 0.1f;
+float gOpacityCutOff = 0.5f;
 
 //VS IN & OUT
 //***********

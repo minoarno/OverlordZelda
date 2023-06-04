@@ -106,8 +106,9 @@ GameObject* Level1::AddPlayer()
 	characterDesc.actionId_Jump = CharacterJump;
 	characterDesc.actionId_Throw = ThrowBomb;
 
-	m_pCharacter = AddChild(new Character(characterDesc, {0,3,15}));
-	m_pCharacter->GetTransform()->Translate(0.f, 5.f, 0.f);
+	XMFLOAT3 spawnPoint = { 0.f, 5.f, 0.f };
+	m_pCharacter = AddChild(new Character(characterDesc, {0,3,15}, spawnPoint));
+	m_pCharacter->GetTransform()->Translate(spawnPoint);
 
 	//Input
 	auto inputAction = InputAction(CharacterMoveLeft, InputState::down, 'A');
@@ -535,6 +536,15 @@ void Level1::UpdateScene()
 		{
 			RemoveChild(m_pRocks[i], true);
 			m_pRocks[i] = nullptr;
+		}
+	}
+
+	for (int i = 0; i < m_pRedGems.size(); i++)
+	{
+		if (m_pRedGems[i] != nullptr && m_pRedGems[i]->GetMarkForDelete())
+		{
+			RemoveChild(m_pRedGems[i], true);
+			m_pRedGems[i] = nullptr;
 		}
 	}
 }

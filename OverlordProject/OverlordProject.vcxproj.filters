@@ -39,6 +39,8 @@
     <ClCompile Include="Bridge.cpp" />
     <ClCompile Include="Scenes\Game\WinScene.cpp" />
     <ClCompile Include="Scenes\Game\LoseScene.cpp" />
+    <ClCompile Include="Scenes\Game\ControlSchemeScene.cpp" />
+    <ClCompile Include="Prefabs\RedGem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -79,5 +81,7 @@
     <ClInclude Include="Bridge.h" />
     <ClInclude Include="Scenes\Game\WinScene.h" />
     <ClInclude Include="Scenes\Game\LoseScene.h" />
+    <ClInclude Include="Scenes\Game\ControlSchemeScene.h" />
+    <ClInclude Include="Prefabs\RedGem.h" />
   </ItemGroup>
 </Project>
