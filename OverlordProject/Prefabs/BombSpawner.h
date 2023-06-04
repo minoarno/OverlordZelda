@@ -13,8 +13,6 @@ public:
 protected:
 	void Initialize(const SceneContext& scenetext) override;
 	void Update(const SceneContext&) override;
-
-	void OnHit(GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action);
 private:
 	float m_StartBombSpawn{ -20.f };
 	float m_BombSpawnDuration{ 5.f };

@@ -268,16 +268,16 @@ void Level1::ResetScene()
 	m_pRocks.clear();
 
 	AddSmallExplodableRock({ 43.f, .75f, -22.f }, { }, .01f);
-	AddSmallExplodableRock({ -15.9f, .95f, 10.2f }, { }, .01f);
-	AddSmallExplodableRock({ 11.3f, .05f, -2.6f }, { }, .01f);
-	AddSmallExplodableRock({ -6.f, 1.25f, -26.9f }, { }, .01f);
-
-	AddMediumExplodableRock({ 19.8f, -.4f, -9.7f }, { }, .01f);
-	AddMediumExplodableRock({ 9.8f, -.4f, -9.7f }, { }, .01f);
-	AddMediumExplodableRock({ -14.8f, 1.6f, -31.7f }, { }, .04f);
-
-	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
-	AddBigExplodableRock({ 20,3,7 }, { }, .01f);
+	//AddSmallExplodableRock({ -15.9f, .95f, 10.2f }, { }, .01f);
+	//AddSmallExplodableRock({ 11.3f, .05f, -2.6f }, { }, .01f);
+	//AddSmallExplodableRock({ -6.f, 1.25f, -26.9f }, { }, .01f);
+	//
+	//AddMediumExplodableRock({ 19.8f, -.4f, -9.7f }, { }, .01f);
+	//AddMediumExplodableRock({ 9.8f, -.4f, -9.7f }, { }, .01f);
+	//AddMediumExplodableRock({ -14.8f, 1.6f, -31.7f }, { }, .04f);
+	//
+	//AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
+	//AddBigExplodableRock({ 20,3,7 }, { }, .01f);
 	m_pObject = AddBigExplodableRock({ 44.8f, 2.2f, -39.4f }, { }, .01f);
 
 	if (m_pBridge != nullptr) RemoveChild(m_pBridge, true);

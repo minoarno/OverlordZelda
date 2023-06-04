@@ -12,6 +12,8 @@ public:
 
 	void StartCountdown();
 	void Launch(const XMFLOAT3& forward);
+
+	bool IsBombPickedUp()const { return m_IsPickedUp; }
 protected:
 	virtual void Initialize(const SceneContext& scenetext) override;
 

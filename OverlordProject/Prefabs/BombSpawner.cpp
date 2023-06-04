@@ -28,21 +28,20 @@ void BombSpawner::Initialize(const SceneContext& sceneContext)
 
 void BombSpawner::Update(const SceneContext& )
 {
-	if (m_pBomb != nullptr) return;
+	if (m_pBomb != nullptr)
+	{
+		if (m_pBomb->IsBombPickedUp())
+		{
+			m_pBomb = nullptr;
+			m_StartBombSpawn = m_pGameTime->GetTotal();
+		}
+		return;
+	}
 
 	if (m_StartBombSpawn + m_BombSpawnDuration < m_pGameTime->GetTotal())
 	{
 		m_pBomb = GetScene()->AddChild(new Bomb(m_pMaterial));
 		auto pos = GetTransform()->GetPosition();
 		m_pBomb->GetTransform()->Translate(pos.x, pos.y, pos.z);
-	}
-}
-
-void BombSpawner::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction action)
-{
-	if (pOtherObject->GetTag() == L"Bomb" && action == PxTriggerAction::LEAVE)
-	{
-		m_pBomb = nullptr;
-		m_StartBombSpawn = m_pGameTime->GetTotal();
 	}
 }
