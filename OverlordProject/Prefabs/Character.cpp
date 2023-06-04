@@ -32,6 +32,11 @@ void Character::Die()
 	SetCharacterAnimation(CharacterAnimation::Dying);
 }
 
+CameraComponent* Character::GetCamera() const
+{
+	return m_pCameraComponent;
+}
+
 void Character::Initialize(const SceneContext& sceneContext)
 {
 	//Controller

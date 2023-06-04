@@ -253,9 +253,9 @@ void Level1::ResetScene()
 		}
 	}
 
-	AddRedGem({ 10,5,10 });
+	m_pObject = AddRedGem({ 10,5,10 });
 	AddRedGem({ -13.3f, 5.f,-31.9f });
-	m_pObject = AddRedGem({ });
+	AddRedGem({ });
 
 	for (int i = 0; i < m_pRocks.size(); i++)
 	{
@@ -277,8 +277,8 @@ void Level1::ResetScene()
 	AddMediumExplodableRock({ -14.8f, 1.6f, -31.7f }, { }, .04f);
 
 	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
-	AddBigExplodableRock({ }, { }, .01f);
-	AddBigExplodableRock({ }, { }, .01f);
+	AddBigExplodableRock({ 20,3,7 }, { }, .01f);
+	AddBigExplodableRock({ 6,8,9 }, { }, .01f);
 
 	if (m_pBridge != nullptr) RemoveChild(m_pBridge, true);
 }
@@ -453,22 +453,22 @@ void Level1::OnGUI()
 {
 	//m_pSeaMaterial->DrawImGui();
 
-	//auto curPos = m_pObject->GetTransform()->GetWorldPosition();
-	//float pos[3]{ curPos.x, curPos.y, curPos.z};
-	//ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
-	//m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
-	//
+	auto curPos = m_pObject->GetTransform()->GetWorldPosition();
+	float pos[3]{ curPos.x, curPos.y, curPos.z};
+	ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
+	m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+	
 	//m_pCharacter->DrawImGui();
 
-	auto curPos = m_pBridgeCamera->GetTransform()->GetWorldPosition();
-	float pos[3]{ curPos.x, curPos.y, curPos.z };
-	ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
-	m_pBridgeCamera->GetTransform()->Translate(pos[0], pos[1], pos[2]);
-
-	auto curRot = m_pBridgeCamera->GetTransform()->GetWorldRotation();
-	float rot[3]{ curRot.x, curRot.y, curRot.z };
-	ImGui::DragFloat3("Rotation", rot, 0.1f, -300, 300);
-	m_pBridgeCamera->GetTransform()->Rotate(rot[0], rot[1], rot[2]);
+	//auto curPos = m_pBridgeCamera->GetTransform()->GetWorldPosition();
+	//float pos[3]{ curPos.x, curPos.y, curPos.z };
+	//ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
+	//m_pBridgeCamera->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+	//
+	//auto curRot = m_pBridgeCamera->GetTransform()->GetWorldRotation();
+	//float rot[3]{ curRot.x, curRot.y, curRot.z };
+	//ImGui::DragFloat3("Rotation", rot, 0.1f, -300, 300);
+	//m_pBridgeCamera->GetTransform()->Rotate(rot[0], rot[1], rot[2]);
 
 	//XMFLOAT4 curPos = m_SceneContext.pLights->GetDirectionalLight().position;
 	//float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
@@ -617,6 +617,6 @@ void Level1::UpdateScene()
 	}
 	if (m_StartBridgeCameraTime + m_CameraSwitchDuration < m_SceneContext.pGameTime->GetTotal())
 	{
-		m_pCharacter->GetComponent<CameraComponent>()->SetActive();
+		m_pCharacter->GetCamera()->SetActive();
 	}
 }
