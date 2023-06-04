@@ -11,7 +11,7 @@ Text::Text(const std::string& text, const XMFLOAT4& color)
 
 void Text::Initialize(const SceneContext&)
 {
-	m_pFont = ContentManager::Load<SpriteFont>(L"SpriteFonts/Consolas_32.fnt");
+	m_pFont = ContentManager::Load<SpriteFont>(L"SpriteFonts/HyliaSerifBeta-Regular_32.fnt");
 }
 
 void Text::Draw(const SceneContext&)

@@ -22,7 +22,7 @@ void BombExplosion::Initialize(const SceneContext& sceneContext)
 	SceneManager::Get()->GetActiveScene()->AddPostProcessingEffect(m_pPostCameraShake);
 
 	auto pRigidBody = AddComponent(new RigidBodyComponent{ });
-	pRigidBody->AddCollider(PxSphereGeometry{ 20.f } , *m_pMaterial, true);
+	pRigidBody->AddCollider(PxSphereGeometry{ 10.f } , *m_pMaterial, true);
 	pRigidBody->SetConstraint(RigidBodyConstraint::All, false);
 
 	SetOnTriggerCallBack([=](GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action)

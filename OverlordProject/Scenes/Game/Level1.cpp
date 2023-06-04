@@ -46,8 +46,6 @@ void Level1::Initialize()
 	auto physX = PhysXManager::Get()->GetPhysics();
 	m_pDefaultMaterial = physX->createMaterial(1.f, 1.f, 0.f);
 
-	//m_pObject = AddChild(new Bridge{ m_pDefaultMaterial });
-
 	//Level
 	AddLevel();
 	AddPlayer();
@@ -57,6 +55,10 @@ void Level1::Initialize()
 	
 	AddChild(new HUD{});
 	
+	m_pBridgeCamera = AddChild(new FixedCamera{});
+	m_pBridgeCamera->GetTransform()->Translate(0, 47.5, 0);
+	m_pBridgeCamera->GetTransform()->Rotate(0, 160, 0);
+
 	//Audio
 	/*
 	auto fmodResult = SoundManager::Get()->GetSystem()->createChannelGroup("Sound Effects", &m_pSoundEffectGroup);
@@ -74,6 +76,8 @@ void Level1::Initialize()
 	//UI
 	AddPauseMenu();
 	SetPauseMenu(false);
+
+	//AddChild(new GameObject{});
 }
 
 void Level1::Update()
@@ -249,9 +253,9 @@ void Level1::ResetScene()
 		}
 	}
 
-	m_pObject = AddRedGem({ 10,5,10 });
+	AddRedGem({ 10,5,10 });
 	AddRedGem({ -13.3f, 5.f,-31.9f });
-	AddRedGem({ });
+	m_pObject = AddRedGem({ });
 
 	for (int i = 0; i < m_pRocks.size(); i++)
 	{
@@ -275,6 +279,8 @@ void Level1::ResetScene()
 	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
 	AddBigExplodableRock({ }, { }, .01f);
 	AddBigExplodableRock({ }, { }, .01f);
+
+	if (m_pBridge != nullptr) RemoveChild(m_pBridge, true);
 }
 
 void Level1::PostDraw()
@@ -447,12 +453,22 @@ void Level1::OnGUI()
 {
 	//m_pSeaMaterial->DrawImGui();
 
-	auto curPos = m_pObject->GetTransform()->GetWorldPosition();
-	float pos[3]{ curPos.x, curPos.y, curPos.z};
+	//auto curPos = m_pObject->GetTransform()->GetWorldPosition();
+	//float pos[3]{ curPos.x, curPos.y, curPos.z};
+	//ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
+	//m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+	//
+	//m_pCharacter->DrawImGui();
+
+	auto curPos = m_pBridgeCamera->GetTransform()->GetWorldPosition();
+	float pos[3]{ curPos.x, curPos.y, curPos.z };
 	ImGui::DragFloat3("Translation", pos, 0.1f, -300, 300);
-	m_pObject->GetTransform()->Translate(pos[0], pos[1], pos[2]);
-	
-	m_pCharacter->DrawImGui();
+	m_pBridgeCamera->GetTransform()->Translate(pos[0], pos[1], pos[2]);
+
+	auto curRot = m_pBridgeCamera->GetTransform()->GetWorldRotation();
+	float rot[3]{ curRot.x, curRot.y, curRot.z };
+	ImGui::DragFloat3("Rotation", rot, 0.1f, -300, 300);
+	m_pBridgeCamera->GetTransform()->Rotate(rot[0], rot[1], rot[2]);
 
 	//XMFLOAT4 curPos = m_SceneContext.pLights->GetDirectionalLight().position;
 	//float pos[4]{ curPos.x, curPos.y, curPos.z, curPos.w };
@@ -582,10 +598,25 @@ void Level1::UpdateScene()
 		}
 	}
 
-	if (areAllCollected)
+	if (!areAllCollected) return;
+
+	if (!m_HasAlreadyDoneOtherCamera)
+	{
+		m_pBridgeCamera->GetComponent<CameraComponent>()->SetActive();
+		m_StartBridgeCameraTime = m_SceneContext.pGameTime->GetTotal();
+		m_HasAlreadyDoneOtherCamera = true;
+		
+		return;
+	}
+
+	if (m_pBridge == nullptr && m_StartBridgeCameraTime + m_TimeBeforeBridgeSpawnsIn < m_SceneContext.pGameTime->GetTotal())
 	{
 		//Spawn Bridge
-		m_pObject = AddChild(new Bridge{ m_pDefaultMaterial });
-		//m_pBridge->GetTransform()->Translate();
+		m_pBridge = AddChild(new Bridge{ m_pDefaultMaterial });
+		m_pBridge->GetTransform()->Translate(21.9f, 33.8f, -58.2f);
+	}
+	if (m_StartBridgeCameraTime + m_CameraSwitchDuration < m_SceneContext.pGameTime->GetTotal())
+	{
+		m_pCharacter->GetComponent<CameraComponent>()->SetActive();
 	}
 }

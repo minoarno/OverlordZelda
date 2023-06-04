@@ -12,20 +12,16 @@ Bridge::Bridge(PxMaterial* pMaterial)
 
 void Bridge::Initialize(const SceneContext& )
 {
-	float scale{ .01f };
+	float scale{ .02f };
 	auto pModel = AddComponent(new ModelComponent(L"Meshes/Bridge.ovm"));
-
+	
 	auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
 	pMaterial->SetDiffuseTexture(L"Textures/Bridge.png");
-
+	
 	pModel->SetMaterial(pMaterial);
 	pModel->GetTransform()->Scale(scale);
 
 	const auto pTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Bridge.ovpt");
 	auto pRigidBody = AddComponent(new RigidBodyComponent{ true });
 	pRigidBody->AddCollider(PxTriangleMeshGeometry{ pTriangleMesh, physx::PxMeshScale{ scale } }, *m_pMaterial);
-}
-
-void Bridge::Update(const SceneContext&)
-{
 }

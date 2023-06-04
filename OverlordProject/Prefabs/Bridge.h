@@ -1,5 +1,5 @@
 #pragma once
-class Bridge : public GameObject
+class Bridge final : public GameObject
 {
 public:
 	Bridge(PxMaterial* pMaterial);
@@ -11,8 +11,6 @@ public:
 
 protected:
 	virtual void Initialize(const SceneContext& scenetext) override;
-
-	void Update(const SceneContext&) override;
 private:
 	PxMaterial* m_pMaterial;
 };

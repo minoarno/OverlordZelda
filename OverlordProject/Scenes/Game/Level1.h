@@ -93,5 +93,8 @@ private:
 	PostCameraShake* m_pCameraShake{nullptr};
 
 	Bridge* m_pBridge{ nullptr };
+	FixedCamera* m_pBridgeCamera{ nullptr };
+	float m_StartBridgeCameraTime{}, m_CameraSwitchDuration{3.f}, m_TimeBeforeBridgeSpawnsIn{1.5f};
+	bool m_HasAlreadyDoneOtherCamera{};
 };
 
