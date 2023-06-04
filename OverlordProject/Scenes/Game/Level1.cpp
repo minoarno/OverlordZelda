@@ -255,7 +255,7 @@ void Level1::ResetScene()
 
 	m_pObject = AddRedGem({ 10,5,10 });
 	AddRedGem({ -13.3f, 5.f,-31.9f });
-	AddRedGem({ });
+	AddRedGem({ 44.8f, 5.2f, -39.4f });
 
 	for (int i = 0; i < m_pRocks.size(); i++)
 	{
@@ -278,7 +278,7 @@ void Level1::ResetScene()
 
 	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
 	AddBigExplodableRock({ 20,3,7 }, { }, .01f);
-	AddBigExplodableRock({ 6,8,9 }, { }, .01f);
+	AddBigExplodableRock({ 44.8f, 5.2f, -39.4f }, { }, .01f);
 
 	if (m_pBridge != nullptr) RemoveChild(m_pBridge, true);
 }
