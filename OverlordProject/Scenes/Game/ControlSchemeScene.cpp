@@ -16,7 +16,7 @@ void ControlSchemeScene::Initialize()
 	{
 		SceneManager::Get()->SetActiveGameScene(L"Level1");
 	} });
-	m_pControlSchemeStart->GetTransform()->Translate(500, 600, 0);
+	m_pControlSchemeStart->GetTransform()->Translate(500, 620, 0);
 
 	auto inputAction = InputAction(SettingsMoveUp, InputState::pressed, -1, -1, XINPUT_GAMEPAD_DPAD_UP);
 	m_SceneContext.pInput->AddInputAction(inputAction);
@@ -28,7 +28,7 @@ void ControlSchemeScene::Initialize()
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
 	auto pControlSchemeBackground = AddChild(new GameObject{})->AddComponent(new SpriteComponent{ L"Textures/UI/ControlScheme.png" });
-	pControlSchemeBackground->GetTransform()->Scale(1.5);
+	pControlSchemeBackground->GetTransform()->Scale(1.4f);
 }
 
 void ControlSchemeScene::Update()
