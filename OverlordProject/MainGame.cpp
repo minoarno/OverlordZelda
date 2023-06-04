@@ -43,8 +43,6 @@ void MainGame::OnGamePreparing(GameContext& gameContext)
 	//gameContext.windowWidth=... (default is 1280)
 	//gameContext.windowHeight=... (default is 720)
 
-	//gameContext.windowTitle = L"GP2 - Milestone 1 (2023) | (2DAE15) Poppe Arno";
-	//gameContext.windowTitle = L"GP2 - Milestone 2 (2023) | (2DAE15) Poppe Arno";
 	gameContext.windowTitle = L"GP2 - Exam Project (2023) | (2DAE15) Poppe Arno";
 }
 

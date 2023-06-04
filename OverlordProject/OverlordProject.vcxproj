@@ -121,11 +121,7 @@
     <ClCompile Include="Materials\UberMaterial.cpp" />
     <ClCompile Include="Materials\Post\PostBlur.cpp" />
     <ClCompile Include="Prefabs\Character.cpp" />
-    <ClCompile Include="Scenes\Week 11\DeferredRenderingScene.cpp" />
-    <ClCompile Include="Scenes\Week 6\HardwareSkinningScene.cpp" />
     <ClCompile Include="Materials\ColorMaterial.cpp" />
-    <ClCompile Include="Scenes\Week 8\ShadowMappingScene.cpp" />
-    <ClCompile Include="Scenes\Week 9\ParticleScene.cpp" />
     <ClCompile Include="Materials\SeaMaterial.cpp" />
     <ClCompile Include="Materials\SkyBoxMaterial.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -181,17 +177,14 @@
     <ClInclude Include="Materials\UberMaterial.h" />
     <ClInclude Include="Materials\Post\PostBlur.h" />
     <ClInclude Include="Prefabs\Character.h" />
-    <ClInclude Include="Scenes\Week 11\DeferredRenderingScene.h" />
-    <ClInclude Include="Scenes\Week 6\HardwareSkinningScene.h" />
     <ClInclude Include="Materials\ColorMaterial.h" />
-    <ClInclude Include="Scenes\Week 8\ShadowMappingScene.h" />
-    <ClInclude Include="Scenes\Week 9\ParticleScene.h" />
     <ClInclude Include="Materials\SeaMaterial.h" />
     <ClInclude Include="Materials\SkyBoxMaterial.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Prefabs\Tree.h" />
     <ClInclude Include="Scenes\Game\WinScene.h" />
+    <ClInclude Include="WinArea.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

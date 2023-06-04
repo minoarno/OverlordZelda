@@ -5,13 +5,10 @@
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Materials\ColorMaterial.cpp" />
-    <ClCompile Include="Scenes\Week 6\HardwareSkinningScene.cpp" />
     <ClCompile Include="Materials\SpikyMaterial.cpp" />
     <ClCompile Include="Materials\UberMaterial.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial_Skinned.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial.cpp" />
-    <ClCompile Include="Scenes\Week 8\ShadowMappingScene.cpp" />
-    <ClCompile Include="Scenes\Week 9\ParticleScene.cpp" />
     <ClCompile Include="Prefabs\Character.cpp" />
     <ClCompile Include="Materials\Shadow\DiffuseMaterial_Shadow.cpp" />
     <ClCompile Include="Materials\Shadow\DiffuseMaterial_Shadow_Skinned.cpp" />
@@ -24,7 +21,6 @@
     <ClCompile Include="Prefabs\UI\HUD.cpp" />
     <ClCompile Include="Prefabs\UI\Text.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred.cpp" />
-    <ClCompile Include="Scenes\Week 11\DeferredRenderingScene.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred_Shadow.cpp" />
     <ClCompile Include="Materials\Deferred\BasicMaterial_Deferred_Shadow_Skinned.cpp" />
@@ -46,14 +42,11 @@
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Materials\ColorMaterial.h" />
-    <ClInclude Include="Scenes\Week 6\HardwareSkinningScene.h" />
     <ClInclude Include="Materials\UberMaterial.h" />
     <ClInclude Include="Materials\DiffuseMaterial_Skinned.h" />
     <ClInclude Include="Materials\SpikeyMaterial.h" />
     <ClInclude Include="Materials\SpikyMaterial.h" />
     <ClInclude Include="Materials\DiffuseMaterial.h" />
-    <ClInclude Include="Scenes\Week 8\ShadowMappingScene.h" />
-    <ClInclude Include="Scenes\Week 9\ParticleScene.h" />
     <ClInclude Include="Prefabs\Character.h" />
     <ClInclude Include="Materials\Shadow\DiffuseMaterial_Shadow_Skinned.h" />
     <ClInclude Include="Materials\Shadow\DiffuseMaterial_Shadow.h" />
@@ -66,7 +59,6 @@
     <ClInclude Include="Prefabs\UI\HUD.h" />
     <ClInclude Include="Prefabs\UI\Text.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred.h" />
-    <ClInclude Include="Scenes\Week 11\DeferredRenderingScene.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred_Shadow.h" />
     <ClInclude Include="Materials\Deferred\BasicMaterial_Deferred_Shadow_Skinned.h" />
