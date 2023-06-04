@@ -184,7 +184,6 @@
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Prefabs\Tree.h" />
     <ClInclude Include="Scenes\Game\WinScene.h" />
-    <ClInclude Include="WinArea.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
