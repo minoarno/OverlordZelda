@@ -37,6 +37,8 @@
     <ClCompile Include="Materials\Post\PostCameraShake.cpp" />
     <ClCompile Include="Prefabs\BombExplosion.cpp" />
     <ClCompile Include="Bridge.cpp" />
+    <ClCompile Include="Scenes\Game\WinScene.cpp" />
+    <ClCompile Include="Scenes\Game\LoseScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -75,5 +77,7 @@
     <ClInclude Include="Materials\Post\PostCameraShake.h" />
     <ClInclude Include="Prefabs\BombExplosion.h" />
     <ClInclude Include="Bridge.h" />
+    <ClInclude Include="Scenes\Game\WinScene.h" />
+    <ClInclude Include="Scenes\Game\LoseScene.h" />
   </ItemGroup>
 </Project>

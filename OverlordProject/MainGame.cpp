@@ -29,6 +29,8 @@
 #ifdef ZeldaGame
 #include "Scenes/Game/MainMenu.h"
 #include "Scenes/Game/Level1.h"
+#include "Scenes/Game/LoseScene.h"
+#include "Scenes/Game/WinScene.h"
 #endif
 
 #pragma endregion
@@ -66,6 +68,8 @@ void MainGame::Initialize()
 #ifdef ZeldaGame
 	SceneManager::Get()->AddGameScene(new MainMenu());
 	SceneManager::Get()->AddGameScene(new Level1());
+	SceneManager::Get()->AddGameScene(new LoseScene());
+	SceneManager::Get()->AddGameScene(new WinScene());
 #endif
 }
 
@@ -89,7 +93,6 @@ LRESULT MainGame::WindowProcedureHook(HWND /*hWnd*/, UINT message, WPARAM wParam
 		{
 			DebugRenderer::ToggleDebugRenderer();
 			return 0;
-
 		}
 
 		//[F3] Previous Scene
@@ -97,7 +100,6 @@ LRESULT MainGame::WindowProcedureHook(HWND /*hWnd*/, UINT message, WPARAM wParam
 		{
 			SceneManager::Get()->PreviousScene();
 			return 0;
-
 		}
 
 		//[F4] Next Scene

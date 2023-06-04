@@ -368,7 +368,7 @@ void Character::SetCharacterAnimation(CharacterAnimation newAnimationState)
 	{
 	case CharacterAnimation::Swimming:
 	case CharacterAnimation::SwimmingIdle:
-		m_pVisuals->GetTransform()->Translate(0, -2.6f, 0);
+		m_pVisuals->GetTransform()->Translate(0, -2.4f, 0);
 		break;
 	default:
 		m_pVisuals->GetTransform()->Translate(0, -1.4f, 0);
