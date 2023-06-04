@@ -8,10 +8,6 @@ WinScene::WinScene()
 {
 }
 
-WinScene::~WinScene()
-{
-}
-
 void WinScene::Initialize()
 {
 	m_SceneContext.settings.showInfoOverlay = false;

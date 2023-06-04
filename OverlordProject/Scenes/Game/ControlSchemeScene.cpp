@@ -8,12 +8,10 @@ ControlSchemeScene::ControlSchemeScene()
 {
 }
 
-ControlSchemeScene::~ControlSchemeScene()
-{
-}
-
 void ControlSchemeScene::Initialize()
 {
+	m_SceneContext.settings.showInfoOverlay = false;
+
 	m_pControlSchemeStart = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonActivated.png",[&]()
 	{
 		SceneManager::Get()->SetActiveGameScene(L"Level1");

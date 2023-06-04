@@ -37,6 +37,7 @@
     <ClCompile Include="Scenes\Game\LoseScene.cpp" />
     <ClCompile Include="Scenes\Game\ControlSchemeScene.cpp" />
     <ClCompile Include="Prefabs\RedGem.cpp" />
+    <ClCompile Include="Prefabs\WinArea.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -75,5 +76,6 @@
     <ClInclude Include="Scenes\Game\LoseScene.h" />
     <ClInclude Include="Scenes\Game\ControlSchemeScene.h" />
     <ClInclude Include="Prefabs\RedGem.h" />
+    <ClInclude Include="Prefabs\WinArea.h" />
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@ public:
 	ControlSchemeScene& operator=(const ControlSchemeScene&) = delete;
 	ControlSchemeScene(ControlSchemeScene&&) = delete;
 	ControlSchemeScene& operator=(ControlSchemeScene&&) = delete;
-	~ControlSchemeScene();
+	~ControlSchemeScene() override = default;
 
 protected:
 	enum InputIds

@@ -2,7 +2,7 @@
 class RedGem final : public GameObject
 {
 public:
-	RedGem(PxMaterial* pMaterial);
+	RedGem(PxMaterial* pMaterial, const XMFLOAT4& pos);
 	RedGem(const RedGem&) = delete;
 	RedGem& operator=(const RedGem&) = delete;
 	RedGem(RedGem&&) = delete;
@@ -10,6 +10,7 @@ public:
 	~RedGem() override = default;
 
 	bool GetMarkForDelete()const { return m_MarkForDelete; };
+	UINT GetLightIndex()const { return m_LightIndex; }
 protected:
 	void Initialize(const SceneContext& sceneContext) override;
 	void Update(const SceneContext&) override;
@@ -21,4 +22,6 @@ private:
 
 	float m_Rotation;
 	float m_RotationSpeed{ 90.f };
+	XMFLOAT4 m_Position{};
+	UINT m_LightIndex;
 };

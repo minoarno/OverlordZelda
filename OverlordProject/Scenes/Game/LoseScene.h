@@ -1,6 +1,6 @@
 #pragma once
 class Button;
-class LoseScene : public GameScene
+class LoseScene final : public GameScene
 {
 public:
 	LoseScene();
@@ -8,7 +8,7 @@ public:
 	LoseScene& operator=(const LoseScene&) = delete;
 	LoseScene(LoseScene&&) = delete;
 	LoseScene& operator=(LoseScene&&) = delete;
-	~LoseScene();
+	~LoseScene() override = default;
 
 protected:
 	enum InputIds

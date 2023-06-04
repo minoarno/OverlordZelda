@@ -8,7 +8,7 @@ public:
 	WinScene& operator=(const WinScene&) = delete;
 	WinScene(WinScene&&) = delete;
 	WinScene& operator=(WinScene&&) = delete;
-	~WinScene();
+	~WinScene() override = default;
 protected:
 	enum InputIds
 	{

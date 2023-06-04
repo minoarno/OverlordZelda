@@ -9,10 +9,6 @@ LoseScene::LoseScene()
 
 }
 
-LoseScene::~LoseScene()
-{
-}
-
 void LoseScene::Initialize()
 {
 	m_SceneContext.settings.showInfoOverlay = false;
