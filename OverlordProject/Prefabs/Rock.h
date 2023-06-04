@@ -14,8 +14,6 @@ public:
 	void SetMarkForDelete(bool value) { m_MarkForDelete = value; }
 protected:
 	virtual void Initialize(const SceneContext& scenetext) override;
-
-	void Update(const SceneContext&) override;
 private:
 	bool m_MarkForDelete{ false };
 

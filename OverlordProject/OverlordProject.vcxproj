@@ -93,6 +93,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bridge.cpp" />
     <ClCompile Include="Prefabs\BombExplosion.cpp" />
     <ClCompile Include="Materials\Post\PostCameraShake.cpp" />
     <ClCompile Include="Prefabs\BombSpawner.cpp" />
@@ -147,6 +148,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bridge.h" />
     <ClInclude Include="Prefabs\BombExplosion.h" />
     <ClInclude Include="Materials\Post\PostCameraShake.h" />
     <ClInclude Include="Prefabs\BombSpawner.h" />

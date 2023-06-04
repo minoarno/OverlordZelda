@@ -26,11 +26,3 @@ void Rock::Initialize(const SceneContext& )
 	pModel->SetMaterial(pMaterial);
 	SetTag(L"Rock");
 }
-
-void Rock::Update(const SceneContext&)
-{
-	if (m_MarkForDelete)
-	{
-		std::cout << "I am still alive\n";
-	}
-}

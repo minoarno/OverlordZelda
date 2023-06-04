@@ -23,7 +23,7 @@ void Bomb::Initialize(const SceneContext& )
 	GetTransform()->Scale(scale);
 
 	m_pRigidBody = AddComponent(new RigidBodyComponent());
-	m_pRigidBody->AddCollider(PxBoxGeometry{ .5f, 1.f, .5f }, *m_pMaterial, true);
+	m_pRigidBody->AddCollider(PxBoxGeometry{ .5f, .5f, .5f }, *m_pMaterial, true);
 	m_pRigidBody->SetKinematic(true);
 
 	SetOnTriggerCallBack([=](GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action)
