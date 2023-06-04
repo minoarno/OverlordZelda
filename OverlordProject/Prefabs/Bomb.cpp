@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Bomb.h"
+#include "BombExplosion.h"
 #include "Character.h"
 
 #include "Materials/Deferred/BasicMaterial_Deferred_Shadow.h"
@@ -44,16 +45,20 @@ void Bomb::Update(const SceneContext& sceneContext)
 		}
 
 
-		if (m_StartCountdownTime + m_TotalBlinkDuration > sceneContext.pGameTime->GetTotal())
+		if (m_StartCountdownTime + m_TotalBlinkDuration < sceneContext.pGameTime->GetTotal())
 		{
 			//Boom
-			std::cout << "Boom" << '\n';
+			SceneManager::Get()->GetActiveScene()->AddChild(new BombExplosion(m_pMaterial));
+			m_IsCountingDown = false;
+			SceneManager::Get()->GetActiveScene()->RemoveChild(this,true);
+			return;
 		}
 
-		if (m_LastTimeBlink + m_BlinkDuration > sceneContext.pGameTime->GetTotal())
+		if (m_LastTimeBlink + m_BlinkDuration < sceneContext.pGameTime->GetTotal())
 		{
 			m_LastTimeBlink = sceneContext.pGameTime->GetTotal();
 			m_BlinkDuration -= m_BlinkDurationShorteningIncrease;
+			if (m_BlinkDuration < .1f) m_BlinkDuration = .1f;
 
 			m_IsRed = !m_IsRed;
 			if (m_IsRed)
@@ -92,6 +97,7 @@ void Bomb::StartCountdown()
 void Bomb::Launch(const XMFLOAT3& forward)
 {
 	m_pRigidBody->SetKinematic(false);
+	m_pRigidBody->SetConstraint(RigidBodyConstraint::AllRot, false);
 	m_pRigidBody->AddCollider(PxSphereGeometry{ .5f }, *m_pMaterial);
 	m_pRigidBody->AddForce(forward);
 }

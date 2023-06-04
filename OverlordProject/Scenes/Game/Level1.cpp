@@ -53,6 +53,7 @@ void Level1::Initialize()
 	AddChild(new HUD{});
 	
 	//Audio
+	/*
 	auto fmodResult = SoundManager::Get()->GetSystem()->createChannelGroup("Sound Effects", &m_pSoundEffectGroup);
 	SoundManager::Get()->ErrorCheck(fmodResult);
 	
@@ -63,9 +64,7 @@ void Level1::Initialize()
 	
 	SoundManager::Get()->GetSystem()->playSound(m_pBackgroundSoundFx, m_pSoundEffectGroup, false, nullptr);
 	m_pSoundEffectGroup->setVolume(m_MusicVolume);
-	
-	//Post Processing
-	m_pCameraShake = MaterialManager::Get()->CreateMaterial<PostCameraShake>();
+	*/
 
 	//UI
 	AddPauseMenu();
@@ -186,13 +185,13 @@ GameObject* Level1::AddLevel()
 	AddSmallExplodableRock({ 11.3f, .05f, -2.6f }, { }, .01f);
 	AddSmallExplodableRock({ -6.f, 1.25f, -26.9f }, { }, .01f);
 	
-	m_pObject = AddMediumExplodableRock({ }, { }, .01f);
+	//m_pObject = AddMediumExplodableRock({ }, { }, .01f);
 	AddMediumExplodableRock({ 9.8f, -.4f, -9.7f }, { }, .01f);
 	AddMediumExplodableRock({ -14.8f, 1.6f, -31.7f }, { }, .04f);
 	
 	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
-	AddBigExplodableRock({ }, { }, .01f);
-	AddBigExplodableRock({ }, { }, .01f);
+	//AddBigExplodableRock({ }, { }, .01f);
+	//AddBigExplodableRock({ }, { }, .01f);
 
 	return pLevel;
 }
@@ -220,12 +219,16 @@ void Level1::OnSceneActivated()
 
 void Level1::ResetScene()
 {
+	m_pCharacter->GetTransform()->Translate(0.f,5.f,0.f);
 	RemovePostProcessingEffect(m_pCameraShake);
 
 	for (int i = 0; i < m_pGems.size(); i++)
 	{
-		RemoveChild(m_pGems[i], true);
-		m_pGems[i] = nullptr;
+		if (m_pGems[i] != nullptr)
+		{
+			RemoveChild(m_pGems[i], true);
+			m_pGems[i] = nullptr;
+		}
 	}
 	m_pGems.clear();
 
@@ -239,6 +242,15 @@ void Level1::ResetScene()
 	AddGem({ -54.f, 8.5f, -4.4f });
 	AddGem({ -35.5f, 9.3f, -26.6f });
 
+	for (int i = 0; i < m_pRocks.size(); i++)
+	{
+		if (m_pRocks[i] != nullptr)
+		{
+			RemoveChild(m_pRocks[i], true);
+			m_pRocks[i] = nullptr;
+		}
+	}
+	m_pRocks.clear();
 }
 
 void Level1::PostDraw()
@@ -305,7 +317,7 @@ void Level1::SetPauseMenu(bool isVisible)
 
 GameObject* Level1::AddSmallExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale)
 {
-	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Small", m_pDefaultMaterial));
+	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Small", m_pDefaultMaterial, scale));
 	pRock->GetTransform()->Translate(position);
 	pRock->GetTransform()->Rotate(rotation);
 	pRock->GetTransform()->Scale(scale);
@@ -314,7 +326,7 @@ GameObject* Level1::AddSmallExplodableRock(const XMFLOAT3& position, const XMFLO
 
 GameObject* Level1::AddMediumExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale)
 {
-	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Medium", m_pDefaultMaterial));
+	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Medium", m_pDefaultMaterial, scale));
 	pRock->GetTransform()->Translate(position);
 	pRock->GetTransform()->Rotate(rotation);
 	pRock->GetTransform()->Scale(scale);
@@ -323,7 +335,7 @@ GameObject* Level1::AddMediumExplodableRock(const XMFLOAT3& position, const XMFL
 
 GameObject* Level1::AddBigExplodableRock(const XMFLOAT3& position, const XMFLOAT3& rotation, float scale)
 {
-	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Big", m_pDefaultMaterial));
+	auto pRock = AddChild(new Rock(L"WindWaker_Rock_Big", m_pDefaultMaterial, scale));
 	pRock->GetTransform()->Translate(position);
 	pRock->GetTransform()->Rotate(rotation);
 	pRock->GetTransform()->Scale(scale);
@@ -500,6 +512,15 @@ void Level1::UpdateScene()
 		{
 			RemoveChild(m_pGems[i], true);
 			m_pGems[i] = nullptr;
+		}
+	}
+
+	for (int i = 0; i < m_pRocks.size(); i++)
+	{
+		if (m_pRocks[i] != nullptr && m_pRocks[i]->GetMarkForDelete())
+		{
+			RemoveChild(m_pGems[i], true);
+			m_pRocks[i] = nullptr;
 		}
 	}
 }

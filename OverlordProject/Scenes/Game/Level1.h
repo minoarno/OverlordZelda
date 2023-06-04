@@ -1,5 +1,6 @@
 #pragma once
 class Gem;
+class Rock;
 class Button;
 class PostBlur;
 class Character;
@@ -61,6 +62,7 @@ private:
 	SeaMaterial* m_pSeaMaterial;
 
 	std::vector<Gem*> m_pGems;
+	std::vector<Rock*> m_pRocks;
 
 	GameObject* m_pObject;
 
