@@ -278,7 +278,7 @@ void Level1::ResetScene()
 
 	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
 	AddBigExplodableRock({ 20,3,7 }, { }, .01f);
-	AddBigExplodableRock({ 44.8f, 5.2f, -39.4f }, { }, .01f);
+	m_pObject = AddBigExplodableRock({ 44.8f, 2.2f, -39.4f }, { }, .01f);
 
 	if (m_pBridge != nullptr) RemoveChild(m_pBridge, true);
 }
