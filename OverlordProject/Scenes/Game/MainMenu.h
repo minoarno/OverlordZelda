@@ -21,6 +21,7 @@ protected:
 
 	void Initialize() override;
 	void Update() override;
+
 	std::vector<Button*> m_pButtons;
 	int m_SelectedButtonIndex = -1;
 };

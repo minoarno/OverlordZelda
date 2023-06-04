@@ -1,5 +1,5 @@
 #pragma once
-
+class Button;
 class LoseScene : public GameScene
 {
 public:
@@ -11,6 +11,16 @@ public:
 	~LoseScene();
 
 protected:
+	enum InputIds
+	{
+		SettingsMoveUp = 7,
+		SettingsMoveDown = 8,
+		SettingsPress = 9
+	};
+
 	void Initialize() override;
 	void Update() override;
+
+	std::vector<Button*> m_pButtons;
+	int m_SelectedButtonIndex = -1;
 };
