@@ -31,6 +31,7 @@ void Bomb::Initialize(const SceneContext& )
 			OnHit(pTriggerObject, pOtherObject, action);
 		});
 
+	SetTag(L"Bomb");
 }
 
 void Bomb::Update(const SceneContext& sceneContext)
@@ -48,7 +49,8 @@ void Bomb::Update(const SceneContext& sceneContext)
 		if (m_StartCountdownTime + m_TotalBlinkDuration < sceneContext.pGameTime->GetTotal())
 		{
 			//Boom
-			SceneManager::Get()->GetActiveScene()->AddChild(new BombExplosion(m_pMaterial));
+			BombExplosion* pBombExplosion = SceneManager::Get()->GetActiveScene()->AddChild(new BombExplosion(m_pMaterial));
+			pBombExplosion->GetTransform()->Translate(GetTransform()->GetWorldPosition());
 			m_IsCountingDown = false;
 			SceneManager::Get()->GetActiveScene()->RemoveChild(this,true);
 			return;

@@ -179,19 +179,6 @@ GameObject* Level1::AddLevel()
 
 	AddBombSpawner({ -10.8f, 2.5f, -4.7f });
 	AddBombSpawner({ 42.5f, 1.8f, -34.5f });
-	
-	AddSmallExplodableRock({ 43.f, .75f, -22.f }, { }, .01f);
-	AddSmallExplodableRock({ -15.9f, .95f, 10.2f }, { }, .01f);
-	AddSmallExplodableRock({ 11.3f, .05f, -2.6f }, { }, .01f);
-	AddSmallExplodableRock({ -6.f, 1.25f, -26.9f }, { }, .01f);
-	
-	//m_pObject = AddMediumExplodableRock({ }, { }, .01f);
-	AddMediumExplodableRock({ 9.8f, -.4f, -9.7f }, { }, .01f);
-	AddMediumExplodableRock({ -14.8f, 1.6f, -31.7f }, { }, .04f);
-	
-	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
-	//AddBigExplodableRock({ }, { }, .01f);
-	//AddBigExplodableRock({ }, { }, .01f);
 
 	return pLevel;
 }
@@ -219,6 +206,11 @@ void Level1::OnSceneActivated()
 
 void Level1::ResetScene()
 {
+	SetPauseMenu(false);
+
+	HUD::Get()->SetAmountOfHearts(3);
+	HUD::Get()->SetAmountRupees(0);
+
 	m_pCharacter->GetTransform()->Translate(0.f,5.f,0.f);
 	RemovePostProcessingEffect(m_pCameraShake);
 
@@ -251,6 +243,19 @@ void Level1::ResetScene()
 		}
 	}
 	m_pRocks.clear();
+
+	AddSmallExplodableRock({ 43.f, .75f, -22.f }, { }, .01f);
+	AddSmallExplodableRock({ -15.9f, .95f, 10.2f }, { }, .01f);
+	AddSmallExplodableRock({ 11.3f, .05f, -2.6f }, { }, .01f);
+	AddSmallExplodableRock({ -6.f, 1.25f, -26.9f }, { }, .01f);
+
+	AddMediumExplodableRock({ 19.8f, -.4f, -9.7f }, { }, .01f);
+	AddMediumExplodableRock({ 9.8f, -.4f, -9.7f }, { }, .01f);
+	AddMediumExplodableRock({ -14.8f, 1.6f, -31.7f }, { }, .04f);
+
+	AddBigExplodableRock({ -15.9f,2.6f,-26.4f }, {}, .01f);
+	AddBigExplodableRock({ }, { }, .01f);
+	AddBigExplodableRock({ }, { }, .01f);
 }
 
 void Level1::PostDraw()
@@ -271,14 +276,14 @@ void Level1::AddPauseMenu()
 	pButton->GetTransform()->Translate(500, 150, 0);
 	m_pButtons.emplace_back(pButton);
 
-	pButton = AddChild(new Button{ L"Textures/UI/StartButtonNormal.png",L"Textures/UI/StartButtonActivated.png",[&]()
+	pButton = AddChild(new Button{ L"Textures/UI/MainMenuButtonNormal.png",L"Textures/UI/MainMenuButtonActivated.png",[&]()
 	{
-		SceneManager::Get()->SetActiveGameScene(L"Main Menu");
+		SceneManager::Get()->SetActiveGameScene(L"MainMenu");
 	} });
 	pButton->GetTransform()->Translate(500, 300, 0);
 	m_pButtons.emplace_back(pButton);
 
-	pButton = AddChild(new Button{ L"Textures/UI/ExitButtonNormal.png",L"Textures/UI/ExitButtonActivated.png",[&]()
+	pButton = AddChild(new Button{ L"Textures/UI/RestartButtonNormal.png",L"Textures/UI/RestartButtonActivated.png",[&]()
 	{
 		ResetScene();
 	} });
@@ -321,6 +326,9 @@ GameObject* Level1::AddSmallExplodableRock(const XMFLOAT3& position, const XMFLO
 	pRock->GetTransform()->Translate(position);
 	pRock->GetTransform()->Rotate(rotation);
 	pRock->GetTransform()->Scale(scale);
+
+	m_pRocks.emplace_back(pRock);
+
 	return pRock;
 }
 
@@ -330,6 +338,9 @@ GameObject* Level1::AddMediumExplodableRock(const XMFLOAT3& position, const XMFL
 	pRock->GetTransform()->Translate(position);
 	pRock->GetTransform()->Rotate(rotation);
 	pRock->GetTransform()->Scale(scale);
+
+	m_pRocks.emplace_back(pRock);
+
 	return pRock;
 }
 
@@ -339,6 +350,9 @@ GameObject* Level1::AddBigExplodableRock(const XMFLOAT3& position, const XMFLOAT
 	pRock->GetTransform()->Translate(position);
 	pRock->GetTransform()->Rotate(rotation);
 	pRock->GetTransform()->Scale(scale);
+
+	m_pRocks.emplace_back(pRock);
+
 	return pRock;
 }
 
@@ -519,7 +533,7 @@ void Level1::UpdateScene()
 	{
 		if (m_pRocks[i] != nullptr && m_pRocks[i]->GetMarkForDelete())
 		{
-			RemoveChild(m_pGems[i], true);
+			RemoveChild(m_pRocks[i], true);
 			m_pRocks[i] = nullptr;
 		}
 	}

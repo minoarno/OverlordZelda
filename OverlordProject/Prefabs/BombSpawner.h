@@ -11,10 +11,14 @@ public:
 	~BombSpawner() = default;
 
 protected:
-	virtual void Initialize(const SceneContext& scenetext) override;
-	virtual void Update(const SceneContext&) override;
-	void SpawnBomb();
+	void Initialize(const SceneContext& scenetext) override;
+	void Update(const SceneContext&) override;
+
+	void OnHit(GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action);
 private:
-	PxMaterial* m_pMaterial;
-	Bomb* m_pBomb;
+	float m_StartBombSpawn{ -20.f };
+	float m_BombSpawnDuration{ 5.f };
+	PxMaterial* m_pMaterial{ nullptr };
+	Bomb* m_pBomb{ nullptr };
+	GameTime* m_pGameTime{ nullptr };
 };

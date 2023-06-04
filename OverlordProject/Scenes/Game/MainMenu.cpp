@@ -10,6 +10,8 @@ MainMenu::MainMenu()
 
 void MainMenu::Initialize()
 {
+	m_SceneContext.settings.showInfoOverlay = false;
+
 	const auto pCamera = AddChild(new FixedCamera());
 	pCamera->GetComponent<CameraComponent>()->SetActive(true);
 
@@ -17,14 +19,14 @@ void MainMenu::Initialize()
 		{
 			SceneManager::Get()->SetActiveGameScene(L"Level1");
 		} });
-	pButton->GetTransform()->Translate(100, 200, 0);
+	pButton->GetTransform()->Translate(490, 480, 0);
 	m_pButtons.emplace_back(pButton);
 
 	pButton = AddChild(new Button{ L"Textures/UI/ExitButtonNormal.png",L"Textures/UI/ExitButtonActivated.png",[&]() 
 		{
 			OverlordGame::Stop();
 		} });
-	pButton->GetTransform()->Translate(100, 400, 0);
+	pButton->GetTransform()->Translate(490, 560, 0);
 	m_pButtons.emplace_back(pButton);
 
 	auto inputAction = InputAction(SettingsMoveUp, InputState::pressed, -1, -1, XINPUT_GAMEPAD_DPAD_UP);
@@ -35,6 +37,9 @@ void MainMenu::Initialize()
 
 	inputAction = InputAction(SettingsPress, InputState::pressed, -1, VK_LBUTTON, XINPUT_GAMEPAD_A);
 	m_SceneContext.pInput->AddInputAction(inputAction);
+
+	auto pBackGround = AddChild(new GameObject{});
+	pBackGround->AddComponent(new SpriteComponent{ L"Textures/UI/MainMenu.png" });
 }
 
 void MainMenu::Update()

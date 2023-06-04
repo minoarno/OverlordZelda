@@ -11,27 +11,38 @@ BombSpawner::BombSpawner(PxMaterial* pMaterial)
 {
 }
 
-void BombSpawner::Initialize(const SceneContext& )
+void BombSpawner::Initialize(const SceneContext& sceneContext)
 {
 	auto pModel = AddComponent(new ModelComponent(L"Meshes/Bomb/BombLeaves.ovm"));
 	auto pMaterial = MaterialManager::Get()->CreateMaterial<BasicMaterial_Deferred_Shadow>();
 	pMaterial->SetDiffuseTexture(L"Textures/Bomb/Bomb.png");
 	pModel->SetMaterial(pMaterial);
-
 	pModel->GetTransform()->Scale(.01f);
+	
+	m_pGameTime = sceneContext.pGameTime;
+
+	auto pRigidBody = AddComponent(new RigidBodyComponent());
+	pRigidBody->AddCollider(PxBoxGeometry{ 2.f, 2.f, 2.f }, *m_pMaterial, true);
+	pRigidBody->SetConstraint(RigidBodyConstraint::All, false);
 }
 
 void BombSpawner::Update(const SceneContext& )
 {
-	SpawnBomb();
-}
+	if (m_pBomb != nullptr) return;
 
-void BombSpawner::SpawnBomb()
-{
-	if (m_pBomb == nullptr)
+	if (m_StartBombSpawn + m_BombSpawnDuration < m_pGameTime->GetTotal())
 	{
 		m_pBomb = GetScene()->AddChild(new Bomb(m_pMaterial));
 		auto pos = GetTransform()->GetPosition();
 		m_pBomb->GetTransform()->Translate(pos.x, pos.y, pos.z);
+	}
+}
+
+void BombSpawner::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction action)
+{
+	if (pOtherObject->GetTag() == L"Bomb" && action == PxTriggerAction::LEAVE)
+	{
+		m_pBomb = nullptr;
+		m_StartBombSpawn = m_pGameTime->GetTotal();
 	}
 }

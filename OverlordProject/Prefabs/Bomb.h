@@ -30,7 +30,7 @@ private:
 
 	float m_LastTimeBlink{};
 	float m_StartCountdownTime{};
-	float m_TotalBlinkDuration = 10.f;
-	float m_BlinkDuration = 1.f;
+	float m_TotalBlinkDuration = 5.f;
+	float m_BlinkDuration = .8f;
 	float m_BlinkDurationShorteningIncrease = .1f;
 };

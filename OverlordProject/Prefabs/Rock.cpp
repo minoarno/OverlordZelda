@@ -19,9 +19,18 @@ void Rock::Initialize(const SceneContext& )
 	pMaterial->SetDiffuseTexture(L"Textures/Rocks/WindWaker_Rocks.png");
 
 	const auto pTriangleMesh = ContentManager::Load<PxConvexMesh>(L"Meshes/Rocks/" + m_Filepath + L".ovpc");
-	auto pRigidBody = AddComponent(new RigidBodyComponent{ true });
+	auto pRigidBody = AddComponent(new RigidBodyComponent{ });
+	pRigidBody->SetConstraint(RigidBodyConstraint::All, false);
 	pRigidBody->AddCollider(PxConvexMeshGeometry{ pTriangleMesh, physx::PxMeshScale{ m_Scale } }, *m_pMaterial);
 
 	pModel->SetMaterial(pMaterial);
 	SetTag(L"Rock");
+}
+
+void Rock::Update(const SceneContext&)
+{
+	if (m_MarkForDelete)
+	{
+		std::cout << "I am still alive\n";
+	}
 }

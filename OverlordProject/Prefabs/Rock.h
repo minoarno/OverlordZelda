@@ -1,6 +1,6 @@
 #pragma once
 
-class Rock : public GameObject
+class Rock final: public GameObject
 {
 public:
 	Rock(const std::wstring& filepath, PxMaterial* pMaterial, float scale = 1.f);
@@ -8,13 +8,14 @@ public:
 	Rock& operator=(const Rock&) = delete;
 	Rock(Rock&&) = delete;
 	Rock& operator=(Rock&&) = delete;
-	~Rock() = default;
+	~Rock() override = default;
 
 	bool GetMarkForDelete()const { return m_MarkForDelete; };
 	void SetMarkForDelete(bool value) { m_MarkForDelete = value; }
 protected:
 	virtual void Initialize(const SceneContext& scenetext) override;
 
+	void Update(const SceneContext&) override;
 private:
 	bool m_MarkForDelete{ false };
 

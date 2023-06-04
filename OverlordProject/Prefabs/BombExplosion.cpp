@@ -21,13 +21,16 @@ void BombExplosion::Initialize(const SceneContext& sceneContext)
 	m_pPostCameraShake = MaterialManager::Get()->CreateMaterial<PostCameraShake>();
 	SceneManager::Get()->GetActiveScene()->AddPostProcessingEffect(m_pPostCameraShake);
 
-	auto pRigidBody = AddComponent(new RigidBodyComponent{ true });
-	pRigidBody->AddCollider(PxSphereGeometry{ .5f } , *m_pMaterial, true);
+	auto pRigidBody = AddComponent(new RigidBodyComponent{ });
+	pRigidBody->AddCollider(PxSphereGeometry{ 20.f } , *m_pMaterial, true);
+	pRigidBody->SetConstraint(RigidBodyConstraint::All, false);
 
 	SetOnTriggerCallBack([=](GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action)
 		{
 			OnHit(pTriggerObject, pOtherObject, action);
 		});
+
+	AddComponent(new ParticleEmitterComponent{ L"Textures/Smoke.png" });
 }
 
 void BombExplosion::Update(const SceneContext& sceneContext)
@@ -38,14 +41,16 @@ void BombExplosion::Update(const SceneContext& sceneContext)
 	}
 }
 
-void BombExplosion::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction action)
+void BombExplosion::OnHit(GameObject* , GameObject* pOtherObject, PxTriggerAction )
 {
-	if (pOtherObject->GetTag() == L"Link" && action == PxTriggerAction::ENTER)
+	if (pOtherObject->GetTag() == L"Link")
 	{
+		std::cout << "Link\n";
 		//Character* pCharacter = reinterpret_cast<Character*>(pOtherObject);
 	}
 	if (pOtherObject->GetTag() == L"Rock")
 	{
+		std::cout << "Rock\n";
 		Rock* pRock = reinterpret_cast<Rock*>(pOtherObject);
 		pRock->SetMarkForDelete(true);
 	}
