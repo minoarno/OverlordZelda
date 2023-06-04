@@ -31,12 +31,20 @@ void BombExplosion::Initialize(const SceneContext& sceneContext)
 		});
 
 	ParticleEmitterSettings particleEmitterSettings{};
-	particleEmitterSettings.minSize = 1.f;
-	particleEmitterSettings.maxSize = 3.f;
-	particleEmitterSettings.minEmitterRadius = 4.f;
-	particleEmitterSettings.minEmitterRadius = 5.f;
+	particleEmitterSettings.minSize = 1.5f;
+	particleEmitterSettings.maxSize = 5.f;
+	particleEmitterSettings.minEmitterRadius = 1.f;
+	particleEmitterSettings.minEmitterRadius = 10.f;
 
-	AddComponent(new ParticleEmitterComponent{ L"Textures/Smoke.png", particleEmitterSettings });
+	AddComponent(new ParticleEmitterComponent{ L"Textures/Smoke.png", particleEmitterSettings, 50 });
+
+	auto fmodResult = SoundManager::Get()->GetSystem()->createChannelGroup("Sound Effects", &m_pSoundEffectGroup);
+	SoundManager::Get()->ErrorCheck(fmodResult);
+
+	SoundManager::Get()->GetSystem()->createStream("Resources/Audio/Explosion.mp3", FMOD_DEFAULT, nullptr, &m_pExplosionSoundFx);
+	SoundManager::Get()->ErrorCheck(fmodResult);
+
+	SoundManager::Get()->GetSystem()->playSound(m_pExplosionSoundFx, m_pSoundEffectGroup, false, nullptr);
 }
 
 void BombExplosion::Update(const SceneContext& sceneContext)

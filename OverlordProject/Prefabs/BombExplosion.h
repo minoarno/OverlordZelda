@@ -20,4 +20,9 @@ private:
 	float m_Duration = 0.5f;
 	PostCameraShake* m_pPostCameraShake{ nullptr };
 	PxMaterial* m_pMaterial{ nullptr };
+
+	//Audio
+	FMOD::Sound* m_pExplosionSoundFx{ nullptr };
+	FMOD::ChannelGroup* m_pSoundEffectGroup{ nullptr };
+	float m_MusicVolume{ .3f };
 };

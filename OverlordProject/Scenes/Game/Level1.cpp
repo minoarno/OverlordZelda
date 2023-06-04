@@ -15,6 +15,7 @@
 #include "Prefabs/BombSpawner.h"
 #include "Prefabs/Bridge.h"
 #include "Prefabs/WinArea.h"
+#include "Prefabs/GemParticleEmitter.h"
 #include "Materials/Post/PostCameraShake.h"
 #include "Materials/Post/PostBlur.h"
 
@@ -582,6 +583,9 @@ void Level1::UpdateScene()
 	{
 		if (m_pGems[i] != nullptr && m_pGems[i]->GetMarkForDelete())
 		{
+			auto pEmitter = AddChild(new GemParticleEmitter{ XMFLOAT4{0.f,1.f,0.f,1.f} });
+			pEmitter->GetTransform()->Translate(m_pGems[i]->GetTransform()->GetWorldPosition());
+
 			RemoveChild(m_pGems[i], true);
 			m_pGems[i] = nullptr;
 		}
@@ -603,6 +607,8 @@ void Level1::UpdateScene()
 		else if (m_pRedGems[i]->GetMarkForDelete())
 		{
 			m_SceneContext.pLights->GetLight(m_pRedGems[i]->GetLightIndex()).isEnabled = false;
+			auto pEmitter = AddChild(new GemParticleEmitter{ XMFLOAT4{0.39f, 0.39f, 0.07f,1.f} });
+			pEmitter->GetTransform()->Translate(m_pRedGems[i]->GetTransform()->GetWorldPosition());
 
 			RemoveChild(m_pRedGems[i], true);
 			m_pRedGems[i] = nullptr;

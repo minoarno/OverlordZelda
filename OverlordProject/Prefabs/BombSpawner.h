@@ -14,7 +14,7 @@ protected:
 	void Initialize(const SceneContext& scenetext) override;
 	void Update(const SceneContext&) override;
 private:
-	float m_StartBombSpawn{ -20.f };
+	float m_StartBombSpawn{ 0.f };
 	float m_BombSpawnDuration{ 5.f };
 	PxMaterial* m_pMaterial{ nullptr };
 	Bomb* m_pBomb{ nullptr };

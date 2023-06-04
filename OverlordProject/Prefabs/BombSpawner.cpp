@@ -24,6 +24,8 @@ void BombSpawner::Initialize(const SceneContext& sceneContext)
 	auto pRigidBody = AddComponent(new RigidBodyComponent());
 	pRigidBody->AddCollider(PxBoxGeometry{ 2.f, 2.f, 2.f }, *m_pMaterial, true);
 	pRigidBody->SetConstraint(RigidBodyConstraint::All, false);
+
+	m_StartBombSpawn = sceneContext.pGameTime->GetTotal() - 1;
 }
 
 void BombSpawner::Update(const SceneContext& )

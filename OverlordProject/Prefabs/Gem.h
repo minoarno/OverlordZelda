@@ -11,7 +11,7 @@ public:
 
 	bool GetMarkForDelete()const { return m_MarkForDelete; };
 protected:
-	void Initialize(const SceneContext& scenetext) override;
+	void Initialize(const SceneContext& sceneContext) override;
 	void Update(const SceneContext&) override;
 
 	void OnHit(GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action);

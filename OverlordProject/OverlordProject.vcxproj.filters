@@ -38,6 +38,7 @@
     <ClCompile Include="Scenes\Game\ControlSchemeScene.cpp" />
     <ClCompile Include="Prefabs\RedGem.cpp" />
     <ClCompile Include="Prefabs\WinArea.cpp" />
+    <ClCompile Include="Prefabs\GemParticleEmitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -77,5 +78,6 @@
     <ClInclude Include="Scenes\Game\ControlSchemeScene.h" />
     <ClInclude Include="Prefabs\RedGem.h" />
     <ClInclude Include="Prefabs\WinArea.h" />
+    <ClInclude Include="Prefabs\GemParticleEmitter.h" />
   </ItemGroup>
 </Project>

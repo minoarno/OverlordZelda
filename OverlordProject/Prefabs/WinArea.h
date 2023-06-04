@@ -14,4 +14,9 @@ protected:
 	void OnHit(GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action);
 private:
 	PxMaterial* m_pMaterial;
+
+	//Audio
+	FMOD::Sound* m_pVictorySoundFx{ nullptr };
+	FMOD::ChannelGroup* m_pSoundEffectGroup{ nullptr };
+	float m_MusicVolume{ .3f };
 };

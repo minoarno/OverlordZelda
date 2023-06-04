@@ -93,6 +93,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Prefabs\GemParticleEmitter.cpp" />
     <ClCompile Include="Prefabs\Bridge.cpp" />
     <ClCompile Include="Prefabs\RedGem.cpp" />
     <ClCompile Include="Scenes\Game\ControlSchemeScene.cpp" />
@@ -149,6 +150,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Prefabs\GemParticleEmitter.h" />
     <ClInclude Include="Prefabs\Bridge.h" />
     <ClInclude Include="Prefabs\RedGem.h" />
     <ClInclude Include="Scenes\Game\ControlSchemeScene.h" />
